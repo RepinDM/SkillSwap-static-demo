@@ -1,0 +1,25 @@
+/* Roboto: основной текст */
+@font-face {
+  font-family: "Roboto";
+  src: url("./Roboto/Roboto-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Roboto";
+  src: url("./Roboto/Roboto-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Jost: заголовки */
+@font-face {
+  font-family: "Jost";
+  src: url("./Jost/Jost-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
