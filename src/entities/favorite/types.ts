@@ -1,5 +1,6 @@
+// Запись об избранном навыке пользователя
 export type TFavorite = {
-  userId: string;
-  skillId: string;
-  addedAt: string;
-};
+  userId: string // ID пользователя, который добавил навык в избранное
+  skillId: string // ID навыка, добавленного в избранное
+  addedAt: string // Дата и время добавления в избранное
+}
