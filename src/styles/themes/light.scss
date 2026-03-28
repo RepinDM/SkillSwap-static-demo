@@ -15,6 +15,35 @@
   --accent: #abd27a; /* основной акцентный цвет (кнопки, выделения) */
   --button-hover: #deebc5; /* hover-состояние кнопок */
 
+  --button-primary-background: rgba(171, 210, 122, 1);
+  --button-primary-background-hover: rgba(222, 235, 197, 1);
+  --button-primary-background-active: rgba(80, 136, 38, 1);
+  --button-primary-background-disabled: rgba(228, 232, 223, 1);
+
+  --button-primary-color: rgba(37, 48, 23, 1);
+  --button-primary-color-hover: rgba(37, 48, 23, 1);
+  --button-primary-color-active: rgba(255, 255, 255, 1);
+  --button-primary-color-disabled: rgba(105, 115, 93, 1);
+
+  --button-secondary-background: rgba(255, 255, 255, 1);
+  --button-secondary-background-hover: rgba(255, 255, 255, 1);
+  --button-secondary-background-active: rgba(255, 255, 255, 1);
+  --button-secondary-background-disabled: rgba(255, 255, 255, 1);
+
+  --button-secondary-color: rgba(37, 48, 23, 1);
+  --button-secondary-color-hover: rgba(105, 115, 93, 1);
+  --button-secondary-color-active: rgba(37, 48, 23, 1);
+  --button-secondary-color-disabled: rgba(156, 161, 151, 1);
+
+  --button-secondary-border: rgba(171, 210, 122, 1);
+  --button-secondary-border-hover: rgba(222, 235, 197, 1);
+  --button-secondary-border-active: rgba(80, 136, 38, 1);
+  --button-secondary-border-disabled: rgba(228, 232, 223, 1);
+
+  --button-tertiary-background: rgba(255, 255, 255, 1);
+  --button-tertiary-color: rgba(37, 48, 23, 1);
+  --button-tertiary-color-disabled: rgba(156, 161, 151, 1);
+
   /*  ФОН  */
   --background: #f9faf7; /* основной фон страницы */
 
