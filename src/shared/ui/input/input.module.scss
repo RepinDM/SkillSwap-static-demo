@@ -1,0 +1,50 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+  font-family: "Roboto", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px;
+}
+
+.label {
+  color: #253017;
+}
+
+.input {
+  padding: 12px 20px;
+  width: 100%;
+  border: 1px solid #69735d;
+  border-radius: 12px;
+  outline: none;
+  transition: border-color 0.2s ease;
+  box-sizing: border-box;
+  min-height: 48px;
+
+  &::placeholder {
+    letter-spacing: 0.02em;
+    color: #69735d;
+  }
+
+  &:focus {
+    border-color: #abd27a;
+  }
+
+  &:disabled {
+    color: #999;
+    cursor: not-allowed;
+    border-color: #69735d;
+  }
+}
+
+.inputError,
+.inputError:focus {
+  border-color: #bf3920;
+}
+
+.errorText {
+  font-size: 12px;
+  color: #bf3920;
+}
