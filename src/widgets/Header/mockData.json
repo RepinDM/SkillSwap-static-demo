@@ -1,0 +1,264 @@
+{
+  "categories": [
+    { "id": 1, "icon": "briefcase", "title": "Бизнес и карьера" },
+    { "id": 2, "icon": "palette", "title": "Творчество и искусство" },
+    { "id": 3, "icon": "global", "title": "Иностранные языки" },
+    { "id": 4, "icon": "book", "title": "Образование и развитие" },
+    { "id": 5, "icon": "home", "title": "Дом и уют" },
+    { "id": 6, "icon": "lifestyle", "title": "Здоровье и лайфстайл" }
+  ],
+  "subcategories": [
+    {
+      "id": 1,
+      "categoryId": 1,
+      "title": "Управление командой",
+      "href": "/categories/1/subcategories/1"
+    },
+    {
+      "id": 2,
+      "categoryId": 1,
+      "title": "Маркетинг и реклама",
+      "href": "/categories/1/subcategories/2"
+    },
+    {
+      "id": 3,
+      "categoryId": 1,
+      "title": "Продажи и переговоры",
+      "href": "/categories/1/subcategories/3"
+    },
+    {
+      "id": 4,
+      "categoryId": 1,
+      "title": "Личный бренд",
+      "href": "/categories/1/subcategories/4"
+    },
+    {
+      "id": 5,
+      "categoryId": 1,
+      "title": "Резюме и собеседование",
+      "href": "/categories/1/subcategories/5"
+    },
+    {
+      "id": 6,
+      "categoryId": 1,
+      "title": "Тайм-менеджмент",
+      "href": "/categories/1/subcategories/6"
+    },
+    {
+      "id": 7,
+      "categoryId": 1,
+      "title": "Проектное управление",
+      "href": "/categories/1/subcategories/7"
+    },
+    {
+      "id": 8,
+      "categoryId": 1,
+      "title": "Предпринимательство",
+      "href": "/categories/1/subcategories/8"
+    },
+    {
+      "id": 9,
+      "categoryId": 2,
+      "title": "Рисование и иллюстрация",
+      "href": "/categories/2/subcategories/9"
+    },
+    {
+      "id": 10,
+      "categoryId": 2,
+      "title": "Фотография",
+      "href": "/categories/2/subcategories/10"
+    },
+    {
+      "id": 11,
+      "categoryId": 2,
+      "title": "Видеомонтаж",
+      "href": "/categories/2/subcategories/11"
+    },
+    {
+      "id": 12,
+      "categoryId": 2,
+      "title": "Музыка и звук",
+      "href": "/categories/2/subcategories/12"
+    },
+    {
+      "id": 13,
+      "categoryId": 2,
+      "title": "Актёрское мастерство",
+      "href": "/categories/2/subcategories/13"
+    },
+    {
+      "id": 14,
+      "categoryId": 2,
+      "title": "Креативное письмо",
+      "href": "/categories/2/subcategories/14"
+    },
+    {
+      "id": 15,
+      "categoryId": 2,
+      "title": "Арт-терапия",
+      "href": "/categories/2/subcategories/15"
+    },
+    {
+      "id": 16,
+      "categoryId": 2,
+      "title": "Декор и DIY",
+      "href": "/categories/2/subcategories/16"
+    },
+    {
+      "id": 17,
+      "categoryId": 3,
+      "title": "Английский",
+      "href": "/categories/3/subcategories/17"
+    },
+    {
+      "id": 18,
+      "categoryId": 3,
+      "title": "Французский",
+      "href": "/categories/3/subcategories/18"
+    },
+    {
+      "id": 19,
+      "categoryId": 3,
+      "title": "Испанский",
+      "href": "/categories/3/subcategories/19"
+    },
+    {
+      "id": 20,
+      "categoryId": 3,
+      "title": "Немецкий",
+      "href": "/categories/3/subcategories/20"
+    },
+    {
+      "id": 21,
+      "categoryId": 3,
+      "title": "Китайский",
+      "href": "/categories/3/subcategories/21"
+    },
+    {
+      "id": 22,
+      "categoryId": 3,
+      "title": "Японский",
+      "href": "/categories/3/subcategories/22"
+    },
+    {
+      "id": 23,
+      "categoryId": 3,
+      "title": "Подготовка к экзаменам (IELTS, TOEFL)",
+      "href": "/categories/3/subcategories/23"
+    },
+    {
+      "id": 24,
+      "categoryId": 4,
+      "title": "Личностное развитие",
+      "href": "/categories/4/subcategories/24"
+    },
+    {
+      "id": 25,
+      "categoryId": 4,
+      "title": "Навыки обучения",
+      "href": "/categories/4/subcategories/25"
+    },
+    {
+      "id": 26,
+      "categoryId": 4,
+      "title": "Когнитивные техники",
+      "href": "/categories/4/subcategories/26"
+    },
+    {
+      "id": 27,
+      "categoryId": 4,
+      "title": "Скорочтение",
+      "href": "/categories/4/subcategories/27"
+    },
+    {
+      "id": 28,
+      "categoryId": 4,
+      "title": "Навыки преподавания",
+      "href": "/categories/4/subcategories/28"
+    },
+    {
+      "id": 29,
+      "categoryId": 4,
+      "title": "Коучинг",
+      "href": "/categories/4/subcategories/29"
+    },
+    {
+      "id": 30,
+      "categoryId": 5,
+      "title": "Уборка и организация",
+      "href": "/categories/5/subcategories/30"
+    },
+    {
+      "id": 31,
+      "categoryId": 5,
+      "title": "Домашние финансы",
+      "href": "/categories/5/subcategories/31"
+    },
+    {
+      "id": 32,
+      "categoryId": 5,
+      "title": "Приготовление еды",
+      "href": "/categories/5/subcategories/32"
+    },
+    {
+      "id": 33,
+      "categoryId": 5,
+      "title": "Домашние растения",
+      "href": "/categories/5/subcategories/33"
+    },
+    {
+      "id": 34,
+      "categoryId": 5,
+      "title": "Ремонт",
+      "href": "/categories/5/subcategories/34"
+    },
+    {
+      "id": 35,
+      "categoryId": 5,
+      "title": "Хранение вещей",
+      "href": "/categories/5/subcategories/35"
+    },
+    {
+      "id": 36,
+      "categoryId": 6,
+      "title": "Йога и медитация",
+      "href": "/categories/6/subcategories/36"
+    },
+    {
+      "id": 37,
+      "categoryId": 6,
+      "title": "Питание и ЗОЖ",
+      "href": "/categories/6/subcategories/37"
+    },
+    {
+      "id": 38,
+      "categoryId": 6,
+      "title": "Ментальное здоровье",
+      "href": "/categories/6/subcategories/38"
+    },
+    {
+      "id": 39,
+      "categoryId": 6,
+      "title": "Осознанность",
+      "href": "/categories/6/subcategories/39"
+    },
+    {
+      "id": 40,
+      "categoryId": 6,
+      "title": "Физические тренировки",
+      "href": "/categories/6/subcategories/40"
+    },
+    {
+      "id": 41,
+      "categoryId": 6,
+      "title": "Сон и восстановление",
+      "href": "/categories/6/subcategories/41"
+    },
+    {
+      "id": 42,
+      "categoryId": 6,
+      "title": "Баланс жизни и работы",
+      "href": "/categories/6/subcategories/42"
+    }
+  ]
+}
