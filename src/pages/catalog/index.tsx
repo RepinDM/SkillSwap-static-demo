@@ -1,2 +1,4 @@
-const CatalogPage = () => <h1>CatalogPage</h1>;
+const CatalogPage = () => <h1>CatalogPage</h1>
+
+
 export default CatalogPage;
