@@ -1,0 +1,43 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 204px 490px;
+  min-height: 100vh;
+  margin: 0 auto;
+  gap: 40px;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.title {
+  font-family: var(--font-h2-family);
+  font-weight: var(--font-h2-weight);
+  font-size: var(--font-h2-size);
+  line-height: var(--font-h2-line-height);
+  text-align: center;
+}
+
+.description {
+  font-family: var(--font-body-family);
+  font-weight: var(--font-body-weight);
+  font-size: var(--font-body-size);
+  line-height: var(--font-body-line-height);
+  text-align: center;
+}
+
+.buttons {
+  display: flex;
+  flex-direction: row;
+  gap: 24px;
+  width: 100%;
+  
+  button {
+    flex: 1;
+  }
+}
