@@ -1,3 +1,5 @@
+//Сверстала страницу NotFoundPage, добавила стили, добавила логику перехода на главную и сообщение заглушку на ошибку
+
 import { useNavigate } from "react-router-dom";
 import styles from "./notFoundPage.module.scss";
 import notFoundImage from "../../shared/image/webp/404.webp";
