@@ -1,2 +1,5 @@
-const RegisterPage = () => <h1>Регистрация</h1>;
-export default RegisterPage;
+import { Outlet } from "react-router-dom";
+
+export const RegisterPage = () => {
+  return <Outlet />;
+};

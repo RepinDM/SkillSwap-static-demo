@@ -46,6 +46,12 @@
   --button-tertiary-color: rgba(37, 48, 23, 1);
   --button-tertiary-color-disabled: rgba(156, 161, 151, 1);
 
+  --dropdown-background: rgba(255, 255, 255, 1);
+  --dropdown-border: rgba(105, 115, 93, 1);
+  --dropdown-category-title-color: rgba(37, 48, 23, 1);
+  --dropdown-category-link-color: rgba(37, 48, 23, 1);
+  --dropdown-category-link-color-hover: rgba(80, 136, 38, 1);
+
   /*  ФОН  */
   --background: #f9faf7; /* основной фон страницы */
 
@@ -72,4 +78,7 @@
 
   /* СОСТОЯНИЯ РЕДАКТИРОВАНИЯ  */
   --editing: #e3e6dd; /* фон активного / редактируемого элемента */
+
+  /* Z-INDEX */
+  --z-index-dropdown: 10;
 }
