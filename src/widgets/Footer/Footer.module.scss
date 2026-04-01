@@ -5,25 +5,26 @@
 
 .container {
   margin: 0 auto;
-  padding-left: 36px;
+  padding: 0 2.25rem;
 }
 
 .content {
   display: flex;
   align-items: flex-start;
-  gap: 189px;
+  gap: clamp(48px, 12vw, 189px);
 }
 
 .leftColumn {
   display: flex;
   flex-direction: column;
-  gap: 112px;
-  padding-top: 32px;
+  gap: clamp(48px, 9vw, 112px);
+  flex-shrink: 0;
 }
 
 .logoLink {
   text-decoration: none;
   display: inline-flex;
+  margin-top: clamp(16px, 2.5vw, 32px);
 
   &:hover {
     opacity: 0.8;
@@ -39,15 +40,16 @@
 }
 
 .linksSection {
-  display: flex;
-  gap: 24px;
-  padding-top: 92px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(24px, 5vw, 48px);
+  margin-top: clamp(48px, 7vw, 92px);
+  flex: 1;
 }
 
 .column {
   display: flex;
   flex-direction: column;
-  width: 324px;
 }
 
 .list {
@@ -67,8 +69,43 @@
   color: var(--text);
   text-decoration: none;
   transition: color 0.2s ease;
+  white-space: nowrap;
 
   &:hover {
     color: var(--text-link);
+  }
+}
+
+@media (max-width: 1024px) {
+  .linksSection {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .column:last-child {
+    grid-column: span 2;
+  }
+}
+
+@media (max-width: 640px) {
+  .content {
+    flex-direction: column;
+    gap: 48px;
+  }
+
+  .leftColumn {
+    gap: 24px;
+  }
+
+  .linksSection {
+    grid-template-columns: 1fr;
+    margin-top: 0;
+  }
+
+  .column:last-child {
+    grid-column: auto;
+  }
+
+  .link {
+    white-space: normal;
   }
 }

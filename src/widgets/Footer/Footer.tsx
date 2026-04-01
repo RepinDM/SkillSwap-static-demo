@@ -53,7 +53,7 @@ export const Footer: FC = () => {
             </nav>
 
             {/* Колонка 2: Контакты, Блог */}
-            <div className={styles.column}>
+            <nav className={styles.column}>
               <ul className={styles.list}>
                 <li>
                   <a href="#" className={styles.link}>
@@ -66,10 +66,10 @@ export const Footer: FC = () => {
                   </a>
                 </li>
               </ul>
-            </div>
+            </nav>
 
             {/* Колонка 3: Политика конфиденциальности, Пользовательское соглашение */}
-            <div className={styles.column}>
+            <nav className={styles.column}>
               <ul className={styles.list}>
                 <li>
                   <a href="#" className={styles.link}>
@@ -82,7 +82,7 @@ export const Footer: FC = () => {
                   </a>
                 </li>
               </ul>
-            </div>
+            </nav>
           </div>
         </div>
       </div>
