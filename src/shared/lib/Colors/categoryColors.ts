@@ -3,12 +3,12 @@
 // Тут цвета фонов тега,в
 
 export const CATEGORY_COLORS = {
-  'businessCareer': "var(--tag-business-career)",
-  'creativityArt': "var(--tag-creativity-art)",
-  'foreignLanguages': "var(--tag-foreign-languages)",
-  'educationDevelopment': "var(--tag-education-development)",
-  'homeComfort': "var(--tag-home-comfort)",
-  'healthLifestyle': "var(--tag-health-lifestyle)",
+  'businesscareer': "var(--tag-business-career)",
+  'creativityart': "var(--tag-creativity-art)",
+  'foreignlanguages': "var(--tag-foreign-languages)",
+  'educationdevelopment': "var(--tag-education-development)",
+  'homecomfort': "var(--tag-home-comfort)",
+  'healthlifestyle': "var(--tag-health-lifestyle)",
   'plus': "var(--tag-plus)",
 } as const;
 
