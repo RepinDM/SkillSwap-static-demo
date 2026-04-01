@@ -47,7 +47,7 @@ const CatalogPage = () =>{
                 {card.learnSkills.map(skill => (
                   <li key={skill.id}>
                     <Tag
-                      label={skill.title}
+                      label={skill.subcategory.name}
                       bgColor={getCategoryColor(
                         skill.subcategory.category.slug
                       )}
