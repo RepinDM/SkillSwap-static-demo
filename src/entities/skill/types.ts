@@ -5,10 +5,10 @@ import type { TUserPromo } from "../user/types";
 export type TSkill = {
   id: number // Уникальный идентификатор навыка
   user: TUserPromo // ID владельца навыка
-  subCategory: TSubcategory // Подкатегория к которой относится навык
+  subcategory: TSubcategory // Подкатегория к которой относится навык
   title: string // Название пользовательского навыка
   description: string // Краткое описание навыка (используется в карточке и превью)
-  type: TSkillType // Тип навыка: teach — пользователь учит, learn — пользователь хочет научиться
+  skillType: TSkillType // Тип навыка: teach — пользователь учит, learn — пользователь хочет научиться
   image?: string // Главное изображение навыка (используется в карточке)
   createdDate: Date // Дата создания навыка. В приложении хранится как Date и используется для сортировки.
 }
@@ -22,5 +22,5 @@ export type TSkillType = 'teach' | 'learn'
 export type TSkillCard = {
   user: TUserPromo
   teachSkill: TSkill
-  learnSkillList: TSkill[]
+  learnSkills: TSkill[]
 }
