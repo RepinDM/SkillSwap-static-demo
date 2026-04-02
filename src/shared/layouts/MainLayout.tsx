@@ -1,21 +1,26 @@
+// Добавлен Layout с возможностью отключения отображения Header/Footer
+
 import { Header } from '@/widgets/header/Header';
 import { Footer } from "@/widgets/Footer/Footer";
-import styles from "./mainLayout.scss";
+import styles from "./MainLayout.scss";
 import React from "react";
 
 export interface LayoutProps {
   children: React.ReactNode;
-  className?: string;
   showHeader?: boolean;
   showFooter?: boolean;
 }
 
-export const Layout = ({ children }: LayoutProps) => {
+export const Layout = ({ 
+  children, 
+  showHeader = true, 
+  showFooter = true 
+}: LayoutProps) => {
   return (
     <div className={styles.layout}>
-      <Header />
+      {showHeader && <Header />}
       <main className={styles.main}>{children}</main>
-      <Footer />
+      {showFooter && <Footer />}
     </div>
   );
 };
