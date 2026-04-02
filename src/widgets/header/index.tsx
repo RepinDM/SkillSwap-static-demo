@@ -1,1 +1,1 @@
-export { Header as defoult } from "./header";
+export { Header as default } from "./header";
