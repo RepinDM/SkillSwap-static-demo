@@ -31,11 +31,11 @@ const CatalogSection: React.FC<CatalogSectionProps> = ({
       </div>
 
       {/* Грид карточек */}
-      <div className={styles.grid}>
+      <ul className={styles.grid}>
         {skillCards.map((card) => (
           <SkillCard card={card} />
         ))}
-      </div>
+      </ul>
     </section>
   );
 };
