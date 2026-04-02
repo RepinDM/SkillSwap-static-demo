@@ -1,4 +1,6 @@
+import type { TSubcategory } from "@/entities/category/types";
 import type { TSkill } from "@/entities/skill/types";
+import type { TUserInfo } from "@/entities/user/types";
 import { CATEGORY_COLORS, type CategoryColorKey } from "@/shared/lib/Colors/categoryColors";
 
 
@@ -29,7 +31,9 @@ const checkResponse = <T>(res: Response): Promise<T> => {
 };
 
 type TUserSkillsResponse = {
-  userSkillList: TSkill[];
+  userSkillList: TSkill[]
+  subcategoryList: TSubcategory[]
+  userList: TUserInfo[]
 };
 
 export const getUserSkills = () =>
@@ -38,14 +42,24 @@ export const getUserSkills = () =>
     .then((data) => {
       console.log("PARSED DATA:", data);
 
-      return data.userSkillList;
+      return {
+        userSkillList: data.userSkillList,
+        subcategoryList: data.subcategoryList, 
+        userList: data.userList};
     })
     .catch((error) => {
       console.error("GET USER SKILLS ERROR:", error);
       throw error;
     });
 
-export const convertSkillsToCards = (skills:TSkill[]) => {
+export const getUserById = (
+  users: TUserInfo[],
+  id: number
+):TUserInfo => {
+  return users.find((user) => user.id === id)!;
+};
+
+export const convertSkillsToCards = (skills:TSkill[], users: TUserInfo[]) => {
   const teachSkills = skills.filter(
     (skill) => skill.skillType === 'teach'
   );
@@ -56,20 +70,21 @@ export const convertSkillsToCards = (skills:TSkill[]) => {
 
   // Группировка навыков "Учусь" по пользователям
   const learnSkillsByUser = learnSkills.reduce<Record<number, TSkill[]>>((acc, learnSkill) => {
-    const key = learnSkill.user.id;
+    const key = learnSkill.userId;
       if (!acc[key]) {
         acc[key] = [];
       }
       acc[key].push(learnSkill);
       return acc;
     }, {});
-  
+
+
   // Список карточек "Учу"
   const skillCards = teachSkills.map((teachSkill) => {
     return({
-      user: teachSkill.user,
+      user: getUserById(users, teachSkill.userId),
       teachSkill: teachSkill,
-      learnSkills: learnSkillsByUser[teachSkill.user.id]
+      learnSkills: learnSkillsByUser[teachSkill.userId] ?? []
     });
   });
   return skillCards;

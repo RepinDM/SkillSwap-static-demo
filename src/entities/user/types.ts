@@ -17,7 +17,7 @@ export type TUser = {
 }
 
 // Данные пользователя для карточек, превью и публичного отображения
-export type TUserPromo = Pick<TUser, 'id' | 'name' | 'avatar' | 'about' | 'city' | 'birthDate' | 'gender'>
+export type TUserInfo = Pick<TUser, 'id' | 'name' | 'avatar' | 'about' | 'city' | 'birthDate' | 'gender'>
 
 // Данные пользователя, связанные с авторизацией
 export type TUserAuth = Pick<TUser, 'email' | 'password'>
