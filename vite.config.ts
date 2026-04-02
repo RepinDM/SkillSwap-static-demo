@@ -17,6 +17,14 @@ export default defineConfig({
       "@": path.resolve(dirname, "./src"),
     },
   },
+  server: {
+    proxy: {
+      "/api": {
+        target: "http://skillswap.ovnet.ru",
+        changeOrigin: true,
+      },
+    },
+  },
   test: {
     projects: [
       {
