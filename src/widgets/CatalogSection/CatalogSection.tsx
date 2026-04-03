@@ -33,7 +33,10 @@ const CatalogSection: React.FC<CatalogSectionProps> = ({
       {/* Грид карточек */}
       <ul className={styles.grid}>
         {skillCards.map((card) => (
-          <SkillCard card={card} />
+          <SkillCard 
+            key={card.teachSkill.id} 
+            card={card} 
+          />
         ))}
       </ul>
     </section>

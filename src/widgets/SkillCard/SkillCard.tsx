@@ -6,6 +6,7 @@ import { User } from "@/shared/ui/User/User";
 import styles from "./SkillCard.module.scss";
 import { Button } from "@/shared/ui/Button/Button";
 import buttonLike from "@/shared/image/icons/like.svg";
+import { Link } from "react-router-dom";
 
 type Props = {
   card: TSkillCard;
@@ -14,7 +15,7 @@ type Props = {
 export const SkillCard = ({ card }: Props) => {
   return (
     <>
-       <li className={styles.card} key={card.teachSkill.id}>
+       <li className={styles.card}>
           <div className={styles.user}>
             <div className={styles.userInfo}>
               <User
@@ -62,13 +63,14 @@ export const SkillCard = ({ card }: Props) => {
               )}
             </ul>
           </div>
-
-          <Button
-            variant="primary"
-            onClick={() => console.log("click", card)}
-          >
-            Подробнее
-          </Button>
+          <Link to={`/skill/${card.teachSkill.id}`} className={styles.link}>
+            <Button
+              variant="primary"
+              onClick={() => console.log("click", card)}
+            >
+              Подробнее
+            </Button>
+          </Link>
         </li>
     </>
   );

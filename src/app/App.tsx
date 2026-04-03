@@ -1,12 +1,13 @@
-import { Provider } from 'react-redux'
-import { RouterProvider } from 'react-router-dom'
-import { router } from './routes/router'
-import { store } from './store/store'
+import { useAppDispatch } from '@/services/hooks';
+import { useEffect } from 'react';
+import { fetchSkillCards } from '@/services/actions/skills';
+import { AppRouter } from './routes/router';
 
 export function App() {
-  return (
-    <Provider store={store}>
-      <RouterProvider router={router} />
-    </Provider>
-  )
+  const dispatch = useAppDispatch();
+  useEffect(() => {
+    dispatch(fetchSkillCards());
+  }, [dispatch]);
+
+  return <AppRouter />;
 }
