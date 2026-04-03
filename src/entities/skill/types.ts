@@ -1,10 +1,10 @@
 import type { TSubcategory } from "@/entities/category/types";
-import type { TUserPromo } from "../user/types";
+import type { TUserInfo } from "../user/types";
 
 // Пользовательский навык, который он заполняет сам в форме создания навыка
 export type TSkill = {
   id: number // Уникальный идентификатор навыка
-  user: TUserPromo // ID владельца навыка
+  userId: number // ID владельца навыка
   subcategory: TSubcategory // Подкатегория к которой относится навык
   title: string // Название пользовательского навыка
   description: string // Краткое описание навыка (используется в карточке и превью)
@@ -20,7 +20,7 @@ export type TSkillType = 'teach' | 'learn'
 
 // Тип карточки навыка
 export type TSkillCard = {
-  user: TUserPromo
+  user: TUserInfo
   teachSkill: TSkill
   learnSkills: TSkill[]
 }
