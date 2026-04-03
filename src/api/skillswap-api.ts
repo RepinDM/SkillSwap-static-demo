@@ -79,7 +79,7 @@ export const convertSkillsToCards = (skills:TSkill[], users: TUserInfo[]) => {
     }, {});
 
 
-  // Список карточек "Учу"
+  // Список карточек привязаных к навыку "Учу"
   const skillCards = teachSkills.map((teachSkill) => {
     return({
       user: getUserById(users, teachSkill.userId),
