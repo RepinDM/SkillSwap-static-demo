@@ -1,0 +1,104 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 32px;
+  padding-top: 36px;
+  padding-bottom: 20px;
+  padding-left: 36px;
+  padding-right: 36px;
+  flex-shrink: 0;
+}
+
+.navigation {
+  display: flex;
+  gap: 24px;
+  font-family: var(--font-body-family);
+  font-weight: var(--font-body-weight);
+  font-size: var(--font-body-size);
+  line-height: var(--font-body-line-height);
+  flex-shrink: 0;
+}
+
+.dropDownBtn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.authBlock {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 24px;
+  flex-shrink: 0;
+}
+
+.userActions {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 20px;
+}
+
+.iconBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  width: fit-content;
+
+  img {
+    display: block;
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+  }
+}
+
+.authButtons {
+  display: flex;
+  flex-direction: row;
+  flex-shrink: 0;
+  gap: 8px;
+}
+
+.searchWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 8px;
+}
+
+.searchIcon {
+  width: 20px;
+  height: 20px;
+  left: 12px;
+  background-color: var(--caption);
+  mask-image: url("../../shared/image/icons/search.svg");
+  mask-size: contain;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  position: absolute;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.searchInput {
+  width: 100%;
+  padding: 12px;
+  padding-left: 44px;
+  background-color: var(--card-input);
+  border-radius: var(--input-radius);
+  box-sizing: border-box;
+  outline: none;
+  transition: border-color 0.2s ease;
+  font-family: var(--font-body-family);
+  font-size: var(--font-body-size);
+  font-weight: var(--font-body-weight);
+  line-height: var(--font-body-line-height);
+  color: var(--disabled-text);
+}
