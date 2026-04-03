@@ -1,5 +1,5 @@
 import type { FC } from "react";
-import { Modal } from "@/shared/ui/modal/Modal";
+import { Modal } from "@/shared/ui/Modal/Modal";
 import { Button } from "@/shared/ui/Button/Button";
 import { Avatar } from "@/shared/ui/Avatar/Avatar";
 import styles from "./ExchangeSuccessModal.module.scss";
