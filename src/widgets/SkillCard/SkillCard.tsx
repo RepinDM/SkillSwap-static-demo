@@ -19,8 +19,8 @@ export const SkillCard = ({ card }: Props) => {
           <div className={styles.user}>
             <div className={styles.userInfo}>
               <User
-                name={card.user.name}
                 avatar={card.user.avatar}
+                name={card.user.name}
                 city={card.user.city.name}
                 age={getAge(card.user.birthDate)}
                 avatarSize={100}
@@ -63,7 +63,7 @@ export const SkillCard = ({ card }: Props) => {
               )}
             </ul>
           </div>
-          <Link to={`/skill/${card.teachSkill.id}`} className={styles.link}>
+          <Link to={`/skill/${card.id}`} className={styles.link}>
             <Button
               variant="primary"
               onClick={() => console.log("click", card)}
