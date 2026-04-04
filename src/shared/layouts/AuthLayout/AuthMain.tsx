@@ -1,3 +1,5 @@
+// Добавила обертку для этапов регистрации, прогресс-бар, кнопка закрыть ведет на главную страницу 
+
 import React from "react";
 import { Logo } from "../../ui/Logo/Logo";
 import styles from "./AuthMain.module.scss";
