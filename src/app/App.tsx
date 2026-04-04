@@ -8,6 +8,6 @@ export function App() {
   useEffect(() => {
     dispatch(fetchSkillCards());
   }, [dispatch]);
-
+  
   return <AppRouter />;
 }
