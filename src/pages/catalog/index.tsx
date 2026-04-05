@@ -1,38 +1,34 @@
-import { convertSkillsToCards, getUserSkills } from "@/api/skillswap-api";
-import type { TSkillCard } from "@/entities/skill/types";
-// Импортируем новый виджет, который сделал разработчик
+import { useAppSelector } from "@/services/hooks";
 import CatalogSection from "@/widgets/CatalogSection/CatalogSection"; 
-import { useEffect, useState } from "react";
 
 const CatalogPage = () => {
-  const [skillCards, setSkillCards] = useState<TSkillCard[]>([]);
+  const { allSkillCards, isLoading } = useAppSelector(
+    (state) => state.skillCards
+  );
 
-  useEffect(() => {
-    getUserSkills().then((data) => {
-      setSkillCards(convertSkillsToCards(data.userSkillList, data.userList));
-    });
-  }, []);
+  if (isLoading) return <p>Loading...</p>;
+
+    // Показываем ПОКА ЧТО все карточки, потом будем сортировать
+    const popularCards = allSkillCards;
+    const recommendedCards = allSkillCards;
+    const newCards = allSkillCards;
 
   return (
     <main>
-      {/* 
-         Используем CatalogSection. 
-         Он сам внутри сделает .map и применит стили сетки (3 в ряд)
-      */}
       <CatalogSection 
         title="Популярное" 
-        skillCards={skillCards}
+        skillCards={popularCards}
       />
 
       <CatalogSection 
         title="Новое" 
-        skillCards={skillCards}
+        skillCards={newCards}
         // onViewAll={() => console.log("Переход ко всем навыкам")}
       />
 
       <CatalogSection 
         title="Рекомендуем" 
-        skillCards={skillCards}
+        skillCards={recommendedCards}
         // onViewAll={() => console.log("Переход ко всем навыкам")}
       />
     </main>
