@@ -3,7 +3,7 @@
   justify-content: space-between;
   align-items: center;
   gap: 32px;
-  padding-top: 36px;
+  padding-top: 42px;
   padding-bottom: 20px;
   padding-left: 36px;
   padding-right: 36px;
@@ -12,7 +12,8 @@
 
 .navigation {
   display: flex;
-  gap: 24px;
+  padding-left: 48px;
+  gap: 30px;
   font-family: var(--font-body-family);
   font-weight: var(--font-body-weight);
   font-size: var(--font-body-size);
