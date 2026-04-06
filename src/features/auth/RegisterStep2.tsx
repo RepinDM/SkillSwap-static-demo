@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
@@ -10,6 +10,7 @@ import { Input } from '../../shared/ui/input/input';
 import { Avatar } from '../../shared/ui/Avatar/Avatar';
 import addIcon from '../../shared/image/icons/add2.svg';
 import infoImage from '../../shared/image/webp/info.webp';
+import crossIcon from '../../shared/image/icons/cross.svg';
 import styles from './RegisterStep2.module.scss';
 
 // Моковые данные
@@ -117,7 +118,7 @@ const validationSchema = yup.object({
 export const RegisterStep2 = () => {
   const navigate = useNavigate();
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
- const fileInputRef = useRef<HTMLInputElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const {
     register,
@@ -139,7 +140,18 @@ export const RegisterStep2 = () => {
     },
   });
 
+  useEffect(() => {
+    return () => {
+      if (avatarPreview) {
+        URL.revokeObjectURL(avatarPreview);
+      }
+    };
+  }, [avatarPreview]);
+
   const selectedCategoryId = watch('categoryId');
+  const selectedCityId = watch('cityId');
+  const selectedGender = watch('gender');
+  const selectedSubcategory = watch('subcategoryId');
 
   // Получение доступных подкатегорий
   const getAvailableSubcategories = () => {
@@ -155,9 +167,12 @@ export const RegisterStep2 = () => {
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      if (avatarPreview) {
+        URL.revokeObjectURL(avatarPreview);
+      }
+
       const previewUrl = URL.createObjectURL(file);
       setAvatarPreview(previewUrl);
-      console.log('Selected file:', file);
     }
   };
 
@@ -175,7 +190,6 @@ export const RegisterStep2 = () => {
       avatar: avatarPreview,
     };
     
-    console.log('Form data:', formDataToSend);
     localStorage.setItem('registerStep2', JSON.stringify(formDataToSend));
     navigate('/register/step-3');
   };
@@ -185,14 +199,20 @@ export const RegisterStep2 = () => {
     navigate(-1);
   };
 
+  const handleClose = () => {
+    navigate(-2)
+  }
+
   return (
     <div className={styles.container}>
       {/* Хедер */}
       <header className={styles.header}>
         <Logo />
-        <Button variant="secondary" onClick={handleBack}>
-          ← Вернуться назад
-        </Button>
+        <div className={styles.closeButtonWrapper}>
+          <Button variant="secondary" onClick={handleClose} iconRight={<img src={crossIcon} />}>
+            Закрыть 
+          </Button>
+        </div>
       </header>
 
       {/* Блок Steps */}
@@ -259,7 +279,7 @@ export const RegisterStep2 = () => {
               <div className={styles.fieldHalf}>
                 <label className={styles.label}>Пол</label>
                 <select
-                  className={`${styles.select} ${errors.gender ? styles.error : ''}`}
+                  className={`${styles.select} ${!selectedGender ? styles.selectPlaceholder : ''} ${errors.gender ? styles.error : ''}`}
                   {...register('gender')}
                 >
                   {GENDERS.map((gender) => (
@@ -278,7 +298,7 @@ export const RegisterStep2 = () => {
             <div className={styles.field}>
               <label className={styles.label}>Город</label>
               <select
-                className={`${styles.select} ${errors.cityId ? styles.error : ''}`}
+                className={`${styles.select} ${!selectedCityId ? styles.selectPlaceholder : ''} ${errors.cityId ? styles.error : ''}`}
                 {...register('cityId')}
               >
                 <option value="">Не указан</option>
@@ -299,7 +319,7 @@ export const RegisterStep2 = () => {
                 Категория навыка, которому хотите научиться
               </label>
               <select
-                className={`${styles.select} ${errors.categoryId ? styles.error : ''}`}
+                className={`${styles.select} ${!selectedCategoryId ? styles.selectPlaceholder : ''} ${errors.categoryId ? styles.error : ''}`}
                 {...register('categoryId')}
               >
                 <option value="">Выберите категорию</option>
@@ -320,7 +340,7 @@ export const RegisterStep2 = () => {
                 Подкатегория навыка, которому хотите научиться
               </label>
               <select
-                className={`${styles.select} ${errors.subcategoryId ? styles.error : ''}`}
+                className={`${styles.select} ${!selectedSubcategory ? styles.selectPlaceholder : ''} ${errors.subcategoryId ? styles.error : ''}`}
                 {...register('subcategoryId')}
                 disabled={!selectedCategoryId || selectedCategoryId === ''}
               >
