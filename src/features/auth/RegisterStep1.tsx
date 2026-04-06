@@ -64,7 +64,7 @@ export const RegisterStep1 = () => {
 
   return (
     <main className={styles.main}>
-      <section className={styles.form}>
+      <section className={styles.main_section}>
         <div className={styles.inputForm}>
           <div className={styles.login}>
             <Button
@@ -83,7 +83,7 @@ export const RegisterStep1 = () => {
           <div className={styles.divider}>
             <span>или</span>
           </div>
-          <div>
+          <div className={styles.input}>
             <Input
               type="email"
               label="Email"
@@ -119,7 +119,7 @@ export const RegisterStep1 = () => {
         </Button>
       </section>
       <section className={styles.info}>
-        <img src={lightBulb} />
+        <img src={lightBulb} className={styles.img} />
         <div className={styles.layout}>
           <span className={styles.text}>Добро пожаловать в SkillSwap!</span>
           <span className={styles.textDetails}>
