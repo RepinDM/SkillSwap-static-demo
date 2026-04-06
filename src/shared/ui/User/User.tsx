@@ -1,4 +1,4 @@
-import { getAgeLabel } from "@/shared/lib/Age/getAgeLabel";
+import { getAgeLabel } from "@/shared/lib/utils/getAge";
 import { Avatar } from "../Avatar/Avatar";
 import styles from "./User.module.scss";
 

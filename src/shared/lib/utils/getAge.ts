@@ -1,3 +1,11 @@
+// Получить возраст пользователя
+export const getAge = (birthDate?: string | Date): number | undefined => {
+  if (!birthDate) return undefined;
+
+  return new Date().getFullYear() - new Date(birthDate).getFullYear();
+};
+
+
 export const getAgeLabel = (age?: number) => {
   if (!age && age !== 0) return "";
 

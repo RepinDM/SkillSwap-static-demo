@@ -21,9 +21,9 @@ const CatalogPage = () => {
     .slice(0, 3);
 
   return (
-    <main>
-      <CatalogSection
-        title="Популярное"
+    <>
+      <CatalogSection 
+        title="Популярное" 
         skillCards={popularCards}
       />
 
@@ -38,7 +38,7 @@ const CatalogPage = () => {
         skillCards={recommendedCards}
         // onViewAll={() => console.log("Переход ко всем навыкам")}
       />
-    </main>
+    </>
   );
 }
 
