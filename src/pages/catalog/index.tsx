@@ -14,7 +14,8 @@ const CatalogPage = () => {
     const newCards = allSkillCards;
 
   return (
-    <main>
+    <>
+      <main>
       <CatalogSection 
         title="Популярное" 
         skillCards={popularCards}
@@ -32,6 +33,7 @@ const CatalogPage = () => {
         // onViewAll={() => console.log("Переход ко всем навыкам")}
       />
     </main>
+    </>
   );
 }
 
