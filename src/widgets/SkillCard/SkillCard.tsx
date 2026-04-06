@@ -1,4 +1,3 @@
-import { getAge, getCategoryColor } from "@/api/skillswap-api";
 import type { TSkillCard } from "@/entities/skill/types";
 import { Tag } from "@/shared/ui/Tag/Tag";
 import { User } from "@/shared/ui/User/User";
@@ -7,6 +6,8 @@ import styles from "./SkillCard.module.scss";
 import { Button } from "@/shared/ui/Button/Button";
 import buttonLike from "@/shared/image/icons/like.svg";
 import { Link } from "react-router-dom";
+import { getAge } from "@/shared/lib/utils/getAge";
+import { getCategoryColor } from "@/shared/lib/utils/getCategoryColors";
 
 type Props = {
   card: TSkillCard;

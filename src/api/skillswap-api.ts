@@ -1,7 +1,6 @@
 import type { TCategoryItem, TSubcategory } from "@/entities/category/types";
 import type { TSkill } from "@/entities/skill/types";
 import type { TUserInfo } from "@/entities/user/types";
-import { CATEGORY_COLORS, type CategoryColorKey } from "@/shared/lib/Colors/categoryColors";
 
 const URL = import.meta.env.VITE_SKILLSWAP_API_URL;
 
@@ -102,15 +101,4 @@ export const convertSubcategoriesToCategoryItems = (
   );
 
   return Object.values(map);
-};
-
-// Получить цвет категории
-export const getCategoryColor = (slug: string) =>
-  CATEGORY_COLORS[slug as CategoryColorKey] ?? CATEGORY_COLORS.plus;
-
-// Получить возраст пользователя
-export const getAge = (birthDate?: string | Date): number | undefined => {
-  if (!birthDate) return undefined;
-
-  return new Date().getFullYear() - new Date(birthDate).getFullYear();
 };
