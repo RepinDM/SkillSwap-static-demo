@@ -14,12 +14,13 @@ import { RegisterPage } from '@/pages/register';
 import { RegisterStep1 } from '@/features/auth/RegisterStep1';
 import { RegisterStep2 } from '@/features/auth/RegisterStep2';
 import { RegisterStep3 } from '@/features/auth/RegisterStep3';
+import Layout from '@/shared/layouts/MainLayout';
+
 
 export const AppRouter = () => {
   return (
     <Routes>
-      <Route path="/" element={<CatalogPage />} />
-      <Route path="/skill/:id" element={<SkillPage />} />
+      {/* страницы БЕЗ layout */}
       <Route path="/login" element={<LoginPage />} />
 
       <Route path="/register" element={<RegisterPage />}>
@@ -28,36 +29,41 @@ export const AppRouter = () => {
         <Route path="step-3" element={<RegisterStep3 />} />
       </Route>
 
-      <Route path="/about" element={<AboutPage />} />
+      {/* страницы С layout */}
+      <Route element={<Layout />}>
+        <Route path="/" element={<CatalogPage />} />
+        <Route path="/skill/:id" element={<SkillPage />} />
+        <Route path="/about" element={<AboutPage />} />
 
-      <Route
-        path="/profile"
-        element={
-          <PrivateRoute>
-            <ProfilePage />
-          </PrivateRoute>
-        }
-      />
+        <Route
+          path="/profile"
+          element={
+            <PrivateRoute>
+              <ProfilePage />
+            </PrivateRoute>
+          }
+        />
 
-      <Route
-        path="/favorites"
-        element={
-          <PrivateRoute>
-            <FavoritesPage />
-          </PrivateRoute>
-        }
-      />
+        <Route
+          path="/favorites"
+          element={
+            <PrivateRoute>
+              <FavoritesPage />
+            </PrivateRoute>
+          }
+        />
 
-      <Route
-        path="/create"
-        element={
-          <PrivateRoute>
-            <CreatePage />
-          </PrivateRoute>
-        }
-      />
+        <Route
+          path="/create"
+          element={
+            <PrivateRoute>
+              <CreatePage />
+            </PrivateRoute>
+          }
+        />
 
-      <Route path="*" element={<NotFoundPage />} />
+        <Route path="*" element={<NotFoundPage />} />
+      </Route>
     </Routes>
   );
 };
