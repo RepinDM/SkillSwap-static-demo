@@ -30,7 +30,7 @@ const CatalogPage = () => {
       <CatalogSection
         title="Новое"
         skillCards={newCards}
-        // onViewAll={() => console.log("Переход ко всем навыкам")}
+         onViewAll={() => console.log("Переход ко всем навыкам")}
       />
 
       <CatalogSection
