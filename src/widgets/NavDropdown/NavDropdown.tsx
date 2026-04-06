@@ -8,25 +8,18 @@ import bookIcon from "@/shared/image/icons/book.svg";
 import homeIcon from "@/shared/image/icons/home.svg";
 import lifestyleIcon from "@/shared/image/icons/lifestyle.svg";
 
-import mockData from "./mockData.json";
+import { useAppSelector } from "@/services/hooks";
+import { getCategoryColor } from "@/shared/lib/utils/getCategoryColors";
+
 import styles from "./NavDropdown.module.scss";
 
 const iconMap: Record<string, string> = {
-  briefcase: briefcaseIcon,
-  palette: paletteIcon,
-  global: globalIcon,
-  book: bookIcon,
-  home: homeIcon,
-  lifestyle: lifestyleIcon,
-};
-
-const tagColorMap: Record<string, string> = {
-  briefcase: "var(--tag-business-career)",
-  palette: "var(--tag-creativity-art)",
-  global: "var(--tag-foreign-languages)",
-  book: "var(--tag-education-development)",
-  home: "var(--tag-home-comfort)",
-  lifestyle: "var(--tag-health-lifestyle)",
+  businesscareer: briefcaseIcon,
+  creativityart: paletteIcon,
+  foreignlanguages: globalIcon,
+  educationdevelopment: bookIcon,
+  homecomfort: homeIcon,
+  healthlifestyle: lifestyleIcon,
 };
 
 interface NavDropdownProps {
@@ -36,7 +29,7 @@ interface NavDropdownProps {
 
 export const NavDropdown: FC<NavDropdownProps> = ({ isOpen, onClose }) => {
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const { categories, subcategories } = mockData;
+  const categoryItems = useAppSelector((state) => state.skillCards.categoryItems);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -68,18 +61,16 @@ export const NavDropdown: FC<NavDropdownProps> = ({ isOpen, onClose }) => {
   return (
     <div className={styles.dropdown} ref={dropdownRef}>
       <nav className={styles.menu}>
-        {categories.map((category) => (
+        {categoryItems.map((category) => (
           <Category
             key={category.id}
-            icon={category.icon}
-            title={category.title}
+            slug={category.slug}
+            title={category.name}
           >
-            {subcategories
-              .filter((sub) => sub.categoryId === category.id)
-              .map((sub) => (
+            {category.subcategories.map((sub) => (
                 <Subcategory
                   key={sub.id}
-                  title={sub.title}
+                  title={sub.name}
                   href={`/catalog?subcategory=${sub.id}`}
                 />
               ))}
@@ -91,19 +82,19 @@ export const NavDropdown: FC<NavDropdownProps> = ({ isOpen, onClose }) => {
 };
 
 interface CategoryProps {
-  icon: string;
+  slug: string;
   title: string;
   children: ReactNode;
 }
 
-const Category: FC<CategoryProps> = ({ icon, title, children }) => {
+const Category: FC<CategoryProps> = ({ slug, title, children }) => {
   return (
     <section className={styles.group}>
       <div
         className={styles.iconWrapper}
-        style={{ backgroundColor: tagColorMap[icon] }}
+        style={{ backgroundColor: getCategoryColor(slug) }}
       >
-        <img className={styles.icon} src={iconMap[icon]} alt="" />
+        <img className={styles.icon} src={iconMap[slug]} alt="" />
       </div>
       <div className={styles.content}>
         <h3 className={styles.title}>{title}</h3>
