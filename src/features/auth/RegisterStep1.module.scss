@@ -1,0 +1,108 @@
+.main {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--card-input);
+  border-radius: 12px;
+  padding: 60px 121px;
+  gap: 32px;
+}
+
+.inputForm {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.login {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  color: var(--text);
+
+  font-family: var(--font-body-family);
+  font-weight: var(--font-body-weight);
+  font-size: var(--font-body-size);
+  line-height: var(--font-body-line-height);
+
+  &::before,
+  &::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background-color: var(--disabled);
+  }
+
+  &::before {
+    margin-right: 8px;
+  }
+
+  &::after {
+    margin-left: 8px;
+  }
+}
+
+.passwordWrapper {
+  position: relative;
+  width: 100%;
+}
+
+.eyeButton {
+  position: absolute;
+  bottom: 0;
+  right: 20px;
+  transform: translateY(-50%);
+  cursor: pointer;
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  background: transparent no-repeat center / contain;
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  background-color: var(--card-input);
+  border-radius: 12px;
+  padding-top: 132px;
+  padding-bottom: 132px;
+  margin: 0 auto; 
+}
+
+.layout {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  padding-left: 60px;
+  padding-right: 60px;
+}
+
+.text {
+  font-family: var(--font-h2-family);
+  font-weight: var(--font-h2-weight);
+  font-size: var(--font-h2-size);
+  line-height: var(--font-h2-line-height);
+}
+
+.textDetails {
+  font-family: var(--font-body-family);
+  font-weight: var(--font-body-weight);
+  font-size: var(--font-body-size);
+  line-height: var(--font-body-line-height);
+}
