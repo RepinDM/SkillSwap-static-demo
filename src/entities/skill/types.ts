@@ -20,6 +20,7 @@ export type TSkillType = 'teach' | 'learn'
 
 // Тип карточки навыка
 export type TSkillCard = {
+  id: number;
   user: TUserInfo
   teachSkill: TSkill
   learnSkills: TSkill[]

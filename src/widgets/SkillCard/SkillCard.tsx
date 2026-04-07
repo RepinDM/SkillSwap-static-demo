@@ -1,4 +1,3 @@
-import { getAge, getCategoryColor } from "@/api/skillswap-api";
 import type { TSkillCard } from "@/entities/skill/types";
 import { Tag } from "@/shared/ui/Tag/Tag";
 import { User } from "@/shared/ui/User/User";
@@ -6,6 +5,9 @@ import { User } from "@/shared/ui/User/User";
 import styles from "./SkillCard.module.scss";
 import { Button } from "@/shared/ui/Button/Button";
 import buttonLike from "@/shared/image/icons/like.svg";
+import { Link } from "react-router-dom";
+import { getAge } from "@/shared/lib/utils/getAge";
+import { getCategoryColor } from "@/shared/lib/utils/getCategoryColors";
 
 type Props = {
   card: TSkillCard;
@@ -14,12 +16,12 @@ type Props = {
 export const SkillCard = ({ card }: Props) => {
   return (
     <>
-       <li className={styles.card} key={card.teachSkill.id}>
+       <li className={styles.card}>
           <div className={styles.user}>
             <div className={styles.userInfo}>
               <User
-                name={card.user.name}
                 avatar={card.user.avatar}
+                name={card.user.name}
                 city={card.user.city.name}
                 age={getAge(card.user.birthDate)}
                 avatarSize={100}
@@ -62,13 +64,14 @@ export const SkillCard = ({ card }: Props) => {
               )}
             </ul>
           </div>
-
-          <Button
-            variant="primary"
-            onClick={() => console.log("click", card)}
-          >
-            Подробнее
-          </Button>
+          <Link to={`/skill/${card.id}`} className={styles.link}>
+            <Button
+              variant="primary"
+              onClick={() => console.log("click", card)}
+            >
+              Подробнее
+            </Button>
+          </Link>
         </li>
     </>
   );

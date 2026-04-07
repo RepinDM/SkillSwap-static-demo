@@ -1,41 +1,44 @@
-import { convertSkillsToCards, getUserSkills } from "@/api/skillswap-api";
-import type { TSkillCard } from "@/entities/skill/types";
-// Импортируем новый виджет, который сделал разработчик
-import CatalogSection from "@/widgets/CatalogSection/CatalogSection"; 
-import { useEffect, useState } from "react";
+import {useAppSelector} from "@/services/hooks";
+import CatalogSection from "@/widgets/CatalogSection/CatalogSection";
 
 const CatalogPage = () => {
-  const [skillCards, setSkillCards] = useState<TSkillCard[]>([]);
+  const {allSkillCards, isLoading} = useAppSelector(
+    (state) => state.skillCards
+  );
 
-  useEffect(() => {
-    getUserSkills().then((data) => {
-      setSkillCards(convertSkillsToCards(data.userSkillList, data.userList));
-    });
-  }, []);
+  if (isLoading) return <p>Loading...</p>;
+
+  // Показываем ПОКА ЧТО все карточки, потом будем сортировать
+  const popularCards = allSkillCards;
+  const recommendedCards = allSkillCards;
+  const newCards = [...allSkillCards]
+    .filter(card => card.teachSkill?.createdDate)
+    .sort((a, b) => {
+      const dateA = new Date(a.teachSkill.createdDate);
+      const dateB = new Date(b.teachSkill.createdDate);
+      return dateB.getTime() - dateA.getTime();
+    })
+    .slice(0, 3);
 
   return (
-    <main>
-      {/* 
-         Используем CatalogSection. 
-         Он сам внутри сделает .map и применит стили сетки (3 в ряд)
-      */}
+    <>
       <CatalogSection 
         title="Популярное" 
-        skillCards={skillCards}
+        skillCards={popularCards}
       />
 
-      <CatalogSection 
-        title="Новое" 
-        skillCards={skillCards}
-        // onViewAll={() => console.log("Переход ко всем навыкам")}
+      <CatalogSection
+        title="Новое"
+        skillCards={newCards}
+         onViewAll={() => console.log("Переход ко всем навыкам")}
       />
 
-      <CatalogSection 
-        title="Рекомендуем" 
-        skillCards={skillCards}
+      <CatalogSection
+        title="Рекомендуем"
+        skillCards={recommendedCards}
         // onViewAll={() => console.log("Переход ко всем навыкам")}
       />
-    </main>
+    </>
   );
 }
 

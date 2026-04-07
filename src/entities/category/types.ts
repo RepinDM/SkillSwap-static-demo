@@ -11,3 +11,7 @@ export type TSubcategory = {
   category: TCategory // родительская категория
   name: string // Название подкатегории
 }
+// Категория со списком подкатегорий
+export type TCategoryItem = TCategory & {
+  subcategories: TSubcategory[]
+}
