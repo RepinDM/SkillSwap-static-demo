@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useState, useRef } from 'react';
+import { useState, useRef, useCallback } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
@@ -95,6 +95,7 @@ export const RegisterStep3 = () => {
   const navigate = useNavigate();
   const [isDragOver, setIsDragOver] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [imagePreviews, setImagePreviews] = useState<string[]>([]);
 
   const {
     register,
@@ -102,6 +103,7 @@ export const RegisterStep3 = () => {
     handleSubmit,
     watch,
     setValue,
+    getValues,
     formState: { errors, isValid },
   } = useForm<IRegisterStep3Form>({
     resolver: yupResolver(validationSchema) as any,
@@ -116,8 +118,8 @@ export const RegisterStep3 = () => {
   });
 
   const selectedCategoryId = watch('categoryId');
-  const selectedCategory = watch('categoryId');
   const selectedSubcategory = watch('subcategoryId');
+  const currentImages = watch('images') || [];
 
   // Получение доступных подкатегорий
   const getAvailableSubcategories = () => {
@@ -125,21 +127,58 @@ export const RegisterStep3 = () => {
     return SUBCATEGORIES[Number(selectedCategoryId)] || [];
   };
 
-  // Обработка выбора файлов
-  const processFiles = (files: FileList | null) => {
-    if (!files) return;
+ // Создание превью для файлов
+  const createPreviews = useCallback((files: File[]) => {
+    return files.map(file => URL.createObjectURL(file));
+  }, []);
+
+  // Очистка превью (важно для предотвращения утечек памяти)
+  const clearPreviews = useCallback((previewsToClear: string[]) => {
+    previewsToClear.forEach(preview => URL.revokeObjectURL(preview));
+  }, []);
+
+  // Обновление превью при изменении images
+  const updatePreviews = useCallback((files: File[]) => {
+    setImagePreviews(prev => {
+      clearPreviews(prev);
+      return createPreviews(files);
+    });
+  }, [createPreviews, clearPreviews]);
+
+  // Обработка добавления новых файлов
+  const processFiles = useCallback((newFilesList: FileList | null) => {
+    if (!newFilesList) return;
     
-    const currentImages = watch('images') || [];
-    const newFiles = Array.from(files);
-    const totalImages = [...currentImages, ...newFiles];
+    const newFiles = Array.from(newFilesList);
+    const currentFiles = getValues('images') || [];
+    const totalFiles = [...currentFiles, ...newFiles];
     
-    if (totalImages.length > 5) {
+    if (totalFiles.length > 5) {
       alert('Можно добавить не более 5 изображений');
       return;
     }
     
-    setValue('images', totalImages);
-  };
+    setValue('images', totalFiles, { shouldValidate: true });
+    updatePreviews(totalFiles);
+  }, [setValue, getValues, updatePreviews]);
+
+  // Удаление изображения
+  const removeImage = useCallback((indexToRemove: number) => {
+    const currentFiles = getValues('images') || [];
+    const newFiles = currentFiles.filter((_, index) => index !== indexToRemove);
+    
+    setValue('images', newFiles, { shouldValidate: true });
+    
+    // Очищаем превью удаленного файла
+    const removedPreview = imagePreviews[indexToRemove];
+    if (removedPreview) {
+      URL.revokeObjectURL(removedPreview);
+    }
+    
+    // Обновляем превью для оставшихся файлов
+    const newPreviews = createPreviews(newFiles);
+    setImagePreviews(newPreviews);
+  }, [setValue, getValues, imagePreviews, createPreviews]);
 
   // Обработка клика по области Drag&Drop
   const handleDropZoneClick = () => {
@@ -149,6 +188,8 @@ export const RegisterStep3 = () => {
   // Обработка выбора файлов через input
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     processFiles(e.target.files);
+    // Очищаем input, чтобы можно было выбрать те же файлы снова
+    e.target.value = '';
   };
 
   // Обработка Drag & Drop
@@ -178,14 +219,6 @@ export const RegisterStep3 = () => {
 
   // Отправка формы
   const onSubmit = (data: IRegisterStep3Form) => {
-    // const formDataToSend = {
-    //   skillName: data.skillName,
-    //   categoryId: Number(data.categoryId),
-    //   subcategoryId: Number(data.subcategoryId),
-    //   description: data.description,
-    //   images: data.images,
-    // };
-    
     const step2Data = localStorage.getItem('registerStep2');
     const step1Data = localStorage.getItem('registerStep1');
     
@@ -198,11 +231,14 @@ export const RegisterStep3 = () => {
         subcategoryId: Number(data.subcategoryId),
         description: data.description,
         imagesCount: data.images.length,
+        imageNames: data.images.map(f => f.name),
       },
     };
     
     localStorage.setItem('registrationComplete', JSON.stringify(completeRegistrationData));
     
+    // Очищаем превью перед переходом
+    clearPreviews(imagePreviews);
     // Временный переход на главную страницу
     navigate('/');
   };
@@ -255,7 +291,7 @@ export const RegisterStep3 = () => {
             <div className={styles.field}>
               <label className={styles.label}>Категория навыка</label>
               <select
-                className={`${styles.select} ${!selectedCategory ? styles.selectPlaceholder : ''} ${errors.categoryId ? styles.error : ''}`}
+                className={`${styles.select} ${!selectedCategoryId ? styles.selectPlaceholder : ''} ${errors.categoryId ? styles.error : ''}`}
                 {...register('categoryId')}
               >
                 <option value="">Выберите категорию навыка</option>
@@ -303,7 +339,9 @@ export const RegisterStep3 = () => {
             </div>
 
             <div className={styles.field}>
-              <label className={styles.label}>Фото навыка</label>
+              <label className={styles.label}>Фото навыка ({currentImages.length}/5)</label>
+              
+              {/* Область Drag&Drop */}
               <div
                 className={`${styles.dropZone} ${isDragOver ? styles.dragOver : ''} ${errors.images ? styles.error : ''}`}
                 onClick={handleDropZoneClick}
@@ -322,6 +360,7 @@ export const RegisterStep3 = () => {
                   </div>
                 </div>
               </div>
+              
               <input
                 ref={fileInputRef}
                 type="file"
@@ -330,6 +369,26 @@ export const RegisterStep3 = () => {
                 onChange={handleFileChange}
                 className={styles.hiddenInput}
               />
+              
+              {/* Превью загруженных изображений */}
+              {imagePreviews.length > 0 && (
+                <div className={styles.imagePreviewList}>
+                  {imagePreviews.map((preview, index) => (
+                    <div key={index} className={styles.imagePreviewItem}>
+                      <img src={preview} alt={`Preview ${index + 1}`} className={styles.previewImage} />
+                      <button
+                        type="button"
+                        className={styles.removeImageBtn}
+                        onClick={() => removeImage(index)}
+                        aria-label="Удалить изображение"
+                      >
+                        <img src={crossIcon} alt="Удалить" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+              
               {errors.images && (
                 <span className={styles.errorMessage}>{errors.images.message}</span>
               )}
@@ -342,7 +401,7 @@ export const RegisterStep3 = () => {
                 </Button>
               </div>
               <div className={styles.buttonWrapper}>
-                <Button variant="primary" disabled={!isValid}>
+                <Button variant="primary" onClick={handleSubmit(onSubmit)} disabled={!isValid}>
                   Продолжить
                 </Button>
               </div>

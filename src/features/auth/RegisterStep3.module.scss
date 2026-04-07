@@ -186,7 +186,7 @@
   flex-direction: column;
   gap: 8px;
   width: 100%;
-  align-items: center;
+  align-items: center ;
 }
 
 .dropZoneText {
@@ -271,4 +271,52 @@
   color: var(--caption);
   line-height: 1.5;
   margin: 0;
+}
+
+.imagePreviewList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.imagePreviewItem {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--border-input);
+}
+
+.previewImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.removeImageBtn {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 20px;
+  height: 20px;
+  background: rgba(0, 0, 0, 0.6);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  
+  &:hover {
+    background: rgba(0, 0, 0, 0.8);
+  }
+  
+  img {
+    width: 12px;
+    height: 12px;
+    filter: brightness(0) invert(1);
+  }
 }
