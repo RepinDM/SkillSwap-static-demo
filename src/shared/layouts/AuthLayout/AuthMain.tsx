@@ -1,17 +1,13 @@
-// Добавила обертку для этапов регистрации, прогресс-бар, кнопка закрыть ведет на главную страницу
+// Добавила обертку для этапов регистрации и входа в аккаунт, 
+// прогресс-бар, кнопка закрыть ведет на главную страницу,
 
-import React from "react";
 import { Logo } from "../../ui/Logo/Logo";
 import styles from "./AuthMain.module.scss";
 import closeButton from "@/shared/image/icons/cross.svg";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import clsx from "clsx";
 
-export interface LayoutProps {
-  children: React.ReactNode;
-}
-
-export const AuthMain = ({ children }: LayoutProps) => {
+export const AuthMain = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -80,7 +76,7 @@ export const AuthMain = ({ children }: LayoutProps) => {
           <div className={styles.progressLabel}>{progressLabel}</div>
         </div>
       )}
-      <main className={styles.main}>{children}</main>
+      <main className={styles.main}><Outlet /></main>
     </div>
   );
 };
