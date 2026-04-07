@@ -8,6 +8,7 @@ import { Logo } from '../../shared/ui/Logo/Logo';
 import { Button } from '../../shared/ui/Button/Button';
 import { Input } from '../../shared/ui/input/input';
 import galleryAddIcon from '../../shared/image/icons/gallery-add.svg';
+import crossIcon from '../../shared/image/icons/cross.svg';
 import boardImage from '../../shared/image/webp/board.webp';
 import styles from './RegisterStep3.module.scss';
 
@@ -79,7 +80,7 @@ const validationSchema = yup.object({
     .string()
     .required('Описание обязательно')
     .min(10, 'Описание должно содержать минимум 10 символов')
-    .max(100, 'Описание не должно превышать 100 символов'),
+    .max(200, 'Описание не должно превышать 200 символов'),
   images: yup
     .mixed<File[]>()
     .test('has-images', 'Добавьте хотя бы одно изображение', (value) => {
@@ -115,6 +116,8 @@ export const RegisterStep3 = () => {
   });
 
   const selectedCategoryId = watch('categoryId');
+  const selectedCategory = watch('categoryId');
+  const selectedSubcategory = watch('subcategoryId');
 
   // Получение доступных подкатегорий
   const getAvailableSubcategories = () => {
@@ -175,17 +178,14 @@ export const RegisterStep3 = () => {
 
   // Отправка формы
   const onSubmit = (data: IRegisterStep3Form) => {
-    const formDataToSend = {
-      skillName: data.skillName,
-      categoryId: Number(data.categoryId),
-      subcategoryId: Number(data.subcategoryId),
-      description: data.description,
-      images: data.images,
-    };
+    // const formDataToSend = {
+    //   skillName: data.skillName,
+    //   categoryId: Number(data.categoryId),
+    //   subcategoryId: Number(data.subcategoryId),
+    //   description: data.description,
+    //   images: data.images,
+    // };
     
-    console.log('Form data:', formDataToSend);
-    
-    // Сохраняем данные из всех шагов
     const step2Data = localStorage.getItem('registerStep2');
     const step1Data = localStorage.getItem('registerStep1');
     
@@ -211,13 +211,19 @@ export const RegisterStep3 = () => {
     navigate(-1);
   };
 
+  const handleClose = () => {
+    navigate(-3);
+  };
+
   return (
     <div className={styles.container}>
       <header className={styles.header}>
         <Logo />
-        <Button variant="secondary" onClick={handleBack}>
-          ← Вернуться назад
-        </Button>
+        <div className={styles.closeButtonWrapper}>
+          <Button variant="secondary" onClick={handleClose} iconRight={<img src={crossIcon} alt="Close" />}>
+            Закрыть
+          </Button>
+        </div>
       </header>
 
       <div className={styles.stepsBlock}>
@@ -249,7 +255,7 @@ export const RegisterStep3 = () => {
             <div className={styles.field}>
               <label className={styles.label}>Категория навыка</label>
               <select
-                className={`${styles.select} ${errors.categoryId ? styles.error : ''}`}
+                className={`${styles.select} ${!selectedCategory ? styles.selectPlaceholder : ''} ${errors.categoryId ? styles.error : ''}`}
                 {...register('categoryId')}
               >
                 <option value="">Выберите категорию навыка</option>
@@ -267,7 +273,7 @@ export const RegisterStep3 = () => {
             <div className={styles.field}>
               <label className={styles.label}>Подкатегория навыка</label>
               <select
-                className={`${styles.select} ${errors.subcategoryId ? styles.error : ''}`}
+                className={`${styles.select} ${!selectedSubcategory ? styles.selectPlaceholder : ''} ${errors.subcategoryId ? styles.error : ''}`}
                 {...register('subcategoryId')}
                 disabled={!selectedCategoryId || selectedCategoryId === ''}
               >
@@ -330,12 +336,16 @@ export const RegisterStep3 = () => {
             </div>
 
             <div className={styles.buttons}>
-              <Button variant="secondary" onClick={handleBack}>
-                Назад
-              </Button>
-              <Button variant="primary" disabled={!isValid}>
-                Продолжить
-              </Button>
+              <div className={styles.buttonWrapper}>
+                <Button variant="secondary" onClick={handleBack}>
+                  Назад
+                </Button>
+              </div>
+              <div className={styles.buttonWrapper}>
+                <Button variant="primary" disabled={!isValid}>
+                  Продолжить
+                </Button>
+              </div>
             </div>
           </form>
         </div>
