@@ -34,7 +34,7 @@ const CatalogSection: React.FC<CatalogSectionProps> = ({
       <ul className={styles.grid}>
         {skillCards.map((card) => (
           <SkillCard 
-            key={card.teachSkill.id} 
+            key={card.id}
             card={card} 
           />
         ))}

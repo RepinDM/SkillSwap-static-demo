@@ -1,11 +1,20 @@
 import type { TSkillCard } from "@/entities/skill/types";
+import type { TCategoryItem } from "@/entities/category/types";
 import { createSlice } from "@reduxjs/toolkit";
 import { fetchSkillCards } from "../actions/skills";
 
-const initialState = {
-  skillCards: [] as TSkillCard[],
+interface SkillCardsState {
+  allSkillCards: TSkillCard[];
+  categoryItems: TCategoryItem[];
+  isLoading: boolean;
+  error: string | null;
+}
+
+const initialState: SkillCardsState = {
+  allSkillCards: [],
+  categoryItems: [],
   isLoading: false,
-  error: null as string | null
+  error: null
 };
 
 const skillCardsSlice = createSlice({
@@ -19,7 +28,8 @@ const skillCardsSlice = createSlice({
       })
       .addCase(fetchSkillCards.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.skillCards = action.payload;
+        state.allSkillCards = action.payload.skillCardList;
+        state.categoryItems = action.payload.categoryItems;
       })
       .addCase(fetchSkillCards.rejected, (state, action) => {
         state.isLoading = false;

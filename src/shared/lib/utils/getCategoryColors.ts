@@ -13,3 +13,7 @@ export const CATEGORY_COLORS = {
 } as const;
 
 export type CategoryColorKey = keyof typeof CATEGORY_COLORS;
+
+// Получить цвет категории
+export const getCategoryColor = (slug: string) =>
+  CATEGORY_COLORS[slug as CategoryColorKey] ?? CATEGORY_COLORS.plus;

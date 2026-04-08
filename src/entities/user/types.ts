@@ -1,7 +1,7 @@
 import type { TCity } from '@/entities/city/types'
 
 // Пол пользователя
-export type TGender = 'male' | 'female'
+export type TGender = "male" | "female";
 
 // Базовый тип пользователя
 export type TUser = {

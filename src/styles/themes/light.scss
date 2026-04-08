@@ -8,8 +8,9 @@
   --toggle: #b2b9a9; /* цвет переключателей (switch, checkbox) */
   --disabled: #e4e8df; /* фон или границы отключённых элементов */
   --card-input: #ffffff; /* фон карточек и полей ввода */
+  --accent: #abd27a;
 
-  --logo-text-color: var(--text);
+  --logo-text-color: var(--text); 
 
   /* ИНТЕРАКЦИИ */
   --text-link: #508826; /* цвет ссылок */
@@ -78,6 +79,9 @@
 
   /* СОСТОЯНИЯ РЕДАКТИРОВАНИЯ  */
   --editing: #e3e6dd; /* фон активного / редактируемого элемента */
+
+  /* OVERLAY */
+  --overlay: rgba(142, 142, 142, 0.6); /* фон оверлея модалок */
 
   /* Z-INDEX */
   --z-index-dropdown: 10;

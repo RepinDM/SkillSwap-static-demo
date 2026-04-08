@@ -16,16 +16,16 @@
   font-weight: 600;
   line-height: 40px;
   margin: 0;
-  color: #253017;
+  color: var(--text, #253017);
 }
 
 .viewAllButton {
-  background: #fff;
+  background: var(--card-input, #fff);
   border: transparent;
   border-radius: 12px;
   font-size: 16px;
   font-weight: 400;
-  color: #253017;
+  color: var(--text, #253017);
   cursor: pointer;
   padding: 12px 24px;
 }

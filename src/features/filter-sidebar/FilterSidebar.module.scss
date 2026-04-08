@@ -1,0 +1,292 @@
+.sidebar {
+  width: 324px;
+  background: transparent;
+  padding: 20px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 40px;
+}
+
+.title {
+  font-family: var(--font-heading);
+  font-weight: var(--font-h2-weight);
+  font-size: var(--font-h2-size);
+  line-height: var(--font-h2-line-height);
+  color: var(--text);
+  margin: 0;
+}
+
+.resetButton {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--font-body-size);
+  font-weight: var(--font-body-weight);
+  color: var(--text-link);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.resetIcon {
+  width: 20px;
+  height: 20px;
+}
+
+// Обертка для всех групп фильтров
+.filtersWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+// Группа фильтра (радио или чекбоксы)
+.filterGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.container {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 10px;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+}
+
+.sectionTitle {
+  font-family: var(--font-heading);
+  font-weight: var(--font-h3-weight);
+  font-size: var(--font-h3-size);
+  line-height: var(--font-h3-line-height);
+  color: var(--text);
+  margin: 0;
+}
+
+.radioGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  
+  :global(.container) {
+    gap: 0;
+  }
+  
+  :global(label) {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    font-size: var(--font-body-size);
+    font-weight: var(--font-body-weight);
+    color: var(--text);
+  }
+  
+  :global(input) {
+    width: 20px;
+    height: 20px;
+    min-height: auto;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+  }
+}
+
+.categoriesList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.categoryItem {
+  display: flex;
+  flex-direction: column;
+}
+
+.categoryHeader {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+  gap: 8px;
+}
+
+.checkboxWrapper {
+  flex: 1;
+  
+  :global(.container) {
+    gap: 0;
+  }
+  
+  :global(label) {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    font-size: var(--font-body-size);
+    font-weight: var(--font-body-weight);
+    color: var(--text);
+  }
+  
+  :global(input) {
+    width: 20px;
+    height: 20px;
+    min-height: auto;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+  }
+}
+
+.accordionButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  flex-shrink: 0;
+  padding: 0;
+  
+  img {
+    width: 20px;
+    height: 20px;
+    display: block;
+  }
+}
+
+.subcategoriesList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 12px;
+  margin-left: 32px;
+  padding-left: 0;
+}
+
+.subcategoryItem {
+  :global(.container) {
+    gap: 0;
+  }
+  
+  :global(label) {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    font-size: var(--font-body-size);
+    font-weight: var(--font-body-weight);
+    color: var(--text);
+  }
+  
+  :global(input) {
+    width: 20px;
+    height: 20px;
+    min-height: auto;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+  }
+}
+
+.showAllButton {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--font-body-size);
+  font-weight: var(--font-body-weight);
+  color: var(--text-link);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  width: fit-content;
+  
+  &:hover {
+    text-decoration: underline;
+  }
+  
+  img {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+.citiesList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.cityItem {
+  :global(.container) {
+    gap: 0;
+  }
+  
+  :global(label) {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    font-size: var(--font-body-size);
+    font-weight: var(--font-body-weight);
+    color: var(--text);
+  }
+  
+  :global(input) {
+    width: 20px;
+    height: 20px;
+    min-height: auto;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+  }
+}
+
+/* RADIO + CHECKBOX size fix */
+.radioGroup,
+.categoriesList,
+.subcategoriesList,
+.citiesList {
+
+  :global(input[type="radio"]),
+  :global(input[type="checkbox"]) {
+    width: 16px;
+    height: 16px;
+    min-height: 16px;
+    flex-shrink: 0;
+    margin: 0;
+    padding: 0;
+  }
+
+  :global(.container) {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  :global(label) {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+  }
+}

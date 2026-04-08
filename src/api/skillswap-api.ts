@@ -1,17 +1,6 @@
-import type { TSubcategory } from "@/entities/category/types";
+import type { TCategoryItem, TSubcategory } from "@/entities/category/types";
 import type { TSkill } from "@/entities/skill/types";
 import type { TUserInfo } from "@/entities/user/types";
-import { CATEGORY_COLORS, type CategoryColorKey } from "@/shared/lib/Colors/categoryColors";
-
-
-/**
- * Для проверки пример:
- * const CatalogPage = () => {
-   useEffect(() => {
-     getUserSkills();
-   }, []);
- */
-
 
 const URL = import.meta.env.VITE_SKILLSWAP_API_URL;
 
@@ -30,7 +19,7 @@ const checkResponse = <T>(res: Response): Promise<T> => {
       });
 };
 
-type TUserSkillsResponse = {
+export type TUserSkillsResponse = {
   userSkillList: TSkill[]
   subcategoryList: TSubcategory[]
   userList: TUserInfo[]
@@ -78,25 +67,38 @@ export const convertSkillsToCards = (skills:TSkill[], users: TUserInfo[]) => {
       return acc;
     }, {});
 
-
   // Список карточек привязаных к навыку "Учу"
   const skillCards = teachSkills.map((teachSkill) => {
     return({
+      id: teachSkill.id,
       user: getUserById(users, teachSkill.userId),
       teachSkill: teachSkill,
       learnSkills: learnSkillsByUser[teachSkill.userId] ?? []
     });
   });
   return skillCards;
-}
+};
 
-// Получить цвет категории
-export const getCategoryColor = (slug: string) =>
-  CATEGORY_COLORS[slug as CategoryColorKey] ?? CATEGORY_COLORS.plus;
+export const convertSubcategoriesToCategoryItems = (
+  subcategories: TSubcategory[]
+): TCategoryItem[] => {
+  const map = subcategories.reduce<Record<number, TCategoryItem>>(
+    (acc, subcategory) => {
+      const category = subcategory.category;
 
-// Получить возраст пользователя
-export const getAge = (birthDate?: string | Date): number | undefined => {
-  if (!birthDate) return undefined;
+      if (!acc[category.id]) {
+        acc[category.id] = {
+          ...category,
+          subcategories: []
+        };
+      }
 
-  return new Date().getFullYear() - new Date(birthDate).getFullYear();
+      acc[category.id].subcategories.push(subcategory);
+
+      return acc;
+    },
+    {}
+  );
+
+  return Object.values(map);
 };
