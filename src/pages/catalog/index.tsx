@@ -65,11 +65,11 @@ const CatalogPage = () => {
       <div style={{ flex: 1 }}>
         {filters.mode === "all" &&
           <>
-            <CatalogSection title="Популярное" skillCards={popularCards} />
-            <CatalogSection title="Новое" skillCards={newCards} />
+            <CatalogSection title="Популярное" skillCards={popularCards}/>
+            <CatalogSection title="Новое" skillCards={newCards}/>
             <CatalogSection title="Рекомендуем" skillCards={recommendedCards} />
           </>
-        };
+        }
 
         {filters.mode !== "all" && (
           <CatalogSection title="Результаты поиска" skillCards={filteredCards} />
