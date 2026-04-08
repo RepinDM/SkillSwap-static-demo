@@ -4,7 +4,7 @@
 import { Logo } from "../../ui/Logo/Logo";
 import styles from "./AuthMain.module.scss";
 import closeButton from "@/shared/image/icons/cross.svg";
-import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import clsx from "clsx";
 
 export const AuthMain = () => {
@@ -34,7 +34,9 @@ export const AuthMain = () => {
   return (
     <div className={styles.authLayout}>
       <header className={styles.header}>
-        <Logo />
+        <Link to="/" aria-label="На главную">
+          <Logo />
+        </Link>
         <button
           className={styles.btnClose}
           onClick={handleClose}

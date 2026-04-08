@@ -3,22 +3,19 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useEffect, useRef, useState } from "react";
 import { Controller, useForm, useWatch } from "react-hook-form";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import * as yup from "yup";
 
 import { Avatar } from "@/shared/ui/Avatar/Avatar";
 import { Button } from "@/shared/ui/Button/Button";
 import { Input } from "@/shared/ui/input/input";
-import { Logo } from "@/shared/ui/Logo/Logo";
 
 import addIcon from "@/shared/image/icons/add2.svg";
-import crossIcon from "@/shared/image/icons/cross.svg";
 import infoImage from "@/shared/image/webp/info.webp";
 import { Calendar } from "@/features/auth/register-step2/ui/Calendar";
 import { CategorySelect } from "@/features/auth/register-step2/ui/CategorySelect";
 import { CitySelect } from "@/features/auth/register-step2/ui/CitySelect";
 import { GenderSelect } from "@/features/auth/register-step2/ui/GenderSelect";
-import { StepProgress } from "@/features/auth/register-step2/ui/StepProgress";
 import { SubcategorySelect } from "@/features/auth/register-step2/ui/SubcategorySelect";
 import styles from "./RegisterStep2.module.scss";
 
@@ -111,7 +108,6 @@ export const RegisterStep2 = () => {
   };
 
   const handleBack = () => navigate(-1);
-  const handleClose = () => navigate("/");
 
   // Пока следующий шаг не подключен, после успешного submit временно идем на главную.
   const onSubmit = (data: RegisterStep2FormValues) => {
@@ -123,23 +119,6 @@ export const RegisterStep2 = () => {
 
   return (
     <div className={styles.container}>
-      <header className={styles.header}>
-        <Link to="/" aria-label="На главную">
-          <Logo />
-        </Link>
-        <div className={styles.closeButtonWrapper}>
-          <Button
-            variant="secondary"
-            onClick={handleClose}
-            iconRight={<img src={crossIcon} alt="" />}
-          >
-            Закрыть
-          </Button>
-        </div>
-      </header>
-
-      <StepProgress step={2} totalSteps={3} />
-
       <div className={styles.content}>
         <section className={styles.formSection}>
           <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>

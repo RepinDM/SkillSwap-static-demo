@@ -1,55 +1,7 @@
 .container {
   min-height: 100vh;
   background: var(--background);
-  padding: 36px 32px 48px;
-}
-
-.header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 28px;
-}
-
-.closeButtonWrapper {
-  width: 142px;
-}
-
-.stepsBlock {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 24px;
-}
-
-.stepsTitle {
-  margin: 0;
-  color: var(--text);
-  font-family: var(--font-heading);
-  font-size: var(--font-h2-size);
-  font-weight: var(--font-h2-weight);
-  line-height: var(--font-h2-line-height);
-}
-
-.progressBar {
-  display: flex;
-  gap: 10px;
-}
-
-.progressStepActive,
-.progressStepInactive {
-  width: 44px;
-  height: 4px;
-  border-radius: 999px;
-}
-
-.progressStepActive {
-  background: var(--accent);
-}
-
-.progressStepInactive {
-  background: var(--disabled);
+  padding: 8px 32px 48px;
 }
 
 .content {
