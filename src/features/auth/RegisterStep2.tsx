@@ -1,145 +1,96 @@
-import { yupResolver } from '@hookform/resolvers/yup';
-import { useState, useRef, useEffect } from 'react';
-import { useForm, Controller } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
-import * as yup from 'yup';
+// Сделано:
+// - собран второй шаг регистрации как отдельная страница
+// - логика формы оставлена в шаге, а сложные поля вынесены в отдельные компоненты
+// - добавлены кастомные поля для даты, пола, города, категории и подкатегории
+// - добавлены валидация и блокировка кнопки продолжения
 
-import { Logo } from '../../shared/ui/Logo/Logo';
-import { Button } from '../../shared/ui/Button/Button';
-import { Input } from '../../shared/ui/input/input';
-import { Avatar } from '../../shared/ui/Avatar/Avatar';
-import addIcon from '../../shared/image/icons/add2.svg';
-import infoImage from '../../shared/image/webp/info.webp';
-import crossIcon from '../../shared/image/icons/cross.svg';
-import styles from './RegisterStep2.module.scss';
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useEffect, useRef, useState } from "react";
+import { Controller, useForm, useWatch } from "react-hook-form";
+import { Link, useNavigate } from "react-router-dom";
+import * as yup from "yup";
 
-// Моковые данные
-const GENDERS = [
-  { value: '', label: 'Не указан' },
-  { value: 'male', label: 'Мужской' },
-  { value: 'female', label: 'Женский' },
-];
+import { Avatar } from "@/shared/ui/Avatar/Avatar";
+import { Button } from "@/shared/ui/Button/Button";
+import { Input } from "@/shared/ui/input/input";
+import { Logo } from "@/shared/ui/Logo/Logo";
 
-const CITIES = [
-  { id: 1, name: 'Москва' },
-  { id: 2, name: 'Санкт-Петербург' },
-  { id: 3, name: 'Новосибирск' },
-  { id: 4, name: 'Екатеринбург' },
-  { id: 5, name: 'Казань' },
-  { id: 6, name: 'Нижний Новгород' },
-];
+import addIcon from "@/shared/image/icons/add2.svg";
+import crossIcon from "@/shared/image/icons/cross.svg";
+import infoImage from "@/shared/image/webp/info.webp";
+import { Calendar } from "@/features/auth/register-step2/ui/Calendar";
+import { CategorySelect } from "@/features/auth/register-step2/ui/CategorySelect";
+import { CitySelect } from "@/features/auth/register-step2/ui/CitySelect";
+import { GenderSelect } from "@/features/auth/register-step2/ui/GenderSelect";
+import { StepProgress } from "@/features/auth/register-step2/ui/StepProgress";
+import { SubcategorySelect } from "@/features/auth/register-step2/ui/SubcategorySelect";
+import styles from "./RegisterStep2.module.scss";
 
-const CATEGORIES = [
-  { id: 1, name: 'Бизнес и карьера', slug: 'business-career' },
-  { id: 2, name: 'Творчество и искусство', slug: 'creativity-art' },
-  { id: 3, name: 'Иностранные языки', slug: 'foreign-languages' },
-  { id: 4, name: 'Образование и развитие', slug: 'education-development' },
-  { id: 5, name: 'Дом и уют', slug: 'home-comfort' },
-  { id: 6, name: 'Здоровье и лайфстайл', slug: 'health-lifestyle' },
-];
-
-const SUBCATEGORIES: Record<number, { id: number; name: string }[]> = {
-  1: [
-    { id: 1, name: 'Маркетинг и реклама' },
-    { id: 2, name: 'Управление проектами' },
-    { id: 3, name: 'Финансы и инвестиции' },
-  ],
-  2: [
-    { id: 4, name: 'Музыка и звук' },
-    { id: 5, name: 'Рисование и иллюстрация' },
-    { id: 6, name: 'Фотография и видео' },
-  ],
-  3: [
-    { id: 7, name: 'Английский' },
-    { id: 8, name: 'Французский' },
-    { id: 9, name: 'Немецкий' },
-    { id: 10, name: 'Испанский' },
-  ],
-  4: [
-    { id: 11, name: 'Навыки обучения' },
-    { id: 12, name: 'Когнитивные техники' },
-    { id: 13, name: 'Тайм-менеджмент' },
-  ],
-  5: [
-    { id: 14, name: 'Приготовление еды' },
-    { id: 15, name: 'Ремонт' },
-    { id: 16, name: 'Садоводство' },
-  ],
-  6: [
-    { id: 17, name: 'Йога и медитация' },
-    { id: 18, name: 'Питание и ЗОЖ' },
-    { id: 19, name: 'Фитнес' },
-  ],
-};
-
-// Тип для формы - все поля строковые
-interface IRegisterStep2Form {
+interface RegisterStep2FormValues {
   name: string;
   birthDate: string;
   gender: string;
   cityId: string;
   categoryId: string;
   subcategoryId: string;
-  skillName: string;
 }
 
-// Схема валидации
 const validationSchema = yup.object({
   name: yup
     .string()
-    .required('Имя обязательно')
-    .min(2, 'Имя должно содержать минимум 2 символа')
-    .max(50, 'Имя не должно превышать 50 символов'),
-  birthDate: yup
-    .string()
-    .required('Дата рождения обязательна')
-    .test('is-valid-date', 'Введите корректную дату', (value) => {
-      if (!value) return false;
-      const date = new Date(value);
-      return !isNaN(date.getTime()) && date <= new Date();
-    }),
-  gender: yup.string().required('Пол обязателен'),
-  cityId: yup.string().required('Город обязателен').test('not-empty', 'Выберите город', (value) => {
-    return value !== undefined && value !== '';
-  }),
-  categoryId: yup.string().required('Категория обязательна').test('not-empty', 'Выберите категорию', (value) => {
-    return value !== undefined && value !== '';
-  }),
-  subcategoryId: yup.string().required('Подкатегория обязательна').test('not-empty', 'Выберите подкатегорию', (value) => {
-    return value !== undefined && value !== '';
-  }),
-  skillName: yup
-    .string()
-    .required('Название навыка обязательно')
-    .min(2, 'Название должно содержать минимум 2 символа')
-    .max(100, 'Название не должно превышать 100 символов'),
+    .required("Имя обязательно")
+    .min(2, "Имя должно содержать минимум 2 символа")
+    .max(50, "Имя не должно превышать 50 символов"),
+  birthDate: yup.string().required("Дата рождения обязательна"),
+  gender: yup.string().required("Пол обязателен").test(
+    "gender-selected",
+    "Выберите пол",
+    (value) => Boolean(value)
+  ),
+  cityId: yup.string().required("Город обязателен").test(
+    "city-selected",
+    "Выберите город",
+    (value) => Boolean(value)
+  ),
+  categoryId: yup.string().required("Категория обязательна").test(
+    "category-selected",
+    "Выберите категорию",
+    (value) => Boolean(value)
+  ),
+  subcategoryId: yup.string().required("Подкатегория обязательна").test(
+    "subcategory-selected",
+    "Выберите подкатегорию",
+    (value) => Boolean(value)
+  ),
 });
 
 export const RegisterStep2 = () => {
   const navigate = useNavigate();
-  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
 
   const {
-    register,
     control,
     handleSubmit,
-    watch,
-    formState: { errors, isValid },
-  } = useForm<IRegisterStep2Form>({
+    setValue,
+    formState: { errors, isValid, submitCount },
+  } = useForm<RegisterStep2FormValues>({
     resolver: yupResolver(validationSchema),
-    mode: 'onChange',
+    mode: "onChange",
     defaultValues: {
-      name: '',
-      birthDate: '',
-      gender: '',
-      cityId: '',
-      categoryId: '',
-      subcategoryId: '',
-      skillName: '',
+      name: "",
+      birthDate: "",
+      gender: "",
+      cityId: "",
+      categoryId: "",
+      subcategoryId: "",
     },
   });
 
+  // Значения из формы нужны для зависимых полей и подписей в кастомных селектах.
+  const selectedCategoryId = useWatch({ control, name: "categoryId" });
+
+  // Освобождаем blob URL превью, чтобы не оставлять лишние ссылки в памяти.
   useEffect(() => {
     return () => {
       if (avatarPreview) {
@@ -148,96 +99,67 @@ export const RegisterStep2 = () => {
     };
   }, [avatarPreview]);
 
-  const selectedCategoryId = watch('categoryId');
-  const selectedCityId = watch('cityId');
-  const selectedGender = watch('gender');
-  const selectedSubcategory = watch('subcategoryId');
-
-  // Получение доступных подкатегорий
-  const getAvailableSubcategories = () => {
-    if (!selectedCategoryId || selectedCategoryId === '') return [];
-    return SUBCATEGORIES[Number(selectedCategoryId)] || [];
-  };
-
-  // Обработка загрузки аватарки
   const handleAvatarClick = () => {
     fileInputRef.current?.click();
   };
 
-  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      if (avatarPreview) {
-        URL.revokeObjectURL(avatarPreview);
-      }
+  const handleAvatarChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
 
-      const previewUrl = URL.createObjectURL(file);
-      setAvatarPreview(previewUrl);
+    if (avatarPreview) {
+      URL.revokeObjectURL(avatarPreview);
     }
+
+    setAvatarPreview(URL.createObjectURL(file));
   };
 
-  // Отправка формы
-  const onSubmit = (data: IRegisterStep2Form) => {
-    // Преобразуем строковые ID в числа для отправки на сервер
-    const formDataToSend = {
-      name: data.name,
-      birthDate: data.birthDate,
-      gender: data.gender,
-      cityId: Number(data.cityId),
-      categoryId: Number(data.categoryId),
-      subcategoryId: Number(data.subcategoryId),
-      skillName: data.skillName,
-      avatar: avatarPreview,
-    };
-    
-    localStorage.setItem('registerStep2', JSON.stringify(formDataToSend));
-    navigate('/register/step-3');
+  const handleBack = () => navigate(-1);
+  const handleClose = () => navigate("/");
+
+  // Пока следующий шаг не подключен, после успешного submit временно идем на главную.
+  const onSubmit = (data: RegisterStep2FormValues) => {
+    localStorage.setItem("registerStep2", JSON.stringify(data));
+    navigate("/");
   };
 
-  // Возврат назад
-  const handleBack = () => {
-    navigate(-1);
-  };
-
-  const handleClose = () => {
-    navigate(-2)
-  }
+  const showSubcategoryError = submitCount > 0 && Boolean(errors.subcategoryId);
 
   return (
     <div className={styles.container}>
-      {/* Хедер */}
       <header className={styles.header}>
-        <Logo />
+        <Link to="/" aria-label="На главную">
+          <Logo />
+        </Link>
         <div className={styles.closeButtonWrapper}>
-          <Button variant="secondary" onClick={handleClose} iconRight={<img src={crossIcon} />}>
-            Закрыть 
+          <Button
+            variant="secondary"
+            onClick={handleClose}
+            iconRight={<img src={crossIcon} alt="" />}
+          >
+            Закрыть
           </Button>
         </div>
       </header>
 
-      {/* Блок Steps */}
-      <div className={styles.stepsBlock}>
-        <h2 className={styles.stepsTitle}>Шаг 2 из 3</h2>
-        <div className={styles.progressBar}>
-          <div className={styles.progressStepActive} />
-          <div className={styles.progressStepActive} />
-          <div className={styles.progressStepInactive} />
-        </div>
-      </div>
+      <StepProgress step={2} totalSteps={3} />
 
-      {/* Основной контент */}
       <div className={styles.content}>
-        {/* Левая часть - форма */}
-        <div className={styles.formSection}>
+        <section className={styles.formSection}>
           <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
-            {/* Аватар */}
+            {/* Загрузка аватара вынесена в отдельную кнопку, чтобы клик был предсказуемым. */}
             <div className={styles.avatarField}>
-              <div className={styles.avatarWrapper} onClick={handleAvatarClick}>
+              <button
+                type="button"
+                className={styles.avatarButton}
+                onClick={handleAvatarClick}
+                aria-label="Загрузить аватар"
+              >
                 <Avatar src={avatarPreview || undefined} size={72} />
-                <div className={styles.addIconWrapper}>
-                  <img src={addIcon} alt="Add" className={styles.addIcon} />
-                </div>
-              </div>
+                <span className={styles.addIconWrapper}>
+                  <img src={addIcon} alt="" className={styles.addIcon} />
+                </span>
+              </button>
               <input
                 ref={fileInputRef}
                 type="file"
@@ -247,7 +169,6 @@ export const RegisterStep2 = () => {
               />
             </div>
 
-            {/* Имя */}
             <Controller
               name="name"
               control={control}
@@ -262,116 +183,84 @@ export const RegisterStep2 = () => {
               )}
             />
 
-            {/* Дата рождения и Пол */}
+            {/* Дата и пол стоят в одной строке, как в макете. */}
             <div className={styles.row}>
-              <div className={styles.fieldHalf}>
-                <label className={styles.label}>Дата рождения</label>
-                <input
-                  type="date"
-                  className={`${styles.input} ${errors.birthDate ? styles.error : ''}`}
-                  {...register('birthDate')}
-                />
-                {errors.birthDate && (
-                  <span className={styles.errorMessage}>{errors.birthDate.message}</span>
+              <Controller
+                name="birthDate"
+                control={control}
+                render={({ field }) => (
+                  <Calendar
+                    label="Дата рождения"
+                    value={field.value}
+                    onChange={field.onChange}
+                    error={errors.birthDate?.message}
+                  />
                 )}
-              </div>
+              />
 
-              <div className={styles.fieldHalf}>
-                <label className={styles.label}>Пол</label>
-                <select
-                  className={`${styles.select} ${!selectedGender ? styles.selectPlaceholder : ''} ${errors.gender ? styles.error : ''}`}
-                  {...register('gender')}
-                >
-                  {GENDERS.map((gender) => (
-                    <option key={gender.value} value={gender.value}>
-                      {gender.label}
-                    </option>
-                  ))}
-                </select>
-                {errors.gender && (
-                  <span className={styles.errorMessage}>{errors.gender.message}</span>
+              <Controller
+                name="gender"
+                control={control}
+                render={({ field }) => (
+                  <GenderSelect
+                    label="Пол"
+                    value={field.value}
+                    onChange={field.onChange}
+                    error={errors.gender?.message}
+                  />
                 )}
-              </div>
+              />
             </div>
 
-            {/* Город */}
-            <div className={styles.field}>
-              <label className={styles.label}>Город</label>
-              <select
-                className={`${styles.select} ${!selectedCityId ? styles.selectPlaceholder : ''} ${errors.cityId ? styles.error : ''}`}
-                {...register('cityId')}
-              >
-                <option value="">Не указан</option>
-                {CITIES.map((city) => (
-                  <option key={city.id} value={city.id}>
-                    {city.name}
-                  </option>
-                ))}
-              </select>
-              {errors.cityId && (
-                <span className={styles.errorMessage}>{errors.cityId.message}</span>
-              )}
-            </div>
-
-            {/* Категория навыка */}
-            <div className={styles.field}>
-              <label className={styles.label}>
-                Категория навыка, которому хотите научиться
-              </label>
-              <select
-                className={`${styles.select} ${!selectedCategoryId ? styles.selectPlaceholder : ''} ${errors.categoryId ? styles.error : ''}`}
-                {...register('categoryId')}
-              >
-                <option value="">Выберите категорию</option>
-                {CATEGORIES.map((category) => (
-                  <option key={category.id} value={category.id}>
-                    {category.name}
-                  </option>
-                ))}
-              </select>
-              {errors.categoryId && (
-                <span className={styles.errorMessage}>{errors.categoryId.message}</span>
-              )}
-            </div>
-
-            {/* Подкатегория навыка */}
-            <div className={styles.field}>
-              <label className={styles.label}>
-                Подкатегория навыка, которому хотите научиться
-              </label>
-              <select
-                className={`${styles.select} ${!selectedSubcategory ? styles.selectPlaceholder : ''} ${errors.subcategoryId ? styles.error : ''}`}
-                {...register('subcategoryId')}
-                disabled={!selectedCategoryId || selectedCategoryId === ''}
-              >
-                <option value="">Выберите подкатегорию</option>
-                {getAvailableSubcategories().map((sub) => (
-                  <option key={sub.id} value={sub.id}>
-                    {sub.name}
-                  </option>
-                ))}
-              </select>
-              {errors.subcategoryId && (
-                <span className={styles.errorMessage}>{errors.subcategoryId.message}</span>
-              )}
-            </div>
-
-            {/* Название навыка */}
+            {/* Город открывается как dropdown с поиском, чтобы было удобнее искать по списку. */}
             <Controller
-              name="skillName"
+              name="cityId"
               control={control}
               render={({ field }) => (
-                <Input
-                  label="Название навыка, которому хотите научиться"
-                  placeholder="Например: Создание сайтов"
+                <CitySelect
+                  label="Город"
                   value={field.value}
                   onChange={field.onChange}
-                  error={errors.skillName?.message}
+                  error={errors.cityId?.message}
                 />
               )}
             />
 
-            {/* Кнопки */}
+            {/* Категория и подкатегория сделаны как раскрывающиеся панели с вариантами выбора. */}
+            <Controller
+              name="categoryId"
+              control={control}
+              render={({ field }) => (
+                <CategorySelect
+                  label="Категория навыка, которому хотите научиться"
+                  value={field.value}
+                  onChange={field.onChange}
+                  error={errors.categoryId?.message}
+                  onResetSubcategory={() =>
+                    setValue("subcategoryId", "", {
+                      shouldDirty: true,
+                    })
+                  }
+                />
+              )}
+            />
+
+            <Controller
+              name="subcategoryId"
+              control={control}
+              render={({ field }) => (
+                <SubcategorySelect
+                  label="Подкатегория навыка, которому хотите научиться"
+                  categoryId={selectedCategoryId || ""}
+                  value={field.value}
+                  onChange={field.onChange}
+                  error={errors.subcategoryId?.message}
+                  showError={showSubcategoryError}
+                />
+              )}
+            />
+
+            {/* Основные действия формы: возврат назад и переход дальше только после валидации. */}
             <div className={styles.buttons}>
               <Button variant="secondary" onClick={handleBack}>
                 Назад
@@ -381,14 +270,14 @@ export const RegisterStep2 = () => {
               </Button>
             </div>
           </form>
-        </div>
+        </section>
 
-        {/* Правая часть - информационный блок */}
-        <div className={styles.infoSection}>
+        {/* Правая колонка статична и не зависит от состояния формы. */}
+        <aside className={styles.infoSection}>
           <div className={styles.imageWrapper}>
             <img
               src={infoImage}
-              alt="Information"
+              alt="Иллюстрация профиля"
               className={styles.image}
             />
           </div>
@@ -396,7 +285,7 @@ export const RegisterStep2 = () => {
           <p className={styles.infoText}>
             Это поможет другим людям лучше вас узнать, чтобы выбрать для обмена
           </p>
-        </div>
+        </aside>
       </div>
     </div>
   );
