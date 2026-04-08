@@ -1,13 +1,9 @@
-import React from "react";
-import { forwardRef } from "react";
+import React, { forwardRef, useId } from "react";
 import type { InputHTMLAttributes } from "react";
 import styles from "./input.module.scss";
 import type { InputType } from "./input.types";
 
-interface InputProps extends Omit<
-  InputHTMLAttributes<HTMLInputElement>,
-  "type" | "onChange"
-> {
+interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, "type" | "onChange"> {
   type?: InputType;
   label?: string;
   error?: string;
@@ -33,10 +29,18 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     },
     ref
   ) => {
+    // useId гарантирует уникальный id для каждого инпута
+    const inputId = useId();
+
     return (
-      <div className={styles.container}>
-        {label && <label className={styles.label}>{label}</label>}
+      <>
+        {label && (
+          <label htmlFor={inputId} className={styles.label}>
+            {label}
+          </label>
+        )}
         <input
+          id={inputId}
           ref={ref}
           type={type}
           className={`${styles.input} ${error ? styles.inputError : ""}`}
@@ -48,7 +52,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         />
         {error && <span className={styles.errorText}>{error}</span>}
         {!error && hint && <span className={styles.hintText}>{hint}</span>}
-      </div>
+      </>
     );
   }
 );

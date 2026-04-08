@@ -1,370 +1,282 @@
-import { useState } from 'react';
-import { Input } from '../../shared/ui/input/input';
-import styles from './FilterSidebar.module.scss';
-import crossIcon from '../../shared/image/icons/cross.svg';
-import chevronDownIcon from '../../shared/image/icons/chevron-down.svg';
-import chevronUpIcon from '../../shared/image/icons/chevron-up.svg';
+import { useState } from "react";
 
-// Временные типы для будущей логики
-interface FiltersSidebarProps {
-  values?: any;
-  onChange?: (values: any) => void;
-}
+import { useAppSelector } from "@/services/hooks";
 
-// Хардкоженные данные
-const ALL_CATEGORIES = [
-  { id: 1, name: 'Бизнес и карьера', slug: 'business-career' },
-  { id: 2, name: 'Творчество и искусство', slug: 'creativity-art' },
-  { id: 3, name: 'Иностранные языки', slug: 'foreign-languages' },
-  { id: 4, name: 'Образование и развитие', slug: 'education-development' },
-  { id: 5, name: 'Дом и уют', slug: 'home-comfort' },
-  { id: 6, name: 'Здоровье и лайфстайл', slug: 'health-lifestyle' },
-  { id: 7, name: 'Технологии и IT', slug: 'tech-it' },
-  { id: 8, name: 'Спорт и фитнес', slug: 'sports-fitness' },
-  { id: 9, name: 'Кулинария', slug: 'cooking' },
-  { id: 10, name: 'Фотография и видео', slug: 'photo-video' },
-];
+import { Input } from "@/shared/ui/input/input";
 
-// Первые 5 категорий для начального отображения
-const INITIAL_CATEGORIES = ALL_CATEGORIES.slice(0, 5);
-const HIDDEN_CATEGORIES = ALL_CATEGORIES.slice(5);
+import styles from "./FilterSidebar.module.scss";
+import crossIcon from "@/shared/image/icons/cross.svg";
+import chevronDownIcon from "@/shared/image/icons/chevron-down.svg";
+import chevronUpIcon from "@/shared/image/icons/chevron-up.svg";
+import type { TFilters } from "@/entities/filters/type";
+import type { TGender } from "@/entities/user/types";
+import type { TSkillType } from "@/entities/skill/types";
 
-// Подкатегории для примера (для каждой категории)
-const SUBCATEGORIES: Record<number, { id: number; name: string }[]> = {
-  1: [
-    { id: 1, name: 'Маркетинг и реклама' },
-    { id: 2, name: 'Управление проектами' },
-    { id: 3, name: 'Финансы и инвестиции' },
-    { id: 4, name: 'Стартапы' },
-  ],
-  2: [
-    { id: 5, name: 'Музыка и звук' },
-    { id: 6, name: 'Рисование и иллюстрация' },
-    { id: 7, name: 'Фотография и видео' },
-    { id: 8, name: 'Дизайн' },
-  ],
-  3: [
-    { id: 9, name: 'Английский' },
-    { id: 10, name: 'Французский' },
-    { id: 11, name: 'Немецкий' },
-    { id: 12, name: 'Испанский' },
-    { id: 13, name: 'Китайский' },
-  ],
-  4: [
-    { id: 14, name: 'Навыки обучения' },
-    { id: 15, name: 'Когнитивные техники' },
-    { id: 16, name: 'Тайм-менеджмент' },
-    { id: 17, name: 'Память и внимание' },
-  ],
-  5: [
-    { id: 18, name: 'Приготовление еды' },
-    { id: 19, name: 'Ремонт' },
-    { id: 20, name: 'Садоводство' },
-    { id: 21, name: 'Декор' },
-  ],
-  6: [
-    { id: 22, name: 'Йога и медитация' },
-    { id: 23, name: 'Питание и ЗОЖ' },
-    { id: 24, name: 'Фитнес' },
-    { id: 25, name: 'Ментальное здоровье' },
-  ],
-  7: [
-    { id: 26, name: 'Программирование' },
-    { id: 27, name: 'Data Science' },
-    { id: 28, name: 'DevOps' },
-    { id: 29, name: 'Кибербезопасность' },
-  ],
-  8: [
-    { id: 30, name: 'Футбол' },
-    { id: 31, name: 'Баскетбол' },
-    { id: 32, name: 'Теннис' },
-    { id: 33, name: 'Плавание' },
-  ],
-  9: [
-    { id: 34, name: 'Выпечка' },
-    { id: 35, name: 'Национальная кухня' },
-    { id: 36, name: 'Десерты' },
-    { id: 37, name: 'Веганская кухня' },
-  ],
-  10: [
-    { id: 38, name: 'Портретная съемка' },
-    { id: 39, name: 'Пейзажная съемка' },
-    { id: 40, name: 'Видеомонтаж' },
-    { id: 41, name: 'Цветокоррекция' },
-  ],
+type Props = {
+  values: TFilters;
+  onChange: (filters: TFilters) => void;
 };
 
-// Все города
-const ALL_CITIES = ['Москва', 'Санкт-Петербург', 'Новосибирск', 'Екатеринбург', 'Казань', 'Нижний Новгород', 'Красноярск', 'Челябинск', 'Самара', 'Ростов-на-Дону'];
-const INITIAL_CITIES = ALL_CITIES.slice(0, 5);
-const HIDDEN_CITIES = ALL_CITIES.slice(5);
+const INITIAL_VISIBLE = 5;
 
-export const FiltersSidebar = ({ /* values, onChange */ }: FiltersSidebarProps) => {
-  // Состояния для аккордеона категорий
-  const [expandedCategories, setExpandedCategories] = useState<Record<number, boolean>>({});
-  
-  // Состояния для "показать все"
+export const FiltersSidebar = ({ values, onChange }: Props) => {
+  const categoryItems = useAppSelector(state => state.skillCards.categoryItems);
+
+  const [expandedCategories, setExpandedCategories] = useState<number[]>([]);
   const [showAllCategories, setShowAllCategories] = useState(false);
   const [showAllCities, setShowAllCities] = useState(false);
 
-  // Временно хардкоженные значения (потом будут из пропсов)
-  const [mainRadioValue, setMainRadioValue] = useState('all');
-  const [selectedCategories, setSelectedCategories] = useState<number[]>([]);
-  const [selectedSubcategories, setSelectedSubcategories] = useState<Record<number, number[]>>({});
-  const [authorGenderValue, setAuthorGenderValue] = useState('any');
-  const [selectedCities, setSelectedCities] = useState<string[]>([]);
+  const citiesFromServer = useAppSelector(state =>
+  state.skillCards.allSkillCards
+    .map(c => c.user.city?.name)
+    .filter((city): city is string => !!city)
+  );
 
-  const toggleCategory = (categoryId: number) => {
-    setExpandedCategories(prev => ({
-      ...prev,
-      [categoryId]: !prev[categoryId]
-    }));
+  const uniqueCities = Array.from(new Set(citiesFromServer));
+
+  const visibleCategories = showAllCategories
+    ? categoryItems
+    : categoryItems.slice(0, INITIAL_VISIBLE);
+
+  const visibleCities = showAllCities
+    ? uniqueCities
+    : uniqueCities.slice(0, INITIAL_VISIBLE);
+
+  const toggleCategory = (id: number) => {
+    setExpandedCategories(prev =>
+      prev.includes(id)
+        ? prev.filter(cid => cid !== id)
+        : [...prev, id]
+    );
   };
 
-  const handleCategoryCheckboxChange = (categoryId: number, checked: boolean) => {
-    if (checked) {
-      setSelectedCategories(prev => [...prev, categoryId]);
+  const handleModeChange = (mode: 'all' | TSkillType) => {
+    onChange({ ...values, mode });
+  };
+
+  const handleGenderChange = (gender: TGender | null) => {
+    onChange({ ...values, gender });
+  };
+
+  const handleCityToggle = (city: string) => {
+    const newCities = values.cities.includes(city)
+      ? values.cities.filter(c => c !== city)
+      : [...values.cities, city];
+
+    onChange({ ...values, cities: newCities });
+  };
+
+  const handleSubcategoryToggle = (id: number) => {
+    const newSkillIds = values.skillIds.includes(id)
+      ? values.skillIds.filter(sid => sid !== id)
+      : [...values.skillIds, id];
+
+    onChange({ ...values, skillIds: newSkillIds });
+  };
+
+  const handleCategoryToggle = (subcategoryIds: number[]) => {
+    const allSelected = subcategoryIds.every(id =>
+      values.skillIds.includes(id)
+    );
+
+    let newSkillIds: number[];
+
+    if (allSelected) {
+      newSkillIds = values.skillIds.filter(
+        id => !subcategoryIds.includes(id)
+      );
     } else {
-      setSelectedCategories(prev => prev.filter(id => id !== categoryId));
-
-      setSelectedSubcategories(prev => {
-        const newState = { ...prev };
-        delete newState[categoryId];
-        return newState;
-      });
-      
-      // ИСПРАВЛЕНИЕ ПУНКТА 2: Закрываем подкатегории при снятии галочки с категории
-      setExpandedCategories(prev => ({
-        ...prev,
-        [categoryId]: false
-      }));
+      newSkillIds = [...new Set([...values.skillIds, ...subcategoryIds])];
     }
-  };
 
-  const handleSubcategoryCheckboxChange = (categoryId: number, subcategoryId: number, checked: boolean) => {
-    setSelectedSubcategories(prev => {
-      const currentSubs = prev[categoryId] || [];
-      let newSubs;
-      if (checked) {
-        newSubs = [...currentSubs, subcategoryId];
-      } else {
-        newSubs = currentSubs.filter(id => id !== subcategoryId);
-      }
-      
-      if (newSubs.length === 0) {
-        const { [categoryId]: _, ...rest } = prev;
-        return rest;
-      }
-      
-      return { ...prev, [categoryId]: newSubs };
-    });
-  };
-
-  const handleCityCheckboxChange = (city: string, checked: boolean) => {
-    if (checked) {
-      setSelectedCities(prev => [...prev, city]);
-    } else {
-      setSelectedCities(prev => prev.filter(c => c !== city));
-    }
+    onChange({ ...values, skillIds: newSkillIds });
   };
 
   const handleReset = () => {
-    setMainRadioValue('all');
-    setSelectedCategories([]);
-    setSelectedSubcategories({});
-    setAuthorGenderValue('any');
-    setSelectedCities([]);
+    onChange({
+      mode: "all",
+      gender: null,
+      cities: [],
+      skillIds: [],
+    });
+
+    setExpandedCategories([]);
     setShowAllCategories(false);
     setShowAllCities(false);
-    // Сброс состояний аккордеона
-    setExpandedCategories({});
   };
-
-  // Функция для переключения "Все категории"
-  const toggleAllCategories = () => {
-    setShowAllCategories(!showAllCategories);
-  };
-
-  // Функция для переключения "Все города"
-  const toggleAllCities = () => {
-    setShowAllCities(!showAllCities);
-  };
-
-  const displayedCategories = showAllCategories ? ALL_CATEGORIES : INITIAL_CATEGORIES;
-  const displayedCities = showAllCities ? ALL_CITIES : INITIAL_CITIES;
 
   return (
     <aside className={styles.sidebar}>
-      {/* Заголовок */}
+      {/* HEADER */}
       <div className={styles.header}>
-        <h3 className={styles.title}>Фильтры (2)</h3>
+        <h3 className={styles.title}>
+          Фильтры ({values.skillIds.length})
+        </h3>
+
         <button className={styles.resetButton} onClick={handleReset}>
           Сбросить
-          <img src={crossIcon} alt="Сбросить" className={styles.resetIcon} />
+          <img src={crossIcon} className={styles.resetIcon} />
         </button>
       </div>
 
-      {/* Основной блок фильтров */}
       <div className={styles.filtersWrapper}>
-        {/* Radio группа основная */}
+        {/* MODE */}
         <div className={styles.filterGroup}>
-          <div className={styles.radioGroup}>
-            <Input
-              type="radio"
-              name="mainFilter"
-              label="Всё"
-              value="all"
-              checked={mainRadioValue === 'all'}
-              onChange={() => setMainRadioValue('all')}
-            />
-            <Input
-              type="radio"
-              name="mainFilter"
-              label="Хочу научиться"
-              value="wantLearn"
-              checked={mainRadioValue === 'wantLearn'}
-              onChange={() => setMainRadioValue('wantLearn')}
-            />
-            <Input
-              type="radio"
-              name="mainFilter"
-              label="Могу научить"
-              value="canTeach"
-              checked={mainRadioValue === 'canTeach'}
-              onChange={() => setMainRadioValue('canTeach')}
-            />
-          </div>
+          <ul className={styles.radioGroup}>
+            <li className={styles.container}>
+              <Input
+                type="radio"
+                label="Всё"
+                checked={values.mode === "all"}
+                onChange={() => handleModeChange("all")}
+              />
+            </li>
+              <li className={styles.container}>
+                <Input
+                type="radio"
+                label="Хочу научиться"
+                checked={values.mode === "learn"}
+                onChange={() => handleModeChange("learn")}
+              />
+              </li>
+              <li className={styles.container}>
+                <Input
+                type="radio"
+                label="Могу научить"
+                checked={values.mode === "teach"}
+                onChange={() => handleModeChange("teach")}
+              />
+              </li>
+          </ul>
         </div>
 
-        {/* Категории навыков */}
+        {/* SKILLS */}
         <div className={styles.filterGroup}>
-          <div className={styles.sectionHeader}>
-            <h4 className={styles.sectionTitle}>Навыки</h4>
-          </div>
-          
-          <div className={styles.categoriesList}>
-            {displayedCategories.map((category) => (
-              <div key={category.id} className={styles.categoryItem}>
+          <h4 className={styles.sectionTitle}>Навыки</h4>
+
+          <ul className={styles.categoriesList}>
+            {visibleCategories.map(category => (
+              <li key={category.id} className={styles.categoryItem}>
                 <div className={styles.categoryHeader}>
-                  <div className={styles.checkboxWrapper}>
-                    <Input
-                      type="checkbox"
-                      label={category.name}
-                      checked={selectedCategories.includes(category.id)}
-                      onChange={(e) => handleCategoryCheckboxChange(category.id, e.target.checked)}
-                    />
-                  </div>
-                  {/* Стрелка показывается только если категория выбрана */}
-                  {selectedCategories.includes(category.id) && (
-                    <button
-                      className={styles.accordionButton}
-                      onClick={() => toggleCategory(category.id)}
-                      aria-label={expandedCategories[category.id] ? 'Свернуть' : 'Развернуть'}
-                    >
-                      <img 
-                        src={expandedCategories[category.id] ? chevronUpIcon : chevronDownIcon} 
-                        alt={expandedCategories[category.id] ? 'Свернуть' : 'Развернуть'}
-                        width={24}
-                        height={24}
-                      />
-                    </button>
-                  )}
+                  <div className={styles.container}>
+                  <Input
+                    type="checkbox"
+                    label={category.name}
+                    checked={category.subcategories.every(sub =>
+                      values.skillIds.includes(sub.id)
+                    )}
+                    onChange={() =>
+                      handleCategoryToggle(
+                        category.subcategories.map(sub => sub.id)
+                      )
+                    }
+                  />
                 </div>
-                
-                {expandedCategories[category.id] && SUBCATEGORIES[category.id] && (
-                  <div className={styles.subcategoriesList}>
-                    {SUBCATEGORIES[category.id].map((subcategory) => (
-                      <div key={subcategory.id} className={styles.subcategoryItem}>
+
+                <button
+                    className={styles.accordionButton}
+                    onClick={() => toggleCategory(category.id)}
+                  >
+                    <img
+                      src={
+                        expandedCategories.includes(category.id)
+                          ? chevronUpIcon
+                          : chevronDownIcon
+                      }
+                    />
+                  </button>
+                </div>
+
+                {expandedCategories.includes(category.id) && (
+                  <ul className={styles.subcategoriesList}>
+                    {category.subcategories.map(sub => (
+                      <li key={sub.id} className={styles.container}>
                         <Input
                           type="checkbox"
-                          label={subcategory.name}
-                          checked={(selectedSubcategories[category.id] || []).includes(subcategory.id)}
-                          onChange={(e) => handleSubcategoryCheckboxChange(category.id, subcategory.id, e.target.checked)}
+                          label={sub.name}
+                          checked={values.skillIds.includes(sub.id)}
+                          onChange={() =>
+                            handleSubcategoryToggle(sub.id)
+                          }
                         />
-                      </div>
+                      </li>
                     ))}
-                  </div>
+                  </ul>
                 )}
-              </div>
+              </li>
             ))}
-          </div>
-          
-          {/* ИСПРАВЛЕНИЕ ПУНКТА 1: Кнопка всегда видна, меняется текст и иконка */}
+          </ul>
+
           <button
             className={styles.showAllButton}
-            onClick={toggleAllCategories}
+            onClick={() => setShowAllCategories(!showAllCategories)}
           >
-            {showAllCategories ? 'Скрыть категории' : 'Все категории'}
-            <img 
-              src={showAllCategories ? chevronUpIcon : chevronDownIcon} 
-              alt={showAllCategories ? 'Свернуть' : 'Развернуть'}
-              width={20}
-              height={20}
+            {showAllCategories ? "Скрыть категории" : "Все категории"}
+            <img
+              src={showAllCategories ? chevronUpIcon : chevronDownIcon}
             />
           </button>
         </div>
 
-        {/* Пол автора */}
+        {/* GENDER */}
         <div className={styles.filterGroup}>
           <h4 className={styles.sectionTitle}>Пол автора</h4>
-          <div className={styles.radioGroup}>
-            <Input
-              type="radio"
-              name="authorGender"
-              label="Не имеет значения"
-              value="any"
-              checked={authorGenderValue === 'any'}
-              onChange={() => setAuthorGenderValue('any')}
-            />
-            <Input
-              type="radio"
-              name="authorGender"
-              label="Мужской"
-              value="male"
-              checked={authorGenderValue === 'male'}
-              onChange={() => setAuthorGenderValue('male')}
-            />
-            <Input
-              type="radio"
-              name="authorGender"
-              label="Женский"
-              value="female"
-              checked={authorGenderValue === 'female'}
-              onChange={() => setAuthorGenderValue('female')}
-            />
-          </div>
+
+          <ul className={styles.radioGroup}>
+            <li className={styles.container}>
+              <Input
+                type="radio"
+                label="Не имеет значения"
+                checked={values.gender === null}
+                onChange={() => handleGenderChange(null)}
+              />
+            </li>
+
+            <li className={styles.container}>
+              <Input
+                type="radio"
+                label="Мужской"
+                checked={values.gender === "male"}
+                onChange={() => handleGenderChange("male")}
+              />
+            </li>
+
+            <li className={styles.container}>
+              <Input
+                type="radio"
+                label="Женский"
+                checked={values.gender === "female"}
+                onChange={() => handleGenderChange("female")}
+              />
+            </li>
+          </ul>
         </div>
 
-        {/* Город */}
+        {/* CITIES */}
         <div className={styles.filterGroup}>
-          <div className={styles.sectionHeader}>
-            <h4 className={styles.sectionTitle}>Город</h4>
-          </div>
-          
-          <div className={styles.citiesList}>
-            {displayedCities.map((city) => (
-              <div key={city} className={styles.cityItem}>
+          <h4 className={styles.sectionTitle}>Город</h4>
+
+          <ul className={styles.citiesList}>
+            {visibleCities.map(city => (
+              <li className={styles.container}>
                 <Input
-                  type="checkbox"
-                  label={city}
-                  checked={selectedCities.includes(city)}
-                  onChange={(e) => handleCityCheckboxChange(city, e.target.checked)}
-                />
-              </div>
+                key={city}
+                type="checkbox"
+                label={city}
+                checked={values.cities.includes(city)}
+                onChange={() => handleCityToggle(city)}
+              />
+              </li>
             ))}
-          </div>
-          
-          {/* ИСПРАВЛЕНИЕ ПУНКТА 1: Кнопка всегда видна, меняется текст и иконка */}
+          </ul>
+
           <button
             className={styles.showAllButton}
-            onClick={toggleAllCities}
+            onClick={() => setShowAllCities(!showAllCities)}
           >
-            {showAllCities ? 'Скрыть города' : 'Все города'}
-            <img 
-              src={showAllCities ? chevronUpIcon : chevronDownIcon} 
-              alt={showAllCities ? 'Свернуть' : 'Развернуть'}
-              width={20}
-              height={20}
+            {showAllCities ? "Скрыть города" : "Все города"}
+            <img
+              src={showAllCities ? chevronUpIcon : chevronDownIcon}
             />
           </button>
         </div>
@@ -372,3 +284,5 @@ export const FiltersSidebar = ({ /* values, onChange */ }: FiltersSidebarProps) 
     </aside>
   );
 };
+
+export default FiltersSidebar;
