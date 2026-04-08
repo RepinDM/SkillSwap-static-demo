@@ -4,13 +4,11 @@ import { useForm, Controller } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
 
-import { Logo } from '../../shared/ui/Logo/Logo';
 import { Button } from '../../shared/ui/Button/Button';
 import { Input } from '../../shared/ui/input/input';
 import { Avatar } from '../../shared/ui/Avatar/Avatar';
 import addIcon from '../../shared/image/icons/add2.svg';
 import infoImage from '../../shared/image/webp/info.webp';
-import crossIcon from '../../shared/image/icons/cross.svg';
 import styles from './RegisterStep2.module.scss';
 
 // Моковые данные
@@ -199,32 +197,8 @@ export const RegisterStep2 = () => {
     navigate(-1);
   };
 
-  const handleClose = () => {
-    navigate(-2)
-  }
-
   return (
     <div className={styles.container}>
-      {/* Хедер */}
-      <header className={styles.header}>
-        <Logo />
-        <div className={styles.closeButtonWrapper}>
-          <Button variant="secondary" onClick={handleClose} iconRight={<img src={crossIcon} />}>
-            Закрыть 
-          </Button>
-        </div>
-      </header>
-
-      {/* Блок Steps */}
-      <div className={styles.stepsBlock}>
-        <h2 className={styles.stepsTitle}>Шаг 2 из 3</h2>
-        <div className={styles.progressBar}>
-          <div className={styles.progressStepActive} />
-          <div className={styles.progressStepActive} />
-          <div className={styles.progressStepInactive} />
-        </div>
-      </div>
-
       {/* Основной контент */}
       <div className={styles.content}>
         {/* Левая часть - форма */}
