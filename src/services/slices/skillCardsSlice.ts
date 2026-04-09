@@ -3,7 +3,7 @@ import type { TCategoryItem } from "@/entities/category/types";
 import { createSlice } from "@reduxjs/toolkit";
 import { fetchSkillCards } from "../actions/skills";
 
-import { mockSkillCards } from "../mockSkills";
+// import { mockSkillCards } from "../mockSkills";
 
 
 interface SkillCardsState {
