@@ -11,9 +11,10 @@ import { getCategoryColor } from "@/shared/lib/utils/getCategoryColors";
 
 type Props = {
   card: TSkillCard;
+  showFavoriteButton?: boolean;
 };
 
-export const SkillCard = ({ card }: Props) => {
+export const SkillCard = ({ card, showFavoriteButton = true }: Props) => {
   return (
     <>
        <li className={styles.card}>
@@ -27,7 +28,12 @@ export const SkillCard = ({ card }: Props) => {
                 avatarSize={100}
               />
             </div>
-            <img src={buttonLike} alt="Кнопка добавления в избранное" />
+          {showFavoriteButton && (
+            <img
+              src={buttonLike}
+              alt="Кнопка добавления в избранное"
+            />
+          )}
           </div>
 
           {/* 2. Чему пользователь УЧИТ (teachSkill) */}
