@@ -16,6 +16,11 @@ import { RegisterStep2 } from "@/features/auth/RegisterStep2";
 import { RegisterStep3 } from "@/features/auth/RegisterStep3";
 import Layout from "@/shared/layouts/MainLayout";
 import AuthMain from "@/shared/layouts/AuthLayout";
+import PersonalSection from "@/pages/profile/sections/PersonalSection";
+import RequestsSection from "@/pages/profile/sections/RequestsSection";
+import ExchangesSection from "@/pages/profile/sections/ExchangesSection";
+import ProfileFavoritesSection from "@/pages/profile/sections/FavoritesSection";
+import SkillsSection from "@/pages/profile/sections/SkillsSection";
 
 export const AppRouter = () => {
   return (
@@ -39,11 +44,16 @@ export const AppRouter = () => {
         <Route
           path="/profile"
           element={
-            <PrivateRoute>
+            // <PrivateRoute>
               <ProfilePage />
-            </PrivateRoute>
-          }
-        />
+            // </PrivateRoute>
+          }>
+          <Route index element={<PersonalSection />} />
+          <Route path="requests" element={<RequestsSection />} />
+          <Route path="exchanges" element={<ExchangesSection />} />
+          <Route path="favorites" element={<ProfileFavoritesSection />} />
+          <Route path="skills" element={<SkillsSection />} />
+        </Route>
 
         <Route
           path="/favorites"
