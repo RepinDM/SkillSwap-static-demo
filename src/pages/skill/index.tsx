@@ -1,10 +1,12 @@
 import { useParams } from "react-router-dom";
 import { useAppSelector } from "@/services/hooks";
-import { getAge, getCategoryColor } from "@/api/skillswap-api";
+
 import { Tag } from "@/shared/ui/Tag/Tag";
 import { User } from "@/shared/ui/User/User";
 import { SkillCard } from "@/widgets/SkillCard/SkillCard";
 import buttonLike from "@/shared/image/icons/like.svg";
+import { getAge } from "@/shared/lib/utils/getAge";
+import { getCategoryColor } from "@/shared/lib/utils/getCategoryColors";
 // import styles from "./SkillPage.module.scss";
 
   
