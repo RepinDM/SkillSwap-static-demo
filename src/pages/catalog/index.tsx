@@ -73,7 +73,7 @@ const CatalogPage = () => {
 
         {filters.mode !== "all" && (
           <CatalogSection title="Результаты поиска" skillCards={filteredCards} />
-        )};
+        )}
       </div>
     </div>
   );
