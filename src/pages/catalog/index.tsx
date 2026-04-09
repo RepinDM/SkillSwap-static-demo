@@ -132,12 +132,7 @@ const CatalogPage = () => {
         )}
 
         {filters.mode !== "all" && (
-          <>
-            <CatalogSection title="Результаты поиска" skillCards={displayedCards} />
-            {hasMore && !isLoading && (
-              <div ref={lastElementRef} style={{ height: "20px" }} />
-            )}
-          </>
+          <CatalogSection title="Результаты поиска" skillCards={filteredCards} />
         )}
       </div>
     </div>
