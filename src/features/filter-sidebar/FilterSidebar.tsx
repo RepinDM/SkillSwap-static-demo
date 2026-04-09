@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 import { useAppSelector } from "@/services/hooks";
 
@@ -26,13 +26,25 @@ export const FiltersSidebar = ({ values, onChange }: Props) => {
   const [showAllCategories, setShowAllCategories] = useState(false);
   const [showAllCities, setShowAllCities] = useState(false);
 
-  const citiesFromServer = useAppSelector(state =>
-  state.skillCards.allSkillCards
-    .map(c => c.user.city?.name)
-    .filter((city): city is string => !!city)
-  );
+  // const citiesFromServer = useAppSelector(state =>
+  // state.skillCards.allSkillCards
+  //   .map(c => c.user.city?.name)
+  //   .filter((city): city is string => !!city)
+  // );
 
-  const uniqueCities = Array.from(new Set(citiesFromServer));
+  // const uniqueCities = Array.from(new Set(citiesFromServer));
+
+
+const allSkillCards = useAppSelector(state => state.skillCards.allSkillCards);
+
+const uniqueCities = useMemo(() => {
+  const cities = allSkillCards
+    .map(c => c.user.city?.name)
+    .filter((city): city is string => !!city);
+
+  return Array.from(new Set(cities));
+}, [allSkillCards]);
+
 
   const visibleCategories = showAllCategories
     ? categoryItems
@@ -258,14 +270,13 @@ export const FiltersSidebar = ({ values, onChange }: Props) => {
 
           <ul className={styles.citiesList}>
             {visibleCities.map(city => (
-              <li className={styles.container}>
+              <li key={city} className={styles.container}>
                 <Input
-                key={city}
-                type="checkbox"
-                label={city}
-                checked={values.cities.includes(city)}
-                onChange={() => handleCityToggle(city)}
-              />
+                  type="checkbox"
+                  label={city}
+                  checked={values.cities.includes(city)}
+                  onChange={() => handleCityToggle(city)}
+                />
               </li>
             ))}
           </ul>
