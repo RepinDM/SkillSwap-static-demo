@@ -125,7 +125,7 @@ const CatalogPage = () => {
               title="Рекомендуем"
               skillCards={displayedCards}
             />
-            {hasMore && !isLoading && ( // Показываем триггер только если не идёт загрузка
+            {hasMore && !isLoading && (
               <div ref={lastElementRef} style={{ height: "20px" }} />
             )}
           </>
