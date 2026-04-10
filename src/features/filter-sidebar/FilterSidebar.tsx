@@ -11,6 +11,7 @@ import chevronUpIcon from "@/shared/image/icons/chevron-up.svg";
 import type { TFilters } from "@/entities/filters/type";
 import type { TGender } from "@/entities/user/types";
 import type { TSkillType } from "@/entities/skill/types";
+import { selectAllSkillCards, selectCategoryItems } from "@/services/slices/skillCardsSlice";
 
 type Props = {
   values: TFilters;
@@ -20,7 +21,7 @@ type Props = {
 const INITIAL_VISIBLE = 5;
 
 export const FiltersSidebar = ({ values, onChange }: Props) => {
-  const categoryItems = useAppSelector(state => state.skillCards.categoryItems);
+  const categoryItems = useAppSelector(selectCategoryItems);
 
   const [expandedCategories, setExpandedCategories] = useState<number[]>([]);
   const [showAllCategories, setShowAllCategories] = useState(false);
@@ -35,7 +36,7 @@ export const FiltersSidebar = ({ values, onChange }: Props) => {
   // const uniqueCities = Array.from(new Set(citiesFromServer));
 
 
-const allSkillCards = useAppSelector(state => state.skillCards.allSkillCards);
+const allSkillCards = useAppSelector(selectAllSkillCards);
 
 const uniqueCities = useMemo(() => {
   const cities = allSkillCards
