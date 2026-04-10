@@ -1,6 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useState, useRef, useCallback, useEffect } from 'react';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm, Controller, useWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
 
@@ -58,12 +58,11 @@ export const RegisterStep3 = () => {
     register,
     control,
     handleSubmit,
-    watch,
     setValue,
     getValues,
     formState: { errors, isValid, submitCount },
   } = useForm<IRegisterStep3Form>({
-    resolver: yupResolver(validationSchema) as any,
+    resolver: yupResolver(validationSchema),
     mode: 'onChange',
     defaultValues: {
       skillName: '',
@@ -74,7 +73,10 @@ export const RegisterStep3 = () => {
     },
   });
 
-  const selectedCategoryId = watch('categoryId');
+  const selectedCategoryId = useWatch({
+    control,
+    name: 'categoryId',
+  });
 
  // Создание превью для файлов
   const createPreviews = useCallback((files: File[]) => {
