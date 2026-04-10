@@ -1,21 +1,21 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { ExchangeSuccessModal } from "./ExchangeSuccessModal";
+import { ExchangeSuggestedModal } from "./ExchangeSuggestedModal";
 import { useState } from "react";
 
-const meta: Meta<typeof ExchangeSuccessModal> = {
-  title: "features/ExchangeSuccessModal",
-  component: ExchangeSuccessModal,
+const meta: Meta<typeof ExchangeSuggestedModal> = {
+  title: "features/ExchangeSuggestedModal",
+  component: ExchangeSuggestedModal,
 };
 
 export default meta;
-type Story = StoryObj<typeof ExchangeSuccessModal>;
+type Story = StoryObj<typeof ExchangeSuggestedModal>;
 
 const ModalWithState = () => {
   const [isOpen, setIsOpen] = useState(true);
   return (
     <>
       <button onClick={() => setIsOpen(true)}>Показать модалку успеха</button>
-      <ExchangeSuccessModal isOpen={isOpen} onClose={() => setIsOpen(false)} />
+      <ExchangeSuggestedModal isOpen={isOpen} onClose={() => setIsOpen(false)} />
     </>
   );
 };
