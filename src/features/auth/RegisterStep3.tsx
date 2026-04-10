@@ -39,12 +39,14 @@ const validationSchema = yup.object({
     .min(10, 'Описание должно содержать минимум 10 символов')
     .max(200, 'Описание не должно превышать 200 символов'),
   images: yup
-    .mixed<File[]>()
+    .array()
+    .of(yup.mixed<File>().required())
+    .default([])
     .test('has-images', 'Добавьте хотя бы одно изображение', (value) => {
-      return value !== undefined && value !== null && value.length > 0;
+      return Array.isArray(value) && value.length > 0;
     })
-    .test('max-images', 'Можно добавить не более 5 изображений', (value) => {
-      return !value || value.length <= 5;
+    .test('max-images', 'Можно добавить не более 7 изображений', (value) => {
+      return Array.isArray(value) && value.length <= 7;
     }),
 });
 
@@ -110,8 +112,8 @@ export const RegisterStep3 = () => {
     const currentFiles = getValues('images') || [];
     const totalFiles = [...currentFiles, ...newFiles];
     
-    if (totalFiles.length > 5) {
-      alert('Можно добавить не более 5 изображений');
+    if (totalFiles.length > 7) {
+      alert('Можно добавить не более 7 изображений');
       return;
     }
     
