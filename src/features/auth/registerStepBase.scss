@@ -1,0 +1,43 @@
+@mixin step-shell {
+  display: grid;
+  grid-template-columns: repeat(2, 556px);
+  gap: 24px;
+  width: 100%;
+  max-width: 1136px;
+  margin: 0 auto;
+}
+
+@mixin step-container {
+  min-height: 100vh;
+  background: var(--background);
+  padding: 0 32px 48px;
+}
+
+@mixin step-card {
+  width: 556px;
+  max-width: 100%;
+  background: var(--card-input);
+  border-radius: 20px;
+  padding: 60px;
+  min-height: 692px;
+}
+
+@mixin step-info-card {
+  @include step-card;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+@mixin step-mobile-shell {
+  grid-template-columns: 1fr;
+  align-items: center;
+}
+
+@mixin step-mobile-card {
+  width: 100%;
+  padding: 32px 24px;
+  min-height: auto;
+}
