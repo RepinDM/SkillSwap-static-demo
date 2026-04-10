@@ -1,12 +1,16 @@
 import type { TFilters } from "@/entities/filters/type";
 import FiltersSidebar from "@/features/filter-sidebar/FilterSidebar";
 import { useAppSelector } from "@/services/hooks";
+import { selectAllSkillCards, selectStatus } from "@/services/slices/skillCardsSlice";
 import CatalogSection from "@/widgets/CatalogSection/CatalogSection";
 import { useMemo, useState, useCallback } from "react";
 import { useInfiniteScroll } from "@/shared/hooks/useInfiniteScroll";
 
 const CatalogPage = () => {
-  const { allSkillCards, isLoading } = useAppSelector(state => state.skillCards);
+  const allSkillCards = useAppSelector(selectAllSkillCards);
+  const status = useAppSelector(selectStatus);
+
+  const isLoading = status === "loading";
 
   const [filters, setFilters] = useState<TFilters>({
     mode: "all",
@@ -112,6 +116,7 @@ const CatalogPage = () => {
   });
 
   if (isLoading) return <p>Loading...</p>;
+
 
   return (
     <div style={{ display: "flex", gap: "24px" }}>
