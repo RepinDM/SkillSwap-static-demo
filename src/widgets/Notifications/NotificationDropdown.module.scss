@@ -1,0 +1,122 @@
+.dropdown {
+  position: fixed;
+  top: 104px;
+  right: 16px;
+  width: 556px;
+  height: 616px;
+  padding: 60px;
+  border-radius: 12px;
+  border: 1px solid rgba(105, 115, 93, 1);
+  background: rgba(255, 255, 255, 1);
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  z-index: 1000;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 500;
+}
+
+.title {
+  font-family: "Jost";
+  font-size: 24px;
+  line-height: 28px;
+  font-style: Medium;
+  letter-spacing: -0.011em;
+}
+
+.action {
+  font-family: "Roboto";
+  font-size: 16px;
+  color:rgba(80, 136, 38, 1);
+  cursor: pointer;
+  letter-spacing: 0.02em;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.item {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.itemTop {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  position: relative;
+  font-weight: 400;
+  font-family: "Roboto";
+}
+
+.icon {
+  width: 40px;
+  height: 40px;
+}
+
+.textBlock {
+  width: 100%;
+  max-width: 306px;
+  max-height: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+}
+
+.text {
+  font-size: 16px;
+  line-height: 24px;
+  letter-spacing: 0.02em;
+}
+
+.subtext {
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: 0.02em;
+}
+
+.date {
+  position: absolute;
+  right: 0;
+  top: 0;
+
+  font-size: 16px;
+  color: rgba(105, 115, 93, 1);
+  font-size: 16px;
+  line-height: 24px;
+  letter-spacing: 0.02em;
+
+}
+
+.button {
+  align-self: flex-start;
+  padding: 12px 24px;
+  border-radius: 12px;
+  background: rgba(171, 210, 122, 1);
+  border: none;
+  cursor: pointer;
+  min-width: 114px;
+  min-height: 48px;
+}
+
+.footerLink {
+  text-align: center;
+  display: block;
+  margin-top: -20px;
+}
