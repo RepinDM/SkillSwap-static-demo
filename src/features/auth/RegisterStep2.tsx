@@ -107,12 +107,14 @@ export const RegisterStep2 = () => {
     setAvatarPreview(URL.createObjectURL(file));
   };
 
-  const handleBack = () => navigate(-1);
+  const handleBack = () => navigate("/register");
+  const handleContinue = () => {
+    void handleSubmit(onSubmit)();
+  };
 
-  // Пока следующий шаг не подключен, после успешного submit временно идем на главную.
   const onSubmit = (data: RegisterStep2FormValues) => {
     localStorage.setItem("registerStep2", JSON.stringify(data));
-    navigate("/");
+    navigate("/register/step-3");
   };
 
   const showSubcategoryError = submitCount > 0 && Boolean(errors.subcategoryId);
@@ -240,7 +242,11 @@ export const RegisterStep2 = () => {
               <Button variant="secondary" onClick={handleBack}>
                 Назад
               </Button>
-              <Button variant="primary" disabled={!isValid}>
+              <Button
+                variant="primary"
+                onClick={handleContinue}
+                disabled={!isValid}
+              >
                 Продолжить
               </Button>
             </div>

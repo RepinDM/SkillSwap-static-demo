@@ -1,60 +1,17 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useState, useRef, useCallback } from 'react';
-import { useForm, Controller } from 'react-hook-form';
+import { useState, useRef, useCallback, useEffect } from 'react';
+import { useForm, Controller, useWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
 
-import { Logo } from '../../shared/ui/Logo/Logo';
 import { Button } from '../../shared/ui/Button/Button';
 import { Input } from '../../shared/ui/input/input';
 import galleryAddIcon from '../../shared/image/icons/gallery-add.svg';
 import crossIcon from '../../shared/image/icons/cross.svg';
 import boardImage from '../../shared/image/webp/board.webp';
+import { CategorySelect } from './register-step2/ui/CategorySelect';
+import { SubcategorySelect } from './register-step2/ui/SubcategorySelect';
 import styles from './RegisterStep3.module.scss';
-
-// Моковые данные
-const CATEGORIES = [
-  { id: 1, name: 'Бизнес и карьера', slug: 'business-career' },
-  { id: 2, name: 'Творчество и искусство', slug: 'creativity-art' },
-  { id: 3, name: 'Иностранные языки', slug: 'foreign-languages' },
-  { id: 4, name: 'Образование и развитие', slug: 'education-development' },
-  { id: 5, name: 'Дом и уют', slug: 'home-comfort' },
-  { id: 6, name: 'Здоровье и лайфстайл', slug: 'health-lifestyle' },
-];
-
-const SUBCATEGORIES: Record<number, { id: number; name: string }[]> = {
-  1: [
-    { id: 1, name: 'Маркетинг и реклама' },
-    { id: 2, name: 'Управление проектами' },
-    { id: 3, name: 'Финансы и инвестиции' },
-  ],
-  2: [
-    { id: 4, name: 'Музыка и звук' },
-    { id: 5, name: 'Рисование и иллюстрация' },
-    { id: 6, name: 'Фотография и видео' },
-  ],
-  3: [
-    { id: 7, name: 'Английский' },
-    { id: 8, name: 'Французский' },
-    { id: 9, name: 'Немецкий' },
-    { id: 10, name: 'Испанский' },
-  ],
-  4: [
-    { id: 11, name: 'Навыки обучения' },
-    { id: 12, name: 'Когнитивные техники' },
-    { id: 13, name: 'Тайм-менеджмент' },
-  ],
-  5: [
-    { id: 14, name: 'Приготовление еды' },
-    { id: 15, name: 'Ремонт' },
-    { id: 16, name: 'Садоводство' },
-  ],
-  6: [
-    { id: 17, name: 'Йога и медитация' },
-    { id: 18, name: 'Питание и ЗОЖ' },
-    { id: 19, name: 'Фитнес' },
-  ],
-};
 
 interface IRegisterStep3Form {
   skillName: string;
@@ -101,12 +58,11 @@ export const RegisterStep3 = () => {
     register,
     control,
     handleSubmit,
-    watch,
     setValue,
     getValues,
-    formState: { errors, isValid },
+    formState: { errors, isValid, submitCount },
   } = useForm<IRegisterStep3Form>({
-    resolver: yupResolver(validationSchema) as any,
+    resolver: yupResolver(validationSchema),
     mode: 'onChange',
     defaultValues: {
       skillName: '',
@@ -117,15 +73,10 @@ export const RegisterStep3 = () => {
     },
   });
 
-  const selectedCategoryId = watch('categoryId');
-  const selectedSubcategory = watch('subcategoryId');
-  const currentImages = watch('images') || [];
-
-  // Получение доступных подкатегорий
-  const getAvailableSubcategories = () => {
-    if (!selectedCategoryId || selectedCategoryId === '') return [];
-    return SUBCATEGORIES[Number(selectedCategoryId)] || [];
-  };
+  const selectedCategoryId = useWatch({
+    control,
+    name: 'categoryId',
+  });
 
  // Создание превью для файлов
   const createPreviews = useCallback((files: File[]) => {
@@ -144,6 +95,12 @@ export const RegisterStep3 = () => {
       return createPreviews(files);
     });
   }, [createPreviews, clearPreviews]);
+
+  useEffect(() => {
+    return () => {
+      clearPreviews(imagePreviews);
+    };
+  }, [clearPreviews, imagePreviews]);
 
   // Обработка добавления новых файлов
   const processFiles = useCallback((newFilesList: FileList | null) => {
@@ -244,33 +201,13 @@ export const RegisterStep3 = () => {
   };
 
   const handleBack = () => {
-    navigate(-1);
+    navigate('/register/step-2');
   };
 
-  const handleClose = () => {
-    navigate(-3);
-  };
+  const showSubcategoryError = submitCount > 0 && Boolean(errors.subcategoryId);
 
   return (
     <div className={styles.container}>
-      <header className={styles.header}>
-        <Logo />
-        <div className={styles.closeButtonWrapper}>
-          <Button variant="secondary" onClick={handleClose} iconRight={<img src={crossIcon} alt="Close" />}>
-            Закрыть
-          </Button>
-        </div>
-      </header>
-
-      <div className={styles.stepsBlock}>
-        <h2 className={styles.stepsTitle}>Шаг 3 из 3</h2>
-        <div className={styles.progressBar}>
-          <div className={styles.progressStepActive} />
-          <div className={styles.progressStepActive} />
-          <div className={styles.progressStepActive} />
-        </div>
-      </div>
-
       <div className={styles.content}>
         <div className={styles.formSection}>
           <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
@@ -288,47 +225,43 @@ export const RegisterStep3 = () => {
               )}
             />
 
-            <div className={styles.field}>
-              <label className={styles.label}>Категория навыка</label>
-              <select
-                className={`${styles.select} ${!selectedCategoryId ? styles.selectPlaceholder : ''} ${errors.categoryId ? styles.error : ''}`}
-                {...register('categoryId')}
-              >
-                <option value="">Выберите категорию навыка</option>
-                {CATEGORIES.map((category) => (
-                  <option key={category.id} value={category.id}>
-                    {category.name}
-                  </option>
-                ))}
-              </select>
-              {errors.categoryId && (
-                <span className={styles.errorMessage}>{errors.categoryId.message}</span>
+            <Controller
+              name="categoryId"
+              control={control}
+              render={({ field }) => (
+                <CategorySelect
+                  label="Категория навыка"
+                  value={field.value}
+                  onChange={field.onChange}
+                  error={errors.categoryId?.message}
+                  onResetSubcategory={() =>
+                    setValue('subcategoryId', '', {
+                      shouldDirty: true,
+                    })
+                  }
+                />
               )}
-            </div>
+            />
 
-            <div className={styles.field}>
-              <label className={styles.label}>Подкатегория навыка</label>
-              <select
-                className={`${styles.select} ${!selectedSubcategory ? styles.selectPlaceholder : ''} ${errors.subcategoryId ? styles.error : ''}`}
-                {...register('subcategoryId')}
-                disabled={!selectedCategoryId || selectedCategoryId === ''}
-              >
-                <option value="">Выберите подкатегорию навыка</option>
-                {getAvailableSubcategories().map((sub) => (
-                  <option key={sub.id} value={sub.id}>
-                    {sub.name}
-                  </option>
-                ))}
-              </select>
-              {errors.subcategoryId && (
-                <span className={styles.errorMessage}>{errors.subcategoryId.message}</span>
+            <Controller
+              name="subcategoryId"
+              control={control}
+              render={({ field }) => (
+                <SubcategorySelect
+                  label="Подкатегория навыка"
+                  categoryId={selectedCategoryId || ''}
+                  value={field.value}
+                  onChange={field.onChange}
+                  error={errors.subcategoryId?.message}
+                  showError={showSubcategoryError}
+                />
               )}
-            </div>
+            />
 
             <div className={styles.field}>
               <label className={styles.label}>Описание</label>
               <textarea
-                className={`${styles.textarea} ${errors.description ? styles.error : ''}`}
+                className={`${styles.textarea} ${errors.description ? styles.textareaError : ''}`}
                 placeholder="Коротко опишите, чему можете научить"
                 rows={4}
                 {...register('description')}
@@ -339,7 +272,7 @@ export const RegisterStep3 = () => {
             </div>
 
             <div className={styles.field}>
-              <label className={styles.label}>Фото навыка ({currentImages.length}/5)</label>
+              <label className={styles.label}>Изображения навыка</label>
               
               {/* Область Drag&Drop */}
               <div
