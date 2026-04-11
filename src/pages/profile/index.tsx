@@ -1,11 +1,14 @@
 import { Outlet } from "react-router-dom";
 import ProfileSidebar from "./ProfileSidebar";
+import styles from "./ProfilePage.module.scss";
 
 const ProfilePage = () => {
   return (
-    <div className="profile-layout">
+    <div className={styles.page}>
       <ProfileSidebar />
-      <Outlet />
+      <section className={styles.content}>
+        <Outlet />
+      </section>
     </div>
   );
 };

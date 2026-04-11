@@ -5,7 +5,8 @@ import checkboxEmptyIcon from "@/shared/image/icons/checkbox-empty.svg";
 import chevronDownIcon from "@/shared/image/icons/chevron-down.svg";
 import chevronUpIcon from "@/shared/image/icons/chevron-up.svg";
 import styles from "@/features/auth/RegisterStep2.module.scss";
-import { SUBCATEGORIES } from "@/features/auth/register-step2/options";
+import { useAppSelector } from "@/services/hooks";
+import { selectCategoryItems } from "@/services/slices/skillCardsSlice";
 
 type SubcategorySelectProps = {
   categoryId: string;
@@ -26,6 +27,7 @@ export const SubcategorySelect = ({
 }: SubcategorySelectProps) => {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState(false);
+  const categories = useAppSelector(selectCategoryItems);
 
   useEffect(() => {
     const handleOutsideClick = (event: MouseEvent) => {
@@ -38,14 +40,16 @@ export const SubcategorySelect = ({
     return () => document.removeEventListener("mousedown", handleOutsideClick);
   }, []);
 
-  const availableSubcategories = useMemo(
-    () => SUBCATEGORIES[categoryId || ""] || [],
-    [categoryId]
-  );
+  const availableSubcategories = useMemo(() => {
+    const category = categories.find(
+      (c) => c.id.toString() === categoryId
+    );
+
+    return category?.subcategories || [];
+  }, [categories, categoryId]);
 
   const selectedLabel =
-    availableSubcategories.find((item) => item.value === value)?.label ||
-    "Выберите подкатегорию";
+  availableSubcategories.find((item) => item.id.toString() === value)?.name || "Выберите подкатегорию";
 
   return (
     <div className={styles.field} ref={wrapperRef}>
@@ -68,15 +72,15 @@ export const SubcategorySelect = ({
         <div className={styles.dropdownPanel}>
           <div className={styles.optionsList}>
             {availableSubcategories.map((subcategory) => {
-              const isSelected = subcategory.value === value;
+              const isSelected = subcategory.id.toString() === value;
 
               return (
                 <button
-                  key={subcategory.value}
+                  key={subcategory.id}
                   type="button"
                   className={styles.optionButton}
                   onClick={() => {
-                    onChange(subcategory.value);
+                    onChange(subcategory.id.toString());
                     setOpen(false);
                   }}
                 >
@@ -84,7 +88,7 @@ export const SubcategorySelect = ({
                     src={isSelected ? checkboxDoneIcon : checkboxEmptyIcon}
                     alt=""
                   />
-                  <span>{subcategory.label}</span>
+                  <span>{subcategory.name}</span>
                 </button>
               );
             })}

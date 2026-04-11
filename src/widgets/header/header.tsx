@@ -14,15 +14,25 @@ import likeIcon from "@/shared/image/icons/like.svg";
 import notification from "@/shared/image/icons/notification.svg";
 import chevronDown from "@/shared/image/icons/chevron-down.svg";
 import { NavDropdown } from "../NavDropdown/NavDropdown";
-import { useState } from "react";
+import { useState } from "react";//useMemo добавить
 import { Avatar } from "@/shared/ui/Avatar/Avatar";
 import { SearchInput } from "@/shared/ui/Search/SearchInput";
 import { useAppSelector } from "@/services/hooks";
+import { NotificationDropdown } from "../Notifications/NotificationDropdown";
 
 export const Header = () => {
-  const [isLoggedIn] = useState(true);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   // const [searchValue, setSearchValue] = useState("");
+  const [searchValue, setSearchValue] = useState("");
+  const [isLoggedIn] = useState(true);
+  //
+  // const isLoggedIn = useMemo(() => {
+  //   if (typeof window === "undefined") return false;
+  //
+  //   return Boolean(
+  //     localStorage.getItem("token") || localStorage.getItem("registrationComplete")
+  //   );
+  // }, []);
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
@@ -36,6 +46,8 @@ export const Header = () => {
     state => state.skillCards.searchQuery
   );
 
+  const [isNotifOpen, setIsNotifOpen] = useState(false);
+  
   return (
     <header className={styles.header}>
       <Link to="/">
@@ -76,11 +88,15 @@ export const Header = () => {
             <button className={styles.iconBtn}>
               <img src={moonIcon} alt="Смена темы" />
             </button>
+            <div style={{ position: "relative" }}>
+              <button className={styles.iconBtn} onClick={() => setIsNotifOpen((prev) => !prev)}>
+                <img src={notification} alt="Уведомления" />
+                {isLoggedIn && <span className={styles.badge} />}
+              </button>
+              <NotificationDropdown isOpen={isNotifOpen} onClose={() => setIsNotifOpen(false)}/>
+            </div>
             <button className={styles.iconBtn}>
               <img src={likeIcon} alt="Избранное" />
-            </button>
-            <button className={styles.iconBtn}>
-              <img src={notification} alt="Уведомления" />
             </button>
             <Avatar />
           </div>

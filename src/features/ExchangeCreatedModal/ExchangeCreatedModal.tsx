@@ -9,7 +9,7 @@ interface ExchangeSuccessModalProps {
   onClose: () => void;
 }
 
-export const ExchangeSuccessModal: FC<ExchangeSuccessModalProps> = ({
+export const ExchangeCreatedModal: FC<ExchangeSuccessModalProps> = ({
   isOpen,
   onClose,
 }) => {
