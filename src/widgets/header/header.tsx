@@ -14,20 +14,22 @@ import likeIcon from "@/shared/image/icons/like.svg";
 import notification from "@/shared/image/icons/notification.svg";
 import chevronDown from "@/shared/image/icons/chevron-down.svg";
 import { NavDropdown } from "../NavDropdown/NavDropdown";
-import { useMemo, useState } from "react";
+import { useState } from "react";//useMemo добавить
 import { Avatar } from "@/shared/ui/Avatar/Avatar";
 import { NotificationDropdown } from "../Notifications/NotificationDropdown";
 
 export const Header = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [searchValue, setSearchValue] = useState("");
-  const isLoggedIn = useMemo(() => {
-    if (typeof window === "undefined") return false;
-
-    return Boolean(
-      localStorage.getItem("token") || localStorage.getItem("registrationComplete")
-    );
-  }, []);
+  const [isLoggedIn] = useState(true);
+  //
+  // const isLoggedIn = useMemo(() => {
+  //   if (typeof window === "undefined") return false;
+  //
+  //   return Boolean(
+  //     localStorage.getItem("token") || localStorage.getItem("registrationComplete")
+  //   );
+  // }, []);
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
