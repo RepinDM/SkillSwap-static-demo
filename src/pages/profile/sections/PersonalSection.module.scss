@@ -1,0 +1,47 @@
+.main {
+  display: flex;
+  flex-direction: row;
+  padding: 60px;
+  align-items: flex-start;
+  gap: 196px;
+}
+
+.about {
+  display: flex;
+  flex-direction: column;
+  width: 460px;
+  gap: 32px;
+}
+
+.photo {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 244px;
+  height: 244px;
+}
+
+.editPhoto {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center; 
+  background-color: var(--button-primary-background-hover);
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+}
+
+.addIcon {
+  display: block;
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+}
+
+.textarea {
+  max-height: 120px;
+  overflow-y: auto;
+}

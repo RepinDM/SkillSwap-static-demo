@@ -1,5 +1,5 @@
 const RequestsSection = () => {
-  return <div>Заявки</div>;
+  return <div>Requests</div>;
 };
 
 export default RequestsSection;
