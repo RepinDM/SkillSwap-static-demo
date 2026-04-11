@@ -16,6 +16,7 @@ import chevronDown from "@/shared/image/icons/chevron-down.svg";
 import { NavDropdown } from "../NavDropdown/NavDropdown";
 import { useState } from "react";
 import { Avatar } from "@/shared/ui/Avatar/Avatar";
+import { NotificationDropdown } from "../Notifications/NotificationDropdown";
 
 export const Header = () => {
   const [isLoggedIn] = useState(true);
@@ -30,6 +31,8 @@ export const Header = () => {
     setIsDropdownOpen(false);
   };
 
+  const [isNotifOpen, setIsNotifOpen] = useState(false);
+  
   return (
     <header className={styles.header}>
       <Link to="/">
@@ -64,11 +67,15 @@ export const Header = () => {
             <button className={styles.iconBtn}>
               <img src={moonIcon} alt="Смена темы" />
             </button>
+            <div style={{ position: "relative" }}>
+              <button className={styles.iconBtn} onClick={() => setIsNotifOpen((prev) => !prev)}>
+                <img src={notification} alt="Уведомления" />
+                {isLoggedIn && <span className={styles.badge} />}
+              </button>
+              <NotificationDropdown isOpen={isNotifOpen} onClose={() => setIsNotifOpen(false)}/>
+            </div>
             <button className={styles.iconBtn}>
               <img src={likeIcon} alt="Избранное" />
-            </button>
-            <button className={styles.iconBtn}>
-              <img src={notification} alt="Уведомления" />
             </button>
             <Avatar />
           </div>
