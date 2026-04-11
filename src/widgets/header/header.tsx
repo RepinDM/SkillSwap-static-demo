@@ -16,11 +16,13 @@ import chevronDown from "@/shared/image/icons/chevron-down.svg";
 import { NavDropdown } from "../NavDropdown/NavDropdown";
 import { useState } from "react";
 import { Avatar } from "@/shared/ui/Avatar/Avatar";
+import { SearchInput } from "@/shared/ui/Search/SearchInput";
+import { useAppSelector } from "@/services/hooks";
 
 export const Header = () => {
   const [isLoggedIn] = useState(true);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [searchValue, setSearchValue] = useState("");
+  // const [searchValue, setSearchValue] = useState("");
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
@@ -29,6 +31,10 @@ export const Header = () => {
   const closeDropdown = () => {
     setIsDropdownOpen(false);
   };
+  
+  const searchValue = useAppSelector(
+    state => state.skillCards.searchQuery
+  );
 
   return (
     <header className={styles.header}>
@@ -51,12 +57,18 @@ export const Header = () => {
       </nav>
       <div className={styles.searchWrapper}>
         <div className={styles.searchIcon} />
-        <input
+        {/* <input
           placeholder="Искать навык"
           value={searchValue}
           onChange={(e) => setSearchValue(e.target.value)}
           className={styles.searchInput}
-        ></input>
+        ></input> */}
+        {/* <SearchInput value={searchValue} className={styles.searchInput} placeholder="Искать навык" onChange={(e) => setSearchValue(e.target.value)}/> */}
+        <SearchInput
+          className={styles.searchInput}
+          placeholder="Искать навык"
+          value={searchValue}
+        />
       </div>
       <div className={styles.authBlock}>
         {isLoggedIn ? (
