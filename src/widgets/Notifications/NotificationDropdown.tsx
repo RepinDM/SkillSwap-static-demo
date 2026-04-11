@@ -2,6 +2,7 @@ import type { FC } from "react";
 import { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import styles from "./NotificationDropdown.module.scss";
+
 interface Props {
   isOpen: boolean;
   onClose: () => void;
@@ -69,14 +70,16 @@ export const NotificationDropdown: FC<Props> = ({ isOpen, onClose }) => {
       <div className={styles.section}>
         <div className={styles.header}>
           <span className={styles.title}>Новые уведомления</span>
-          <span className={styles.action}>Прочитать все</span>
+          <button type="button" className={styles.action}>
+            Прочитать все
+          </button>
         </div>
 
         <div className={styles.list}>
           {mockNew.map((item) => (
             <div key={item.id} className={styles.item}>
               <div className={styles.itemTop}>
-                <img src="/public/idea.svg" alt="Уведомление" className={styles.icon} />
+                <img src="/idea.svg" alt="Уведомление" className={styles.icon} />
 
                 <div className={styles.textBlock}>
                   <p className={styles.text}>{item.text}</p>
@@ -86,7 +89,9 @@ export const NotificationDropdown: FC<Props> = ({ isOpen, onClose }) => {
                 <span className={styles.date}>{item.date}</span>
               </div>
 
-              <button className={styles.button}>Перейти</button>
+              <button type="button" className={styles.button}>
+                Перейти
+              </button>
             </div>
           ))}
         </div>
@@ -95,14 +100,16 @@ export const NotificationDropdown: FC<Props> = ({ isOpen, onClose }) => {
       <div className={styles.section}>
         <div className={styles.header}>
           <span className={styles.title}>Просмотренные</span>
-          <span className={styles.action}>Очистить</span>
+          <button type="button" className={styles.action}>
+            Очистить
+          </button>
         </div>
 
         <div className={styles.list}>
           {mockSeen.map((item) => (
             <div key={item.id} className={styles.item}>
               <div className={styles.itemTop}>
-                <img src="/public/idea.svg" className={styles.icon} />
+                <img src="/idea.svg" alt="Уведомление" className={styles.icon} />
 
                 <div className={styles.textBlock}>
                   <p className={styles.text}>{item.text}</p>
