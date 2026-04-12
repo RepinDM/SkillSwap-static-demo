@@ -21,12 +21,14 @@ import RequestsSection from "@/pages/profile/sections/RequestsSection";
 import ExchangesSection from "@/pages/profile/sections/ExchangesSection";
 import ProfileFavoritesSection from "@/pages/profile/sections/FavoritesSection";
 import SkillsSection from "@/pages/profile/sections/SkillsSection";
+import NotificationsPage from "@/pages/notifications";
 
 import { SearchResultsPage } from "@/pages/search/SearchResultsPage";
 
 export const AppRouter = () => {
   return (
     <Routes>
+
       <Route element={<AuthMain />}>
         <Route path="/login" element={<LoginPage />} />
 
@@ -42,6 +44,7 @@ export const AppRouter = () => {
         <Route path="/" element={<CatalogPage />} />
         <Route path="/skill/:id" element={<SkillPage />} />
         <Route path="/about" element={<AboutPage />} />
+        <Route path="/notifications" element={<NotificationsPage />} />
 
         <Route
           path="/profile"

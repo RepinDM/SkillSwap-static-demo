@@ -14,7 +14,7 @@ import LightBulb from '@/shared/image/light/light-bulb.png';
 export const LoginForm = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [error, setError] = useState('');
+    const [error] = useState('');
     const passRef = useRef<HTMLInputElement>(null);
 
     const emailChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value);

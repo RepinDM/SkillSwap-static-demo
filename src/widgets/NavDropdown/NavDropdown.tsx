@@ -12,6 +12,7 @@ import { useAppSelector } from "@/services/hooks";
 import { getCategoryColor } from "@/shared/lib/utils/getCategoryColors";
 
 import styles from "./NavDropdown.module.scss";
+import { selectCategoryItems } from "@/services/slices/skillCardsSlice";
 
 const iconMap: Record<string, string> = {
   businesscareer: briefcaseIcon,
@@ -29,7 +30,7 @@ interface NavDropdownProps {
 
 export const NavDropdown: FC<NavDropdownProps> = ({ isOpen, onClose }) => {
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const categoryItems = useAppSelector((state) => state.skillCards.categoryItems);
+  const categoryItems = useAppSelector(selectCategoryItems);
 
   useEffect(() => {
     if (!isOpen) return;
