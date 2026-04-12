@@ -3,6 +3,7 @@ import { SkillCardsList } from "@/shared/ui/Search/SkillCardsList"
 import { useSearchParams } from "react-router-dom"
 import { setSearchQuery } from "@/services/slices/skillCardsSlice"
 import { useEffect } from "react"
+import { selectSearchFilteredSkillCards } from "@/services/slices/skillCardsSlice"
 
 export const SearchResultsPage = () => {
   const [searchParams] = useSearchParams();
@@ -13,7 +14,7 @@ export const SearchResultsPage = () => {
     dispatch(setSearchQuery(query))
   }, [query, dispatch])
 
-  const filteredCards = useAppSelector((state) => state.skillCards.searchFilteredSkillCards)
+  const filteredCards = useAppSelector(selectSearchFilteredSkillCards)
 
   return <SkillCardsList cards={filteredCards}/>
 }

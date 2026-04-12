@@ -6,7 +6,7 @@ import { fetchSkillCards } from "../actions/skills";
 interface SkillCardsState {
   allSkillCards: TSkillCard[];
   categoryItems: TCategoryItem[];
-  isLoading: boolean;
+  status: "idle" | "loading" | "success" | "error";
   error: string | null;
 
   searchQuery: string;
@@ -16,7 +16,7 @@ interface SkillCardsState {
 const initialState: SkillCardsState = {
   allSkillCards: [],
   categoryItems: [],
-  isLoading: false,
+  status: "idle",
   error: null,
 
   searchQuery: "",
@@ -47,15 +47,20 @@ const skillCardsSlice = createSlice({
         state.allSkillCards,
         action.payload
       );
-    }
+    },
+
+    clearError: (state) => {
+      state.error = null;
+    },
   },
   extraReducers: (builder) => {
     builder
       .addCase(fetchSkillCards.pending, (state) => {
-        state.isLoading = true;
+        state.status = "loading";
+        state.error = null;
       })
       .addCase(fetchSkillCards.fulfilled, (state, action) => {
-        state.isLoading = false;
+        state.status = "success";
         state.allSkillCards = action.payload.skillCardList;
         state.categoryItems = action.payload.categoryItems;
 
@@ -65,12 +70,30 @@ const skillCardsSlice = createSlice({
         );
       })
       .addCase(fetchSkillCards.rejected, (state, action) => {
-        state.isLoading = false;
+        state.status = "error";
         state.error = action.error.message || "Ошибка загрузки";
       });
+  },
+  selectors: {
+    selectAllSkillCards: (state) => state.allSkillCards,
+    selectCategoryItems: (state) => state.categoryItems,
+    selectStatus: (state) => state.status,
+    selectError: (state) => state.error,
+    selectSearchQuery: (state) => state.searchQuery,
+    selectSearchFilteredSkillCards: (state) =>
+      state.searchFilteredSkillCards
   }
 });
 
-export const {setSearchQuery} = skillCardsSlice.actions;
+export const {setSearchQuery, clearError} = skillCardsSlice.actions;
+
+export const { 
+  selectAllSkillCards, 
+  selectCategoryItems,
+  selectStatus,
+  selectError,
+  selectSearchQuery,
+  selectSearchFilteredSkillCards
+} = skillCardsSlice.selectors;
 
 export default skillCardsSlice.reducer;
