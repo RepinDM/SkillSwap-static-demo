@@ -32,11 +32,18 @@ export const CitySelect = ({ error, label, onChange, value }: CitySelectProps) =
   }, []);
 
   const cities = useMemo(() => {
-    const result = allSkillCards
-      .map((c) => c.user.city?.name)
-      .filter((city): city is string => Boolean(city));
+    const map = new Map();
 
-    return Array.from(new Set(result));
+    allSkillCards.forEach((c) => {
+      const city = c.user.city;
+      if (city?.id && city?.name) {
+        map.set(city.id, {
+          id: city.id,
+          name: city.name,
+        });
+      }
+    });
+    return Array.from(map.values());
   }, [allSkillCards]);
 
   const filteredCities = useMemo(() => {
@@ -44,11 +51,11 @@ export const CitySelect = ({ error, label, onChange, value }: CitySelectProps) =
     if (!normalized) return cities;
 
     return cities.filter((city) =>
-      city.toLowerCase().includes(normalized)
+      city.name.toLowerCase().includes(normalized)
     );
   }, [query, cities]);
 
-  const selectedLabel = cities.find((city) => city === value) || "Не указан";
+  const selectedLabel = cities.find((city) => String(city.id) === value)?.name || "Не указан";
 
   return (
     <div className={styles.field} ref={wrapperRef}>
@@ -90,16 +97,16 @@ export const CitySelect = ({ error, label, onChange, value }: CitySelectProps) =
           <div className={styles.optionsList}>
             {filteredCities.map((city) => (
               <button
-                key={city}
+                key={city.id}
                 type="button"
                 className={styles.optionButton}
                 onClick={() => {
-                  onChange(city);
+                  onChange(String(city.id)); // ← ВАЖНО
                   setOpen(false);
                   setQuery("");
                 }}
               >
-                {city}
+                {city.name}
               </button>
             ))}
           </div>

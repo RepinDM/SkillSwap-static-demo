@@ -47,9 +47,9 @@ export const AppRouter = () => {
         <Route
           path="/profile"
           element={
-            // <PrivateRoute>
+            <PrivateRoute>
               <ProfilePage />
-            // </PrivateRoute>
+            </PrivateRoute>
           }>
           <Route index element={<PersonalSection />} />
           <Route path="requests" element={<RequestsSection />} />
