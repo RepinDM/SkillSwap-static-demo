@@ -5,7 +5,6 @@ import SkillPage from "@/pages/skill";
 import LoginPage from "@/pages/login";
 import AboutPage from "@/pages/about";
 import ProfilePage from "@/pages/profile";
-import FavoritesPage from "@/pages/favorites";
 import CreatePage from "@/pages/create";
 import NotFoundPage from "@/pages/not-found";
 
@@ -57,15 +56,6 @@ export const AppRouter = () => {
           <Route path="favorites" element={<ProfileFavoritesSection />} />
           <Route path="skills" element={<SkillsSection />} />
         </Route>
-
-        <Route
-          path="/favorites"
-          element={
-            <PrivateRoute>
-              <FavoritesPage />
-            </PrivateRoute>
-          }
-        />
 
         <Route
           path="/create"
