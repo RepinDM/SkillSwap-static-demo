@@ -13,7 +13,10 @@ import { CategorySelect } from './register-step2/ui/CategorySelect';
 import { SubcategorySelect } from './register-step2/ui/SubcategorySelect';
 import styles from './RegisterStep3.module.scss';
 import { useAppDispatch, useAppSelector } from '@/services/hooks';
-import { clearRegister, selectStep1, selectStep2, setStep3 } from '@/services/slices/registerSlice';
+import { clearRegister, selectStep1, selectStep2, selectStep3, setStep3 } from '@/services/slices/registerSlice';
+import type { TSkill } from '@/entities/skill/types';
+import { TeachSkillModal } from '../TeachSkillModal/components/SkillModal/TeachSkillModal';
+import { ExchangeCreatedModal } from '../ExchangeCreatedModal/ExchangeCreatedModal';
 
 interface IRegisterStep3Form {
   skillName: string;
@@ -54,6 +57,11 @@ const validationSchema = yup.object({
 
 export const RegisterStep3 = () => {
   const navigate = useNavigate();
+
+  const [showSkillModal, setShowSkillModal] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [skillPreview, setSkillPreview] = useState<TSkill | null>(null);
+
   const [isDragOver, setIsDragOver] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
@@ -61,6 +69,7 @@ export const RegisterStep3 = () => {
 
   const step1 = useAppSelector(selectStep1);
   const step2 = useAppSelector(selectStep2);
+   const step3 = useAppSelector(selectStep3);
 
   const {
     register,
@@ -182,9 +191,25 @@ export const RegisterStep3 = () => {
     processFiles(e.dataTransfer.files);
   };
 
-  // Отправка формы
-  const onSubmit = async (data: IRegisterStep3Form) => {
+  const onSubmit = (data: IRegisterStep3Form) => {
     dispatch(setStep3(data));
+
+    const preview: TSkill = {
+      title: data.skillName,
+      description: data.description,
+      images: imagePreviews,
+      subcategory: {
+        name: "Подкатегория",
+        category: { name: "Категория" }
+      }
+    } as TSkill;
+
+    setSkillPreview(preview);
+    setShowSkillModal(true);
+  };
+
+  const handleConfirmSubmit = async () => {
+    if (!step3) return;
 
     const formData = new FormData();
 
@@ -207,30 +232,24 @@ export const RegisterStep3 = () => {
     }
 
     // STEP 3
-    formData.append("skillName", data.skillName);
-    formData.append("categoryId", data.categoryId);
-    formData.append("skillSubcategoryId", data.subcategoryId);
-    formData.append("description", data.description);
+    formData.append("skillName", step3.skillName);
+    formData.append("categoryId", step3.categoryId);
+    formData.append("skillSubcategoryId", step3.subcategoryId);
+    formData.append("description", step3.description);
 
-    data.images.forEach((file) => {
+    step3.images.forEach((file) => {
       formData.append("images", file);
     });
 
     try {
-      const response = await fetch(
-        "http://skillswap.ovnet.ru/api/register_user/",
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
+      await fetch("http://skillswap.ovnet.ru/api/register_user/", {
+        method: "POST",
+        body: formData,
+      });
 
-      const result = await response.json();
+      setShowSkillModal(false);
+      setShowSuccessModal(true);
 
-      console.log("SUCCESS", result);
-
-      dispatch(clearRegister());
-      navigate("/");
     } catch (e) {
       console.error("ERROR", e);
     }
@@ -243,155 +262,175 @@ export const RegisterStep3 = () => {
   const showSubcategoryError = submitCount > 0 && Boolean(errors.subcategoryId);
 
   return (
-    <div className={styles.container}>
-      <div className={styles.content}>
-        <div className={styles.formSection}>
-          <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
-            <Controller
-              name="skillName"
-              control={control}
-              render={({ field }) => (
-                <Input
-                  label="Название навыка"
-                  placeholder="Введите название навыка"
-                  value={field.value}
-                  onChange={field.onChange}
-                  error={errors.skillName?.message}
-                />
-              )}
-            />
-
-            <Controller
-              name="categoryId"
-              control={control}
-              render={({ field }) => (
-                <CategorySelect
-                  label="Категория навыка"
-                  value={field.value}
-                  onChange={field.onChange}
-                  error={errors.categoryId?.message}
-                  onResetSubcategory={() =>
-                    setValue('subcategoryId', '', {
-                      shouldDirty: true,
-                    })
-                  }
-                />
-              )}
-            />
-
-            <Controller
-              name="subcategoryId"
-              control={control}
-              render={({ field }) => (
-                <SubcategorySelect
-                  label="Подкатегория навыка"
-                  categoryId={selectedCategoryId || ''}
-                  value={field.value}
-                  onChange={field.onChange}
-                  error={errors.subcategoryId?.message}
-                  showError={showSubcategoryError}
-                />
-              )}
-            />
-
-            <div className={styles.field}>
-              <label className={styles.label}>Описание</label>
-              <textarea
-                className={`${styles.textarea} ${errors.description ? styles.textareaError : ''}`}
-                placeholder="Коротко опишите, чему можете научить"
-                rows={4}
-                {...register('description')}
+    <>
+      <div className={styles.container}>
+        <div className={styles.content}>
+          <div className={styles.formSection}>
+            <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
+              <Controller
+                name="skillName"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    label="Название навыка"
+                    placeholder="Введите название навыка"
+                    value={field.value}
+                    onChange={field.onChange}
+                    error={errors.skillName?.message}
+                  />
+                )}
               />
-              {errors.description && (
-                <span className={styles.errorMessage}>{errors.description.message}</span>
-              )}
-            </div>
 
-            <div className={styles.field}>
-              <label className={styles.label}>Изображения навыка</label>
-              
-              {/* Область Drag&Drop */}
-              <div
-                className={`${styles.dropZone} ${isDragOver ? styles.dragOver : ''} ${errors.images ? styles.error : ''}`}
-                onClick={handleDropZoneClick}
-                onDragEnter={handleDragEnter}
-                onDragLeave={handleDragLeave}
-                onDragOver={handleDragOver}
-                onDrop={handleDrop}
-              >
-                <div className={styles.dropZoneContent}>
-                  <p className={styles.dropZoneText}>
-                    Перетащите или выберите изображения навыка
-                  </p>
-                  <div className={styles.galleryButton}>
-                    <img src={galleryAddIcon} alt="Gallery" className={styles.galleryIcon} />
-                    <span>Выбрать изображения</span>
+              <Controller
+                name="categoryId"
+                control={control}
+                render={({ field }) => (
+                  <CategorySelect
+                    label="Категория навыка"
+                    value={field.value}
+                    onChange={field.onChange}
+                    error={errors.categoryId?.message}
+                    onResetSubcategory={() =>
+                      setValue('subcategoryId', '', {
+                        shouldDirty: true,
+                      })
+                    }
+                  />
+                )}
+              />
+
+              <Controller
+                name="subcategoryId"
+                control={control}
+                render={({ field }) => (
+                  <SubcategorySelect
+                    label="Подкатегория навыка"
+                    categoryId={selectedCategoryId || ''}
+                    value={field.value}
+                    onChange={field.onChange}
+                    error={errors.subcategoryId?.message}
+                    showError={showSubcategoryError}
+                  />
+                )}
+              />
+
+              <div className={styles.field}>
+                <label className={styles.label}>Описание</label>
+                <textarea
+                  className={`${styles.textarea} ${errors.description ? styles.textareaError : ''}`}
+                  placeholder="Коротко опишите, чему можете научить"
+                  rows={4}
+                  {...register('description')}
+                />
+                {errors.description && (
+                  <span className={styles.errorMessage}>{errors.description.message}</span>
+                )}
+              </div>
+
+              <div className={styles.field}>
+                <label className={styles.label}>Изображения навыка</label>
+                
+                {/* Область Drag&Drop */}
+                <div
+                  className={`${styles.dropZone} ${isDragOver ? styles.dragOver : ''} ${errors.images ? styles.error : ''}`}
+                  onClick={handleDropZoneClick}
+                  onDragEnter={handleDragEnter}
+                  onDragLeave={handleDragLeave}
+                  onDragOver={handleDragOver}
+                  onDrop={handleDrop}
+                >
+                  <div className={styles.dropZoneContent}>
+                    <p className={styles.dropZoneText}>
+                      Перетащите или выберите изображения навыка
+                    </p>
+                    <div className={styles.galleryButton}>
+                      <img src={galleryAddIcon} alt="Gallery" className={styles.galleryIcon} />
+                      <span>Выбрать изображения</span>
+                    </div>
                   </div>
                 </div>
+                
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  onChange={handleFileChange}
+                  className={styles.hiddenInput}
+                />
+                
+                {/* Превью загруженных изображений */}
+                {imagePreviews.length > 0 && (
+                  <div className={styles.imagePreviewList}>
+                    {imagePreviews.map((preview, index) => (
+                      <div key={index} className={styles.imagePreviewItem}>
+                        <img src={preview} alt={`Preview ${index + 1}`} className={styles.previewImage} />
+                        <button
+                          type="button"
+                          className={styles.removeImageBtn}
+                          onClick={() => removeImage(index)}
+                          aria-label="Удалить изображение"
+                        >
+                          <img src={crossIcon} alt="Удалить" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+                
+                {errors.images && (
+                  <span className={styles.errorMessage}>{errors.images.message}</span>
+                )}
               </div>
-              
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept="image/*"
-                multiple
-                onChange={handleFileChange}
-                className={styles.hiddenInput}
-              />
-              
-              {/* Превью загруженных изображений */}
-              {imagePreviews.length > 0 && (
-                <div className={styles.imagePreviewList}>
-                  {imagePreviews.map((preview, index) => (
-                    <div key={index} className={styles.imagePreviewItem}>
-                      <img src={preview} alt={`Preview ${index + 1}`} className={styles.previewImage} />
-                      <button
-                        type="button"
-                        className={styles.removeImageBtn}
-                        onClick={() => removeImage(index)}
-                        aria-label="Удалить изображение"
-                      >
-                        <img src={crossIcon} alt="Удалить" />
-                      </button>
-                    </div>
-                  ))}
+
+              <div className={styles.buttons}>
+                <div className={styles.buttonWrapper}>
+                  <Button variant="secondary" onClick={handleBack}>
+                    Назад
+                  </Button>
                 </div>
-              )}
-              
-              {errors.images && (
-                <span className={styles.errorMessage}>{errors.images.message}</span>
-              )}
-            </div>
-
-            <div className={styles.buttons}>
-              <div className={styles.buttonWrapper}>
-                <Button variant="secondary" onClick={handleBack}>
-                  Назад
-                </Button>
+                <div className={styles.buttonWrapper}>
+                  <Button type="submit" variant="primary" disabled={!isValid}>
+                    Продолжить
+                  </Button>
+                </div>
               </div>
-              <div className={styles.buttonWrapper}>
-                <Button type="submit" variant="primary" disabled={!isValid}>
-                  Продолжить
-                </Button>
-              </div>
-            </div>
-          </form>
-        </div>
-
-        <div className={styles.infoSection}>
-          <div className={styles.imageWrapper}>
-            <img
-              src={boardImage}
-              alt="Information"
-              className={styles.image}
-            />
+            </form>
           </div>
-          <h3 className={styles.infoTitle}>Укажите, чем вы готовы поделиться</h3>
-          <p className={styles.infoText}>
-            Так другие люди смогут увидеть ваши предложения и предложить вам обмен!
-          </p>
+
+          <div className={styles.infoSection}>
+            <div className={styles.imageWrapper}>
+              <img
+                src={boardImage}
+                alt="Information"
+                className={styles.image}
+              />
+            </div>
+            <h3 className={styles.infoTitle}>Укажите, чем вы готовы поделиться</h3>
+            <p className={styles.infoText}>
+              Так другие люди смогут увидеть ваши предложения и предложить вам обмен!
+            </p>
+          </div>
         </div>
       </div>
-    </div>
+
+      {skillPreview && (
+        <TeachSkillModal
+          isOpen={showSkillModal}
+          teachSkill={skillPreview}
+          onEdit={() => setShowSkillModal(false)}
+          onDone={handleConfirmSubmit}
+        />
+      )}
+
+      <ExchangeCreatedModal
+        isOpen={showSuccessModal}
+        onClose={() => {
+          setShowSuccessModal(false);
+          dispatch(clearRegister());
+          navigate("/");
+        }}
+      />
+    </>
   );
 };

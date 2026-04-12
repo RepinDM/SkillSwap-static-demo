@@ -1,25 +1,23 @@
 import type { FC } from "react";
-import { useNavigate } from "react-router-dom";
 import { Button } from "@/shared/ui/Button/Button";
 import type { TSkill } from "@/entities/skill/types";
-import styles from "./SkillModal.module.scss";
+import styles from "./TeachSkillModal.module.scss";
 
-interface SkillModalProps {
+interface teachSkillModalProps {
   isOpen: boolean;
   teachSkill: TSkill;
+  onEdit: () => void;
+  onDone: () => void;
 }
 
-export const SkillModal: FC<SkillModalProps> = ({
+export const TeachSkillModal: FC<teachSkillModalProps> = ({
   isOpen,
   teachSkill,
+  onEdit,
+  onDone,
 }) => {
-  const navigate = useNavigate();
 
   if (!isOpen) return null;
-
-  const handleDone = () => {
-    navigate("/");
-  };
 
   const mainImage = teachSkill.images?.[0];
 
@@ -46,15 +44,18 @@ export const SkillModal: FC<SkillModalProps> = ({
                 </p>
              </div>
              <div className={styles.actions}>
-              <Button variant="secondary" 
-                    iconRight={<img src="/edit.svg" alt="edit"/>}>
+              <Button
+                variant="secondary"
+                onClick={onEdit}
+                iconRight={<img src="/edit.svg" alt="edit" />}
+              >
                 Редактировать
               </Button>
 
-              <Button onClick={handleDone}>
+              <Button onClick={onDone}>
                 Готово
               </Button>
-             </div>
+            </div>
           </div>
 
           <div className={styles.gallery}>

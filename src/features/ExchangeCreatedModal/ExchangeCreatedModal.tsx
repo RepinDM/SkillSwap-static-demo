@@ -2,7 +2,7 @@ import type { FC } from "react";
 import { Modal } from "@/shared/ui/modal/Modal";
 import { Button } from "@/shared/ui/Button/Button";
 import { Avatar } from "@/shared/ui/Avatar/Avatar";
-import styles from "./ExchangeSuccessModal.module.scss";
+import styles from "./ExchangeCreatedModal.module.scss";
 
 interface ExchangeSuccessModalProps {
   isOpen: boolean;
