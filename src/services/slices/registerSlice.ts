@@ -1,6 +1,5 @@
 // store/registerSlice.ts
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
-import type { RootState } from "../store";
 
 interface RegisterState {
   step1: {
@@ -54,13 +53,14 @@ const registerSlice = createSlice({
   selectors: {
         selectStep1: (state) => state.step1,
         selectStep2: (state) => state.step2,
+        selectStep3: (state) => state.step3
     },
 });
 
 export const { setStep1, setStep2, setStep3, clearRegister } =
   registerSlice.actions;
 
-  export const { selectStep1, selectStep2 } =
+  export const { selectStep1, selectStep2, selectStep3 } =
   registerSlice.selectors;
 
 export default registerSlice.reducer;
