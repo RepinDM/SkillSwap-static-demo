@@ -1,7 +1,7 @@
 import { useState, useRef } from "react";
 import { Input } from "@/shared/ui/input";
 import { Button } from "@/shared/ui/Button/Button";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import clsx from "clsx";
 import styles from "./LoginForm.module.scss";
 import IconGoogle from "@/shared/image/icons/Google.svg";
@@ -21,10 +21,77 @@ export const LoginForm = () => {
     const passwordChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value);
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
+    const navigate = useNavigate();
+    const location = useLocation();
+
+    const from = location.state?.from?.pathname || "/";
+
     const handleVisible = () => {
         setIsPasswordVisible((v) => !v);
         passRef.current?.focus();   
     };
+
+    const handleLogin = async (e: React.FormEvent) => {
+        e.preventDefault();
+
+        try {
+            // вместо fetch - фейковый ответ
+            const fakeResponse = {
+                accessToken: "fake-access-token-123",
+                refreshToken: "fake-refresh-token-123",
+                user: {
+                    id: 1,
+                    email,
+                    name: "Test User",
+                },
+            };
+
+            // имитация задержки сервера
+            await new Promise((res) => setTimeout(res, 500));
+
+            localStorage.setItem("accessToken", fakeResponse.accessToken);
+            localStorage.setItem("refreshToken", fakeResponse.refreshToken);
+            localStorage.setItem("user", JSON.stringify(fakeResponse.user));
+
+            navigate(from, { replace: true });
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
+    // const handleLogin = async (e: React.FormEvent) => {
+    //     e.preventDefault();
+    //     try {
+    //         const response = await fetch("http://skillswap.ovnet.ru/api/login/", {
+    //             method: "POST",
+    //             headers: {
+    //                 "Content-Type": "application/json",
+    //             },
+    //             body: JSON.stringify({
+    //                 email,
+    //                 password,
+    //             }),
+    //         });
+
+    //         const data = await response.json();
+
+    //         if (!response.ok) {
+    //             throw new Error(data.error || "Login failed");
+    //         }
+
+    //         // СОХРАНЯЕМ ТОКЕН
+    //         localStorage.setItem("accessToken", data.accessToken);
+    //         localStorage.setItem("refreshToken", data.refreshToken);
+
+    //         // (опционально)
+    //         localStorage.setItem("user", JSON.stringify(data.user));
+
+    //         // редирект
+    //         navigate(from, { replace: true });
+    //     } catch (err) {
+    //         console.error(err);
+    //     }
+    // };
 
     return (
         <div className={styles.content}>
@@ -50,7 +117,7 @@ export const LoginForm = () => {
                     <span>или</span>
                 </div>
 
-                <form className={styles.auth_form}>
+               <form className={styles.auth_form} onSubmit={handleLogin}>
                     <Input
                         name="email"
                         placeholder="Введите email"
@@ -89,7 +156,7 @@ export const LoginForm = () => {
                     </div>
 
                     <div className={styles.submit_button}>
-                        <Button>
+                        <Button type="submit">
                             Войти
                         </Button>
                     </div>

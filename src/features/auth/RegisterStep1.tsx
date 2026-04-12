@@ -12,6 +12,8 @@ import eyeClosed from "@/shared/image/icons/eye-slash.svg";
 import iconGoogle from "@/shared/image/icons/Google.svg";
 import iconApple from "@/shared/image/icons/Apple.svg";
 import lightBulb from "@/shared/image/webp/light-bulb.webp";
+import { setStep1 } from "@/services/slices/registerSlice";
+import { useAppDispatch } from "@/services/hooks";
 
 const registerStep1Schema = yup.object({
   email: yup
@@ -35,6 +37,7 @@ type RegisterStep1Values = yup.InferType<typeof registerStep1Schema>;
 export const RegisterStep1 = () => {
   const navigate = useNavigate();
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const dispatch = useAppDispatch();
 
   const {
     register,
@@ -58,7 +61,13 @@ export const RegisterStep1 = () => {
     const isValid = await trigger();
     if (isValid) {
       const data = getValues();
-      navigate("/register/step-2", { state: data });
+      dispatch(
+        setStep1({
+          email: data.email,
+          password: data.password,
+        })
+      );
+      navigate("/register/step-2");
     }
   };
 

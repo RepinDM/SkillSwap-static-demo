@@ -12,6 +12,8 @@ import boardImage from '../../shared/image/webp/board.webp';
 import { CategorySelect } from './register-step2/ui/CategorySelect';
 import { SubcategorySelect } from './register-step2/ui/SubcategorySelect';
 import styles from './RegisterStep3.module.scss';
+import { useAppDispatch, useAppSelector } from '@/services/hooks';
+import { clearRegister, selectStep1, selectStep2, setStep3 } from '@/services/slices/registerSlice';
 
 interface IRegisterStep3Form {
   skillName: string;
@@ -55,6 +57,10 @@ export const RegisterStep3 = () => {
   const [isDragOver, setIsDragOver] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
+  const dispatch = useAppDispatch();
+
+  const step1 = useAppSelector(selectStep1);
+  const step2 = useAppSelector(selectStep2);
 
   const {
     register,
@@ -177,29 +183,57 @@ export const RegisterStep3 = () => {
   };
 
   // Отправка формы
-  const onSubmit = (data: IRegisterStep3Form) => {
-    const step2Data = localStorage.getItem('registerStep2');
-    const step1Data = localStorage.getItem('registerStep1');
-    
-    const completeRegistrationData = {
-      step1: step1Data ? JSON.parse(step1Data) : null,
-      step2: step2Data ? JSON.parse(step2Data) : null,
-      step3: {
-        skillName: data.skillName,
-        categoryId: Number(data.categoryId),
-        subcategoryId: Number(data.subcategoryId),
-        description: data.description,
-        imagesCount: data.images.length,
-        imageNames: data.images.map(f => f.name),
-      },
-    };
-    
-    localStorage.setItem('registrationComplete', JSON.stringify(completeRegistrationData));
-    
-    // Очищаем превью перед переходом
-    clearPreviews(imagePreviews);
-    // Временный переход на главную страницу
-    navigate('/');
+  const onSubmit = async (data: IRegisterStep3Form) => {
+    dispatch(setStep3(data));
+
+    const formData = new FormData();
+
+    // STEP 1
+    formData.append("email", step1?.email || "");
+    formData.append("password", step1?.password || "");
+
+    // STEP 2
+    formData.append("name", step2?.name || "");
+    formData.append("birthDate", step2?.birthDate || "");
+    formData.append("gender", step2?.gender || "");
+    formData.append("cityId", step2?.cityId || "");
+
+    if (step2?.subcategoryId) {
+      formData.append("learningSubcategoryIds", step2.subcategoryId);
+    }
+
+    if (step2?.avatar) {
+      formData.append("avatar", step2.avatar);
+    }
+
+    // STEP 3
+    formData.append("skillName", data.skillName);
+    formData.append("categoryId", data.categoryId);
+    formData.append("skillSubcategoryId", data.subcategoryId);
+    formData.append("description", data.description);
+
+    data.images.forEach((file) => {
+      formData.append("images", file);
+    });
+
+    try {
+      const response = await fetch(
+        "http://skillswap.ovnet.ru/api/register_user/",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+
+      const result = await response.json();
+
+      console.log("SUCCESS", result);
+
+      dispatch(clearRegister());
+      navigate("/");
+    } catch (e) {
+      console.error("ERROR", e);
+    }
   };
 
   const handleBack = () => {
@@ -336,7 +370,7 @@ export const RegisterStep3 = () => {
                 </Button>
               </div>
               <div className={styles.buttonWrapper}>
-                <Button variant="primary" onClick={handleSubmit(onSubmit)} disabled={!isValid}>
+                <Button type="submit" variant="primary" disabled={!isValid}>
                   Продолжить
                 </Button>
               </div>

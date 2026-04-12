@@ -18,6 +18,8 @@ import { CitySelect } from "@/features/auth/register-step2/ui/CitySelect";
 import { GenderSelect } from "@/features/auth/register-step2/ui/GenderSelect";
 import { SubcategorySelect } from "@/features/auth/register-step2/ui/SubcategorySelect";
 import styles from "./RegisterStep2.module.scss";
+import { setStep2 } from "@/services/slices/registerSlice";
+import { useAppDispatch } from "@/services/hooks";
 
 interface RegisterStep2FormValues {
   name: string;
@@ -61,6 +63,7 @@ export const RegisterStep2 = () => {
   const navigate = useNavigate();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
+  const dispatch = useAppDispatch();
 
   const {
     control,
@@ -113,9 +116,17 @@ export const RegisterStep2 = () => {
   };
 
   const onSubmit = (data: RegisterStep2FormValues) => {
-    localStorage.setItem("registerStep2", JSON.stringify(data));
+    const avatarFile = fileInputRef.current?.files?.[0] || null;
+
+    dispatch(
+      setStep2({
+        ...data,
+        avatar: avatarFile,
+      })
+    );
+
     navigate("/register/step-3");
-  };
+};
 
   const showSubcategoryError = submitCount > 0 && Boolean(errors.subcategoryId);
 

@@ -9,6 +9,7 @@ interface ButtonProps {
   disabled?: boolean;
   iconLeft?: ReactNode;
   iconRight?: ReactNode;
+  type?: "button" | "submit" | "reset";
 }
 
 export const Button: FC<ButtonProps> = ({
@@ -18,10 +19,11 @@ export const Button: FC<ButtonProps> = ({
   disabled = false,
   iconLeft,
   iconRight,
+  type = "button"
 }) => {
   return (
     <button
-      type="button"
+      type={type}
       className={clsx(styles.button, styles[variant])}
       onClick={onClick}
       disabled={disabled}
