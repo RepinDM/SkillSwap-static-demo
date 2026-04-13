@@ -209,9 +209,7 @@
 
 .buttonRow {
   margin-top: 20px;
-  max-width: 280px;
-  margin-right: auto;
-  margin-left: auto;
+  width: 100%;
 }
 
 @media (max-width: 960px) {
@@ -233,7 +231,7 @@
   }
 
   .buttonRow {
-    max-width: none;
+    width: 100%;
   }
 
   .avatarWrap {
