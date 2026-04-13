@@ -11,6 +11,8 @@ body {
   font-weight: var(--font-body-weight);
   font-size: var(--font-body-size);
   line-height: var(--font-body-line-height);
+  max-width: 1440px;
+  margin: 0 auto;
 }
 
 h1,

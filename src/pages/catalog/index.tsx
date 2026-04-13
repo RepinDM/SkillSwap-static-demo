@@ -244,7 +244,7 @@ const CatalogPage = () => {
   if (isLoading) return <p>Loading...</p>;
 
   return (
-    <div style={{ display: "flex", gap: "24px" }}>
+    <div style={{ display: "flex", gap: "24px", alignItems: "flex-start" }}>
       <FiltersSidebar values={filters} onChange={handleFiltersChange} />
       <div style={{ flex: 1 }}>
 
