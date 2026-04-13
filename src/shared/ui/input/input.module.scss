@@ -52,18 +52,28 @@
   position: relative;
 }
 
-.iconRight {
+.withIconLeft {
+  padding-left: 52px;
+}
+
+.withIconRight {
+  padding-right: 52px;
+}
+
+.iconRight,
+.iconLeft {
   position: absolute;
-  display: flex;
   top: 50%;
-  right: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   transform: translateY(-50%);
 }
 
 .iconLeft {
-  position: absolute;
-  display: flex;
-  top: 50%;
-  transform: translateY(-50%);
+  left: 16px;
 }
 
+.iconRight {
+  right: 16px;
+}

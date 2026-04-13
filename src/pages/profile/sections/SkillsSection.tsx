@@ -1,7 +1,5 @@
-import styles from "./SkillsSection.module.scss";
-
 const SkillsSection = () => {
-  return <article></article>;
+  return <div>Мои навыки</div>;
 };
 
 export default SkillsSection;

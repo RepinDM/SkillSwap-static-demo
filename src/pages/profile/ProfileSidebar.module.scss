@@ -1,0 +1,50 @@
+.sidebar {
+  width: 324px;
+  min-height: 752px;
+  border-radius: 24px;
+  background: var(--card-input);
+  padding: 28px 18px;
+  box-sizing: border-box;
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 44px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  color: var(--text);
+  font-family: var(--font-body-family);
+  font-size: var(--font-body-size);
+  line-height: var(--font-body-line-height);
+  text-decoration: none;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.link:hover {
+  background: var(--button-hover);
+}
+
+.linkActive {
+  background: var(--button-hover);
+}
+
+.icon {
+  width: 20px;
+  height: 20px;
+  flex: 0 0 auto;
+}
+
+@media (max-width: 960px) {
+  .sidebar {
+    width: 100%;
+    min-height: auto;
+  }
+}

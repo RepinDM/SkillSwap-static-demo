@@ -3,10 +3,7 @@ import type { InputHTMLAttributes } from "react";
 import styles from "./input.module.scss";
 import type { InputType } from "./input.types";
 
-interface InputProps extends Omit<
-  InputHTMLAttributes<HTMLInputElement>,
-  "type" | "onChange"
-> {
+interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, "type" | "onChange"> {
   type?: InputType;
   label?: string;
   error?: string;
@@ -52,7 +49,9 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             id={inputId}
             ref={ref}
             type={type}
-            className={`${styles.input} ${error ? styles.inputError : ""}`}
+            className={`${styles.input} ${error ? styles.inputError : ""} ${
+              iconLeft ? styles.withIconLeft : ""
+            } ${iconRight ? styles.withIconRight : ""}`}
             value={value}
             onChange={onChange}
             placeholder={placeholder}
