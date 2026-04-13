@@ -63,6 +63,7 @@ export const RegisterStep2 = () => {
   const navigate = useNavigate();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const dispatch = useAppDispatch();
 
   const {
@@ -107,6 +108,7 @@ export const RegisterStep2 = () => {
       URL.revokeObjectURL(avatarPreview);
     }
 
+    setAvatarFile(file);
     setAvatarPreview(URL.createObjectURL(file));
   };
 
@@ -116,8 +118,6 @@ export const RegisterStep2 = () => {
   };
 
   const onSubmit = (data: RegisterStep2FormValues) => {
-    const avatarFile = fileInputRef.current?.files?.[0] || null;
-
     dispatch(
       setStep2({
         ...data,

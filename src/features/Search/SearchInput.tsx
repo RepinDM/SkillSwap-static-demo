@@ -2,7 +2,7 @@ import { Input } from "@/shared/ui/input";
 import { setSearchQuery } from "@/services/slices/skillCardsSlice";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAppDispatch } from "@/services/hooks";
-import { useMemo, useEffect, useState } from "react";
+import { useMemo, useEffect } from "react";
 
 const debounce = (fn: (value: string) => void, delay: number) => {
   let timeout: ReturnType<typeof setTimeout>;
@@ -24,18 +24,15 @@ type SearchInputProps = {
 };
 
 export const SearchInput = ({
+  value = "",
   ...props
 }: SearchInputProps) => {
-
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const location = useLocation();
 
-  const [value, setValue] = useState("");
-
   useEffect(() => {
     if (location.pathname !== "/") {
-      setValue("");
       dispatch(setSearchQuery(""));
     }
   }, [location.pathname, dispatch]);
@@ -51,9 +48,7 @@ export const SearchInput = ({
   }, [dispatch, navigate, location.pathname]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setValue(value)
-    debouncedDispatch(value);
+    debouncedDispatch(e.target.value);
   };
 
   return <Input {...props} value={value} type="search" onChange={handleChange}/>
