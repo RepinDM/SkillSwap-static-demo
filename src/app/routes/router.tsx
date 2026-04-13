@@ -5,7 +5,6 @@ import SkillPage from "@/pages/skill";
 import LoginPage from "@/pages/login";
 import AboutPage from "@/pages/about";
 import ProfilePage from "@/pages/profile";
-import FavoritesPage from "@/pages/favorites";
 import CreatePage from "@/pages/create";
 import NotFoundPage from "@/pages/not-found";
 
@@ -21,10 +20,12 @@ import RequestsSection from "@/pages/profile/sections/RequestsSection";
 import ExchangesSection from "@/pages/profile/sections/ExchangesSection";
 import ProfileFavoritesSection from "@/pages/profile/sections/FavoritesSection";
 import SkillsSection from "@/pages/profile/sections/SkillsSection";
+import NotificationsPage from "@/pages/notifications";
 
 export const AppRouter = () => {
   return (
     <Routes>
+
       <Route element={<AuthMain />}>
         <Route path="/login" element={<LoginPage />} />
 
@@ -40,13 +41,14 @@ export const AppRouter = () => {
         <Route path="/" element={<CatalogPage />} />
         <Route path="/skill/:id" element={<SkillPage />} />
         <Route path="/about" element={<AboutPage />} />
+        <Route path="/notifications" element={<NotificationsPage />} />
 
         <Route
           path="/profile"
           element={
-            // <PrivateRoute>
+            <PrivateRoute>
               <ProfilePage />
-            // </PrivateRoute>
+            </PrivateRoute>
           }>
           <Route index element={<PersonalSection />} />
           <Route path="requests" element={<RequestsSection />} />
@@ -54,15 +56,6 @@ export const AppRouter = () => {
           <Route path="favorites" element={<ProfileFavoritesSection />} />
           <Route path="skills" element={<SkillsSection />} />
         </Route>
-
-        <Route
-          path="/favorites"
-          element={
-            <PrivateRoute>
-              <FavoritesPage />
-            </PrivateRoute>
-          }
-        />
 
         <Route
           path="/create"

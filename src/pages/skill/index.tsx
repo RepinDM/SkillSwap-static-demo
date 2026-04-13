@@ -7,10 +7,11 @@ import { SkillCard } from "@/widgets/SkillCard/SkillCard";
 import buttonLike from "@/shared/image/icons/like.svg";
 import { getAge } from "@/shared/lib/utils/getAge";
 import { getCategoryColor } from "@/shared/lib/utils/getCategoryColors";
+import { selectAllSkillCards } from "@/services/slices/skillCardsSlice";
 
 export const SkillPage = () => {
   const { id } = useParams<{ id: string }>();
-  const allCards = useAppSelector((state) => state.skillCards.allSkillCards);
+  const allCards = useAppSelector(selectAllSkillCards);
   const card = allCards.find((c) => c.id === Number(id));
 
   if (!card) return <p>Навык не найден</p>;

@@ -4,7 +4,8 @@ import chevronDownIcon from "@/shared/image/icons/chevron-down.svg";
 import chevronUpIcon from "@/shared/image/icons/chevron-up.svg";
 import crossIcon from "@/shared/image/icons/cross.svg";
 import styles from "@/features/auth/RegisterStep2.module.scss";
-import { CITIES } from "@/features/auth/register-step2/options";
+import { useAppSelector } from "@/services/hooks";
+import { selectAllSkillCards } from "@/services/slices/skillCardsSlice";
 
 type CitySelectProps = {
   error?: string;
@@ -17,6 +18,7 @@ export const CitySelect = ({ error, label, onChange, value }: CitySelectProps) =
   const wrapperRef = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
+  const allSkillCards = useAppSelector(selectAllSkillCards);
 
   useEffect(() => {
     const handleOutsideClick = (event: MouseEvent) => {
@@ -29,15 +31,31 @@ export const CitySelect = ({ error, label, onChange, value }: CitySelectProps) =
     return () => document.removeEventListener("mousedown", handleOutsideClick);
   }, []);
 
+  const cities = useMemo(() => {
+    const map = new Map();
+
+    allSkillCards.forEach((c) => {
+      const city = c.user.city;
+      if (city?.id && city?.name) {
+        map.set(city.id, {
+          id: city.id,
+          name: city.name,
+        });
+      }
+    });
+    return Array.from(map.values());
+  }, [allSkillCards]);
+
   const filteredCities = useMemo(() => {
     const normalized = query.trim().toLowerCase();
-    if (!normalized) return CITIES;
+    if (!normalized) return cities;
 
-    return CITIES.filter((city) => city.label.toLowerCase().includes(normalized));
-  }, [query]);
+    return cities.filter((city) =>
+      city.name.toLowerCase().includes(normalized)
+    );
+  }, [query, cities]);
 
-  const selectedLabel =
-    CITIES.find((item) => item.value === value)?.label || "Не указан";
+  const selectedLabel = cities.find((city) => String(city.id) === value)?.name || "Не указан";
 
   return (
     <div className={styles.field} ref={wrapperRef}>
@@ -79,16 +97,16 @@ export const CitySelect = ({ error, label, onChange, value }: CitySelectProps) =
           <div className={styles.optionsList}>
             {filteredCities.map((city) => (
               <button
-                key={city.value}
+                key={city.id}
                 type="button"
                 className={styles.optionButton}
                 onClick={() => {
-                  onChange(city.value);
+                  onChange(String(city.id)); // ← ВАЖНО
                   setOpen(false);
                   setQuery("");
                 }}
               >
-                {city.label}
+                {city.name}
               </button>
             ))}
           </div>
