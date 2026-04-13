@@ -22,8 +22,6 @@ import ProfileFavoritesSection from "@/pages/profile/sections/FavoritesSection";
 import SkillsSection from "@/pages/profile/sections/SkillsSection";
 import NotificationsPage from "@/pages/notifications";
 
-import { SearchResultsPage } from "@/pages/search/SearchResultsPage";
-
 export const AppRouter = () => {
   return (
     <Routes>
@@ -68,7 +66,6 @@ export const AppRouter = () => {
           }
         />
 
-        <Route path="/search" element={<SearchResultsPage/>}/>
         <Route path="*" element={<NotFoundPage />} />
       </Route>
     </Routes>

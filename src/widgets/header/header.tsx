@@ -17,7 +17,7 @@ import { NavDropdown } from "../NavDropdown/NavDropdown";
 import { useState } from "react";//useMemo добавить
 import { Avatar } from "@/shared/ui/Avatar/Avatar";
 import { NotificationDropdown } from "../Notifications/NotificationDropdown";
-import { SearchInput } from "@/shared/ui/Search/SearchInput";
+import { SearchInput } from "@/features/Search/SearchInput";
 import { useAppSelector } from "@/services/hooks";
 import { selectSearchQuery } from "@/services/slices/skillCardsSlice";
 

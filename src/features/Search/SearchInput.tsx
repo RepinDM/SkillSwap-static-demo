@@ -34,8 +34,8 @@ export const SearchInput = ({
   const [value, setValue] = useState("");
 
   useEffect(() => {
-    if (location.pathname === "/") {
-      setValue("")
+    if (location.pathname !== "/") {
+      setValue("");
       dispatch(setSearchQuery(""));
     }
   }, [location.pathname, dispatch]);
@@ -43,13 +43,12 @@ export const SearchInput = ({
   const debouncedDispatch = useMemo(() => {
     return debounce((value: string) => {
       dispatch(setSearchQuery(value));
-      if (value === "") {
-        navigate("/search");
-      } else {
-        navigate(`/search?q=${value}`);
+
+      if (location.pathname !== "/") {
+        navigate("/");
       }
     }, DELAY);
-  }, [dispatch, navigate]);
+  }, [dispatch, navigate, location.pathname]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
