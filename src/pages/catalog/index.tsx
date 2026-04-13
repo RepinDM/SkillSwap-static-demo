@@ -11,6 +11,9 @@ import {
 import { useInfiniteScroll } from "@/shared/hooks/useInfiniteScroll";
 import CatalogSection from "@/widgets/CatalogSection/CatalogSection";
 import { useCallback, useMemo, useState } from "react";
+import styles from "./GlobalSearch.module.scss";
+import { Button } from "@/shared/ui/Button/Button";
+import crossIcon from "@/shared/image/icons/cross.svg";
 
 const CatalogPage = () => {
   const allSkillCards = useAppSelector(selectAllSkillCards);
@@ -39,19 +42,20 @@ const CatalogPage = () => {
     (cards: TSkillCard[]) => {
       if (!searchQuery.trim()) return cards;
       const q = searchQuery.toLowerCase();
-      return cards.filter((card) =>
-        card.teachSkill.title.toLowerCase().includes(q) ||
-        card.user.name.toLowerCase().includes(q) ||
-        card.teachSkill.subcategory.name.toLowerCase().includes(q) ||
-        card.teachSkill.subcategory.category.name.toLowerCase().includes(q) ||
-
-        card.learnSkills.some(skill =>
-          skill.title.toLowerCase().includes(q) ||
-          skill.subcategory.name.toLowerCase().includes(q)
-        )
+      return cards.filter(
+        (card) =>
+          card.teachSkill.title.toLowerCase().includes(q) ||
+          card.user.name.toLowerCase().includes(q) ||
+          card.teachSkill.subcategory.name.toLowerCase().includes(q) ||
+          card.teachSkill.subcategory.category.name.toLowerCase().includes(q) ||
+          card.learnSkills.some(
+            (skill) =>
+              skill.title.toLowerCase().includes(q) ||
+              skill.subcategory.name.toLowerCase().includes(q),
+          ),
       );
     },
-    [searchQuery]
+    [searchQuery],
   );
 
   // Карточки прошедшие через фильтры пола/города/режима/подкатегорий
@@ -74,7 +78,7 @@ const CatalogPage = () => {
         if (filters.mode === "learn") {
           if (
             !card.learnSkills.some((skill) =>
-              filters.skillIds.includes(skill.subcategory.id)
+              filters.skillIds.includes(skill.subcategory.id),
             )
           )
             return false;
@@ -247,22 +251,26 @@ const CatalogPage = () => {
     <div style={{ display: "flex", gap: "24px", alignItems: "flex-start" }}>
       <FiltersSidebar values={filters} onChange={handleFiltersChange} />
       <div style={{ flex: 1 }}>
-
         {/* Активные фильтры */}
         {activeFilterTags.length > 0 && (
-          <div style={{ display: "flex", flexWrap: "wrap", gap: "8px", marginBottom: "16px" }}>
+          <div className={styles.activeFilterTags}>
             {activeFilterTags.map((tag) => (
-              <div key={tag.id}>
-                <span>{tag.label}</span>
-                <button onClick={tag.onRemove}>x</button>
-              </div>
+              <Button
+                className={styles.activeFilterTag}
+                key={tag.id}
+                onClick={tag.onRemove}
+                variant="tertiary"
+                iconRight={<img src={crossIcon} alt="close" />}
+              >
+                {tag.label}
+              </Button>
             ))}
           </div>
         )}
 
         {/* Счётчик результатов */}
         {(isSearching || isFiltering) && (
-          <p style={{ marginBottom: "16px", fontWeight: 600, fontSize: "20px" }}>
+          <p className={styles.searchResultsCount}>
             Подходящие предложения: {sourceCards.length}
           </p>
         )}

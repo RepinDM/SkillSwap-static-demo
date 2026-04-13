@@ -3,6 +3,7 @@ import styles from "./Button.module.scss";
 import clsx from "clsx";
 
 interface ButtonProps {
+  className?: string;
   children: ReactNode;
   onClick?: MouseEventHandler<HTMLButtonElement>;
   variant?: "primary" | "secondary" | "tertiary";
@@ -13,6 +14,7 @@ interface ButtonProps {
 }
 
 export const Button: FC<ButtonProps> = ({
+  className,
   children,
   onClick,
   variant = "primary",
@@ -24,7 +26,7 @@ export const Button: FC<ButtonProps> = ({
   return (
     <button
       type={type}
-      className={clsx(styles.button, styles[variant])}
+      className={clsx(styles.button, styles[variant], className)}
       onClick={onClick}
       disabled={disabled}
     >
