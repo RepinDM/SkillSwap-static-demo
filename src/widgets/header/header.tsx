@@ -17,10 +17,12 @@ import { NavDropdown } from "../NavDropdown/NavDropdown";
 import { useState } from "react";//useMemo добавить
 import { Avatar } from "@/shared/ui/Avatar/Avatar";
 import { NotificationDropdown } from "../Notifications/NotificationDropdown";
+import { SearchInput } from "@/shared/ui/Search/SearchInput";
+import { useAppSelector } from "@/services/hooks";
+import { selectSearchQuery } from "@/services/slices/skillCardsSlice";
 
 export const Header = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [searchValue, setSearchValue] = useState("");
   const [isLoggedIn] = useState(true);
   //
   // const isLoggedIn = useMemo(() => {
@@ -38,6 +40,8 @@ export const Header = () => {
   const closeDropdown = () => {
     setIsDropdownOpen(false);
   };
+  
+  const searchValue = useAppSelector(selectSearchQuery);
 
   const [isNotifOpen, setIsNotifOpen] = useState(false);
   
@@ -62,12 +66,11 @@ export const Header = () => {
       </nav>
       <div className={styles.searchWrapper}>
         <div className={styles.searchIcon} />
-        <input
-          placeholder="Искать навык"
-          value={searchValue}
-          onChange={(e) => setSearchValue(e.target.value)}
-          className={styles.searchInput}
-        ></input>
+        <SearchInput
+            className={styles.searchInput}
+            placeholder="Искать навык"
+            value={searchValue}
+        />
       </div>
       <div className={styles.authBlock}>
         {isLoggedIn ? (
