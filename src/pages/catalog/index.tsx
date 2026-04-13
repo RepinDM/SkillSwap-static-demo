@@ -4,6 +4,7 @@ import FiltersSidebar from "@/features/filter-sidebar/FilterSidebar";
 import { useAppSelector } from "@/services/hooks";
 import {
   selectAllSkillCards,
+  selectCategoryItems,
   selectSearchQuery,
   selectStatus,
 } from "@/services/slices/skillCardsSlice";
@@ -15,6 +16,7 @@ const CatalogPage = () => {
   const allSkillCards = useAppSelector(selectAllSkillCards);
   const status = useAppSelector(selectStatus);
   const searchQuery = useAppSelector(selectSearchQuery);
+  const categoryItems = useAppSelector(selectCategoryItems);
 
   const isLoading = status === "loading";
 
@@ -114,6 +116,77 @@ const CatalogPage = () => {
     return sourceCards.slice(0, visibleCount);
   }, [sourceCards, visibleCount]);
 
+  // Собираем активные плашки из текущих фильтров
+  const activeFilterTags = useMemo(() => {
+    const tags: { id: string; label: string; onRemove: () => void }[] = [];
+
+    // Режим (если не "all")
+    if (filters.mode === "learn") {
+      tags.push({
+        id: "mode-learn",
+        label: "Хочу научиться",
+        onRemove: () => handleFiltersChange({ ...filters, mode: "all" }),
+      });
+    }
+    if (filters.mode === "teach") {
+      tags.push({
+        id: "mode-teach",
+        label: "Могу научить",
+        onRemove: () => handleFiltersChange({ ...filters, mode: "all" }),
+      });
+    }
+
+    // Выбранные подкатегории
+    filters.skillIds.forEach((skillId) => {
+      const subcategory = categoryItems
+        .flatMap((c) => c.subcategories)
+        .find((s) => s.id === skillId);
+
+      if (subcategory) {
+        tags.push({
+          id: `skill-${skillId}`,
+          label: subcategory.name,
+          onRemove: () =>
+            handleFiltersChange({
+              ...filters,
+              skillIds: filters.skillIds.filter((id) => id !== skillId),
+            }),
+        });
+      }
+    });
+
+    // Города
+    filters.cities.forEach((city) => {
+      tags.push({
+        id: `city-${city}`,
+        label: city,
+        onRemove: () =>
+          handleFiltersChange({
+            ...filters,
+            cities: filters.cities.filter((c) => c !== city),
+          }),
+      });
+    });
+
+    // Пол
+    if (filters.gender === "male") {
+      tags.push({
+        id: "gender-male",
+        label: "Мужской",
+        onRemove: () => handleFiltersChange({ ...filters, gender: null }),
+      });
+    }
+    if (filters.gender === "female") {
+      tags.push({
+        id: "gender-female",
+        label: "Женский",
+        onRemove: () => handleFiltersChange({ ...filters, gender: null }),
+      });
+    }
+
+    return tags;
+  }, [filters, categoryItems, handleFiltersChange]);
+
   // Популярное и Новое тоже учитывают поиск
   const popularCards = useMemo(() => {
     if (filters.mode !== "all") return [];
@@ -174,25 +247,40 @@ const CatalogPage = () => {
     <div style={{ display: "flex", gap: "24px" }}>
       <FiltersSidebar values={filters} onChange={handleFiltersChange} />
       <div style={{ flex: 1 }}>
+
+        {/* Активные фильтры */}
+        {activeFilterTags.length > 0 && (
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "8px", marginBottom: "16px" }}>
+            {activeFilterTags.map((tag) => (
+              <div key={tag.id}>
+                <span>{tag.label}</span>
+                <button onClick={tag.onRemove}>x</button>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Счётчик результатов */}
+        {(isSearching || isFiltering) && (
+          <p style={{ marginBottom: "16px", fontWeight: 600, fontSize: "20px" }}>
+            Подходящие предложения: {sourceCards.length}
+          </p>
+        )}
+
+        {/* Секции каталога */}
         {isSearching || isFiltering ? (
           <CatalogSection
-            title={
-              isSearching
-                ? `Результаты поиска: «${searchQuery}»`
-                : "Результаты поиска"
-            }
+            title={isSearching ? `Результаты поиска: «${searchQuery}»` : ""}
             skillCards={displayedCards}
           />
         ) : (
           <>
             <CatalogSection title="Популярное" skillCards={popularCards} />
             <CatalogSection title="Новое" skillCards={newCards} />
-            <CatalogSection
-              title="Рекомендуем"
-              skillCards={displayedCards}
-            />
+            <CatalogSection title="Рекомендуем" skillCards={displayedCards} />
           </>
         )}
+
         {hasMore && !isLoading && (
           <div ref={lastElementRef} style={{ height: "20px" }} />
         )}
