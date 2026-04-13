@@ -1,14 +1,20 @@
 import type { TFilters } from "@/entities/filters/type";
+import type { TSkillCard } from "@/entities/skill/types";
 import FiltersSidebar from "@/features/filter-sidebar/FilterSidebar";
 import { useAppSelector } from "@/services/hooks";
-import { selectAllSkillCards, selectStatus } from "@/services/slices/skillCardsSlice";
-import CatalogSection from "@/widgets/CatalogSection/CatalogSection";
-import { useMemo, useState, useCallback } from "react";
+import {
+  selectAllSkillCards,
+  selectSearchQuery,
+  selectStatus,
+} from "@/services/slices/skillCardsSlice";
 import { useInfiniteScroll } from "@/shared/hooks/useInfiniteScroll";
+import CatalogSection from "@/widgets/CatalogSection/CatalogSection";
+import { useCallback, useMemo, useState } from "react";
 
 const CatalogPage = () => {
   const allSkillCards = useAppSelector(selectAllSkillCards);
   const status = useAppSelector(selectStatus);
+  const searchQuery = useAppSelector(selectSearchQuery);
 
   const isLoading = status === "loading";
 
@@ -26,8 +32,29 @@ const CatalogPage = () => {
     setVisibleCount(20);
   }, []);
 
+  // Применяет поиск поверх любого массива карточек
+  const applySearch = useCallback(
+    (cards: TSkillCard[]) => {
+      if (!searchQuery.trim()) return cards;
+      const q = searchQuery.toLowerCase();
+      return cards.filter((card) =>
+        card.teachSkill.title.toLowerCase().includes(q) ||
+        card.user.name.toLowerCase().includes(q) ||
+        card.teachSkill.subcategory.name.toLowerCase().includes(q) ||
+        card.teachSkill.subcategory.category.name.toLowerCase().includes(q) ||
+
+        card.learnSkills.some(skill =>
+          skill.title.toLowerCase().includes(q) ||
+          skill.subcategory.name.toLowerCase().includes(q)
+        )
+      );
+    },
+    [searchQuery]
+  );
+
+  // Карточки прошедшие через фильтры пола/города/режима/подкатегорий
   const filteredCards = useMemo(() => {
-    return allSkillCards.filter(card => {
+    return allSkillCards.filter((card) => {
       const cityName = card.user.city?.name;
 
       if (filters.gender) {
@@ -35,15 +62,25 @@ const CatalogPage = () => {
         if (filters.gender !== card.user.gender) return false;
       }
 
-      if (filters.cities.length > 0 && (!cityName || !filters.cities.includes(cityName))) return false;
+      if (
+        filters.cities.length > 0 &&
+        (!cityName || !filters.cities.includes(cityName))
+      )
+        return false;
 
       if (filters.skillIds.length > 0) {
         if (filters.mode === "learn") {
-          if (!card.learnSkills.some(skill => filters.skillIds.includes(skill.subcategory.id))) return false;
+          if (
+            !card.learnSkills.some((skill) =>
+              filters.skillIds.includes(skill.subcategory.id)
+            )
+          )
+            return false;
         }
 
         if (filters.mode === "teach") {
-          if (!filters.skillIds.includes(card.teachSkill.subcategory.id)) return false;
+          if (!filters.skillIds.includes(card.teachSkill.subcategory.id))
+            return false;
         }
       }
 
@@ -51,47 +88,59 @@ const CatalogPage = () => {
     });
   }, [allSkillCards, filters]);
 
+  // Итоговый список для отображения - фильтры + поиск
   const sourceCards = useMemo(() => {
+    let cards: TSkillCard[];
+
     if (filters.mode === "all") {
-      const filteredByGenderAndCity = allSkillCards.filter(card => {
+      cards = allSkillCards.filter((card) => {
         const cityName = card.user.city?.name;
-
-        if (filters.gender) {
-          if (!card.user.gender) return false;
-          if (filters.gender !== card.user.gender) return false;
-        }
-
-        if (filters.cities.length > 0 && (!cityName || !filters.cities.includes(cityName))) return false;
-
+        if (filters.gender && card.user.gender !== filters.gender) return false;
+        if (
+          filters.cities.length > 0 &&
+          (!cityName || !filters.cities.includes(cityName))
+        )
+          return false;
         return true;
       });
-      return filteredByGenderAndCity;
+    } else {
+      cards = filteredCards;
     }
 
-    return filteredCards;
-  }, [allSkillCards, filters, filteredCards]);
+    return applySearch(cards);
+  }, [allSkillCards, filters, filteredCards, applySearch]);
 
   const displayedCards = useMemo(() => {
     return sourceCards.slice(0, visibleCount);
   }, [sourceCards, visibleCount]);
 
+  // Популярное и Новое тоже учитывают поиск
   const popularCards = useMemo(() => {
     if (filters.mode !== "all") return [];
-    return allSkillCards.filter(card => {
+    const base = allSkillCards.filter((card) => {
       const cityName = card.user.city?.name;
       if (filters.gender && card.user.gender !== filters.gender) return false;
-      if (filters.cities.length > 0 && (!cityName || !filters.cities.includes(cityName))) return false;
+      if (
+        filters.cities.length > 0 &&
+        (!cityName || !filters.cities.includes(cityName))
+      )
+        return false;
       return true;
     });
-  }, [allSkillCards, filters]);
+    return applySearch(base);
+  }, [allSkillCards, filters, applySearch]);
 
   const newCards = useMemo(() => {
     if (filters.mode !== "all") return [];
-    return [...allSkillCards]
-      .filter(card => {
+    const base = [...allSkillCards]
+      .filter((card) => {
         const cityName = card.user.city?.name;
         if (filters.gender && card.user.gender !== filters.gender) return false;
-        if (filters.cities.length > 0 && (!cityName || !filters.cities.includes(cityName))) return false;
+        if (
+          filters.cities.length > 0 &&
+          (!cityName || !filters.cities.includes(cityName))
+        )
+          return false;
         return card.teachSkill?.createdDate;
       })
       .sort((a, b) => {
@@ -100,13 +149,14 @@ const CatalogPage = () => {
         return dateB.getTime() - dateA.getTime();
       })
       .slice(0, 3);
-  }, [allSkillCards, filters]);
+    return applySearch(base);
+  }, [allSkillCards, filters, applySearch]);
 
   const hasMore = visibleCount < sourceCards.length;
 
   const loadMore = () => {
     if (!hasMore || isLoading) return;
-    setVisibleCount(prev => prev + 20);
+    setVisibleCount((prev) => prev + 20);
   };
 
   const { lastElementRef } = useInfiniteScroll({
@@ -115,14 +165,25 @@ const CatalogPage = () => {
     onLoadMore: loadMore,
   });
 
-  if (isLoading) return <p>Loading...</p>;
+  const isSearching = searchQuery.trim().length > 0;
+  const isFiltering = filters.mode !== "all" || filters.skillIds.length > 0;
 
+  if (isLoading) return <p>Loading...</p>;
 
   return (
     <div style={{ display: "flex", gap: "24px" }}>
       <FiltersSidebar values={filters} onChange={handleFiltersChange} />
       <div style={{ flex: 1 }}>
-        {filters.mode === "all" && (
+        {isSearching || isFiltering ? (
+          <CatalogSection
+            title={
+              isSearching
+                ? `Результаты поиска: «${searchQuery}»`
+                : "Результаты поиска"
+            }
+            skillCards={displayedCards}
+          />
+        ) : (
           <>
             <CatalogSection title="Популярное" skillCards={popularCards} />
             <CatalogSection title="Новое" skillCards={newCards} />
@@ -130,18 +191,14 @@ const CatalogPage = () => {
               title="Рекомендуем"
               skillCards={displayedCards}
             />
-            {hasMore && !isLoading && (
-              <div ref={lastElementRef} style={{ height: "20px" }} />
-            )}
           </>
         )}
-
-        {filters.mode !== "all" && (
-          <CatalogSection title="Результаты поиска" skillCards={filteredCards} />
+        {hasMore && !isLoading && (
+          <div ref={lastElementRef} style={{ height: "20px" }} />
         )}
       </div>
     </div>
   );
-}
+};
 
 export default CatalogPage;
