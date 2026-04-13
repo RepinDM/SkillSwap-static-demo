@@ -41,7 +41,55 @@
   object-fit: contain;
 }
 
+.field {
+  position: relative;
+}
+
 .textarea {
-  max-height: 120px;
+  min-height: 120px;
+  width: 460px;
   overflow-y: auto;
+  resize: none;
+  border: 1px solid var(--border-input);
+  border-radius: var(--input-radius);
+  padding: 12px 20px;
+  box-sizing: border-box;
+}
+
+.textarea:disabled {
+  cursor: default;
+  color: var(--disabled-text);
+}
+
+.iconRight {
+  position: absolute;
+  display: flex;
+  top: 50%;
+  right: 14px;
+  transform: translateY(-50%);
+}
+
+.editButton {
+  position: absolute;
+  z-index: 2;
+  display: flex;
+  top: 50%;
+  right: 14px;
+  transform: translateY(-50%);
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+.editButton img {
+  width: 24px;
+  height: 24px;
+  display: block;
+}
+
+.passwordLink {
+  color: var(--text-link);
+  font-family: var(--font-h4-family);
+  font-weight: var(--font-h4-weight);
+  font-size: var(--font-h4-size);
+  line-height: var(--font-h4-line-height);
 }

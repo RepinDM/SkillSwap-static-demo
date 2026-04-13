@@ -1,3 +1,7 @@
+//1. Верстка личного кабинета
+//2. Смена пароля, инпуты Имя, Почта, О себе заблокированы до нажатия на иконка изменить
+//3.
+
 import { Controller, useForm } from "react-hook-form";
 import styles from "./PersonalSection.module.scss";
 import { Avatar } from "@/shared/ui/Avatar/Avatar";
@@ -8,7 +12,7 @@ import { CitySelect } from "@/features/auth/register-step2/ui/CitySelect";
 import EditPhoto from "@/shared/image/icons/gallery-edit.svg";
 import EditIcon from "@/shared/image/icons/edit.svg";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/shared/ui/Button/Button";
 
 import { MOCK_USER } from "../mock_user";
@@ -20,10 +24,24 @@ interface PersonalFormValues {
   gender: string;
   cityId: string;
   about: string;
+  password: string;
 }
 
 const PersonalSection = () => {
-  const { control, reset } = useForm<PersonalFormValues>({
+  const [editingField, setEditingField] = useState<string | null>(null);
+  const [isEditingPassword, setIsEditingPassword] = useState(false);
+
+  const handleEditClick = (field: string) => {
+    setEditingField(field);
+  };
+
+  const {
+    control,
+    reset,
+    register,
+    setValue,
+    formState: { isSubmitting, isDirty },
+  } = useForm<PersonalFormValues>({
     mode: "onChange",
     defaultValues: {
       email: "",
@@ -32,24 +50,20 @@ const PersonalSection = () => {
       gender: "",
       cityId: "",
       about: "",
+      password: "",
     },
   });
 
   useEffect(() => {
-    reset({
-      email: MOCK_USER.email,
-      name: MOCK_USER.name,
-      birthDate: MOCK_USER.birthDate,
-      gender: MOCK_USER.gender,
-      cityId: MOCK_USER.cityId,
-      about: MOCK_USER.about,
-    });
+    reset(MOCK_USER);
   }, [reset]);
 
+
   return (
-    <div className={styles.main}>
+    <form className={styles.main} >
       <section className={styles.about}>
         <div>
+          {/* Почта */}
           <Controller
             name="email"
             control={control}
@@ -59,10 +73,61 @@ const PersonalSection = () => {
                 placeholder="Введите вашу почту"
                 value={field.value}
                 onChange={field.onChange}
-                iconRight={<img src={EditIcon} alt="Редактировать" />}
+                disabled={editingField !== "email"}
+                iconRight={
+                  <button
+                    type="button"
+                    onClick={() => handleEditClick("email")}
+                    aria-label="Редактировать почту"
+                  >
+                    <img src={EditIcon} alt="" />
+                  </button>
+                }
               />
             )}
           />
+          {/* Изменить пароль */}
+          <div>
+            {!isEditingPassword ? (
+              <button
+                type="button"
+                className={styles.passwordLink}
+                onClick={() => setIsEditingPassword(true)}
+              >
+                <span>Изменить пароль</span>
+              </button>
+            ) : (
+              <Controller
+                name="password"
+                control={control}
+                rules={{
+                  required: "Введите новый пароль",
+                  minLength: { value: 6, message: "Минимум 6 символов" },
+                }}
+                render={({ field, fieldState }) => (
+                  <Input
+                    {...field}
+                    type="password"
+                    label="Новый пароль"
+                    placeholder="Придумайте пароль"
+                    error={fieldState.error?.message}
+                    iconRight={
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setValue("password", "");
+                          setIsEditingPassword(false);
+                        }}
+                      >
+                        ✕
+                      </button>
+                    }
+                  />
+                )}
+              />
+            )}
+          </div>
+          {/* Имя */}
           <Controller
             name="name"
             control={control}
@@ -72,11 +137,21 @@ const PersonalSection = () => {
                 placeholder="Введите ваше имя"
                 value={field.value}
                 onChange={field.onChange}
-                iconRight={<img src={EditIcon} alt="Редактировать" />}
+                disabled={editingField !== "name"}
+                iconRight={
+                  <button
+                    type="button"
+                    onClick={() => handleEditClick("name")}
+                    aria-label="Редактировать имя"
+                  >
+                    <img src={EditIcon} alt="" />
+                  </button>
+                }
               />
             )}
           />
-          <div className={styles.row}>
+          {/* Дата + Пол */}
+          <div>
             <Controller
               name="birthDate"
               control={control}
@@ -100,6 +175,7 @@ const PersonalSection = () => {
               )}
             />
           </div>
+          {/* Город */}
           <Controller
             name="cityId"
             control={control}
@@ -111,15 +187,30 @@ const PersonalSection = () => {
               />
             )}
           />
+          {/* О себе */}
           <div className={styles.field}>
             <label className={styles.label}>О себе</label>
+
             <textarea
               className={styles.textarea}
-              placeholder="Напишите что-нибудь о себе"
+              placeholder="Напишите что-нибудь о себе..."
+              disabled={editingField !== "about"}
+              {...register("about")}
+              autoFocus={editingField === "about"}
             />
+            <button
+              type="button"
+              className={styles.editButton}
+              onClick={() => handleEditClick("about")}
+              aria-label="Редактировать"
+            >
+              <img src={EditIcon} alt="" />
+            </button>
           </div>
         </div>
-        <Button>Сохранить</Button>
+        <Button disabled={isSubmitting || !isDirty}>
+          {isSubmitting ? "Сохранение..." : "Сохранить"}
+        </Button>
       </section>
       <section className={styles.photo}>
         <div className={styles.avatarField}>
@@ -130,12 +221,16 @@ const PersonalSection = () => {
           >
             <Avatar src={MOCK_USER.avatar} size={244} />
             <span className={styles.editPhoto}>
-              <img src={EditPhoto} alt="" className={styles.addIcon} />
+              <img
+                src={EditPhoto}
+                alt="Изменить или добавить фото"
+                className={styles.addIcon}
+              />
             </span>
           </button>
         </div>
       </section>
-    </div>
+    </form>
   );
 };
 

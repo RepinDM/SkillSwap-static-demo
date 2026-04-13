@@ -47,3 +47,23 @@
   line-height: var(--font-caption-line-height);
   color: var(--text);
 }
+
+.inputContainer {
+  position: relative;
+}
+
+.iconRight {
+  position: absolute;
+  display: flex;
+  top: 50%;
+  right: 14px;
+  transform: translateY(-50%);
+}
+
+.iconLeft {
+  position: absolute;
+  display: flex;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
