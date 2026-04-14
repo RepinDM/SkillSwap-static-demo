@@ -1,8 +1,7 @@
 import type { TCategoryItem, TSubcategory } from "@/entities/category/types";
 import type { TSkill } from "@/entities/skill/types";
 import type { TUserInfo } from "@/entities/user/types";
-
-const URL = import.meta.env.VITE_SKILLSWAP_API_URL;
+import { API_URL } from "./config";
 
 const checkResponse = <T>(res: Response): Promise<T> => {
   console.log("RESPONSE STATUS:", res.status);
@@ -26,7 +25,7 @@ export type TUserSkillsResponse = {
 };
 
 export const getUserSkills = () =>
-  fetch(`${URL}/get_user_skill_list`)
+  fetch(`${API_URL}/get_user_skill_list`)
     .then((res) => checkResponse<TUserSkillsResponse>(res))
     .then((data) => {
       console.log("PARSED DATA:", data);

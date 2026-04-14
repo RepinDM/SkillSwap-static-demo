@@ -17,6 +17,7 @@ import { clearRegister, selectStep1, selectStep2, selectStep3, setStep3 } from '
 import type { TSkill } from '@/entities/skill/types';
 import { TeachSkillModal } from '../TeachSkillModal/components/SkillModal/TeachSkillModal';
 import { ExchangeCreatedModal } from '../ExchangeCreatedModal/ExchangeCreatedModal';
+import { API_URL } from '@/api/config';
 
 interface IRegisterStep3Form {
   skillName: string;
@@ -242,7 +243,7 @@ export const RegisterStep3 = () => {
     });
 
     try {
-      await fetch("http://skillswap.ovnet.ru/api/register_user/", {
+      await fetch(`${API_URL}/register_user/`, {
         method: "POST",
         body: formData,
       });

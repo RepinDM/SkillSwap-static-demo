@@ -21,12 +21,17 @@ import ExchangesSection from "@/pages/profile/sections/ExchangesSection";
 import ProfileFavoritesSection from "@/pages/profile/sections/FavoritesSection";
 import SkillsSection from "@/pages/profile/sections/SkillsSection";
 import NotificationsPage from "@/pages/notifications";
+import { PublicRoute } from "./PublicRoute";
 
 export const AppRouter = () => {
   return (
     <Routes>
-
-      <Route element={<AuthMain />}>
+      <Route
+        element={
+          <PublicRoute>
+            <AuthMain />
+          </PublicRoute>
+        }>
         <Route path="/login" element={<LoginPage />} />
 
         <Route path="/register" element={<RegisterPage />}>
