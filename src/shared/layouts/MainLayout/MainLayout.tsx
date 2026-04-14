@@ -1,6 +1,5 @@
 // Добавлен Layout для отображения Header/Footer для разного контента
-
-import { Header } from "@/widgets/header/header";
+import { Header } from "@/widgets/Header/Header";
 import { Footer } from "@/widgets/Footer/Footer";
 import styles from "./MainLayout.module.scss";
 import { Outlet } from "react-router-dom";

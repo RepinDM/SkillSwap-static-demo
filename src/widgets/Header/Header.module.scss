@@ -113,3 +113,15 @@
   background: rgba(224, 121, 110, 1);
   border-radius: 50%;
 }
+
+.userInfo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.userName {
+  font-family: var(--font-body-family);
+  font-size: var(--font-body-size);
+  color: rgba(12, 12, 12, 1);
+}
