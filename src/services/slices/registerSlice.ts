@@ -14,6 +14,7 @@ interface RegisterState {
     cityId: string;
     learnSkills: { categoryId: string; subcategoryId: string }[];
     avatar?: File | null;
+    about?: string;
   } | null;
 
   step3: {
