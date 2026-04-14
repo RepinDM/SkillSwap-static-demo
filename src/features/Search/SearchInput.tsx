@@ -2,18 +2,7 @@ import { Input } from "@/shared/ui/input";
 import { setSearchQuery } from "@/services/slices/skillCardsSlice";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAppDispatch } from "@/services/hooks";
-import { useMemo, useEffect } from "react";
-
-const debounce = (fn: (value: string) => void, delay: number) => {
-  let timeout: ReturnType<typeof setTimeout>;
-
-  return (value: string) => {
-    clearTimeout(timeout);
-    timeout = setTimeout(() => {
-      fn(value);
-    }, delay);
-  };
-};
+import { useEffect, useRef, useState } from "react";
 
 const DELAY = 300;
 
@@ -31,25 +20,45 @@ export const SearchInput = ({
   const navigate = useNavigate();
   const location = useLocation();
 
+  const [localValue, setLocalValue] = useState(value);
+
+  useEffect(() => {
+    setLocalValue(value);
+  }, [value]);
+
   useEffect(() => {
     if (location.pathname !== "/") {
       dispatch(setSearchQuery(""));
+      setLocalValue("");
     }
   }, [location.pathname, dispatch]);
 
-  const debouncedDispatch = useMemo(() => {
-    return debounce((value: string) => {
-      dispatch(setSearchQuery(value));
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+
+    setLocalValue(val);
+
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+
+    timeoutRef.current = setTimeout(() => {
+      dispatch(setSearchQuery(val));
 
       if (location.pathname !== "/") {
         navigate("/");
       }
     }, DELAY);
-  }, [dispatch, navigate, location.pathname]);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    debouncedDispatch(e.target.value);
   };
 
-  return <Input {...props} value={value} type="search" onChange={handleChange}/>
-}
+  return (
+    <Input
+      {...props}
+      value={localValue}
+      type="search"
+      onChange={handleChange}
+    />
+  );
+};
