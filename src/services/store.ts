@@ -1,11 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit'
 import skillCardsSlice from './slices/skillCardsSlice'
 import registerSlice from './slices/registerSlice';
+import authSlice from './slices/authSlice';
 
 export const store = configureStore({
   reducer: {
     skillCards: skillCardsSlice,
     register: registerSlice,
+    auth: authSlice,
   },
 
   middleware: (getDefaultMiddleware) =>
