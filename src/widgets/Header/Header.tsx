@@ -92,10 +92,10 @@ export const Header = () => {
             <button className={styles.iconBtn}>
               <img src={likeIcon} alt="Избранное" />
             </button>
-            <div className={styles.userInfo}>
+            <Link to="/profile" className={styles.userInfo}>
               <span className={styles.userName}>{user?.name}</span>
-              <Avatar />
-            </div>
+              <Avatar src={user?.avatar} />
+            </Link>
           </div>
         ) : (
           <>
