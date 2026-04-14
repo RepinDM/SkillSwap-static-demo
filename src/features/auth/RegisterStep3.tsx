@@ -70,7 +70,7 @@ export const RegisterStep3 = () => {
 
   const step1 = useAppSelector(selectStep1);
   const step2 = useAppSelector(selectStep2);
-   const step3 = useAppSelector(selectStep3);
+  const step3 = useAppSelector(selectStep3);
 
   const {
     register,
@@ -83,13 +83,22 @@ export const RegisterStep3 = () => {
     resolver: yupResolver(validationSchema),
     mode: 'onChange',
     defaultValues: {
-      skillName: '',
-      categoryId: '',
-      subcategoryId: '',
-      description: '',
-      images: [],
+      skillName: step3?.skillName || "",
+      categoryId: step3?.categoryId || "",
+      subcategoryId: step3?.subcategoryId || "",
+      description: step3?.description || "",
+      images: step3?.images || [],
     },
   });
+
+  useEffect(() => {
+    if (!step3) return;
+
+    setValue("skillName", step3.skillName);
+    setValue("categoryId", step3.categoryId);
+    setValue("subcategoryId", step3.subcategoryId);
+    setValue("description", step3.description);
+  }, [step3, setValue]);
 
   const selectedCategoryId = useWatch({
     control,
