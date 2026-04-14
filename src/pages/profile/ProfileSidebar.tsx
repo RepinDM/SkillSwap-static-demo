@@ -5,6 +5,7 @@ import exchangeIcon from "@/shared/image/icons/message-text.svg";
 import favoriteIcon from "@/shared/image/icons/like.svg";
 import skillIcon from "@/shared/image/icons/idea.svg";
 import personalIcon from "@/shared/image/icons/user.svg";
+import LogoutButton from "@/features/auth/logout/LogoutButton";
 
 const navItems = [
   { to: "requests", label: "Заявки", icon: requestIcon, end: false },
@@ -32,6 +33,9 @@ const ProfileSidebar = () => {
           </NavLink>
         ))}
       </nav>
+      <div className={styles.logout}>
+        <LogoutButton />
+      </div>
     </aside>
   );
 };
