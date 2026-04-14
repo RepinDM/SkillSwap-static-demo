@@ -1,12 +1,19 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { loginUser } from "../actions/login";
-import type { TUserAuth } from "@/entities/user/types";
+import type { TGender, TUserAuth } from "@/entities/user/types";
 
 // interface AuthUser {
 //   id: number;
 //   name: string;
 //   email: string;
 //   avatar?: string;
+//   about?: string;
+//   gender?: TGender;
+//   birthDate?: string;
+//   city?: {
+//     id: number;
+//     name: string;
+//   };
 // }
 
 interface AuthState {
