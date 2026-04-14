@@ -1,8 +1,6 @@
-
-
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useEffect, useRef, useState } from "react";
-import { Controller, useForm, useWatch } from "react-hook-form";
+import { Controller, useFieldArray, useForm, useWatch, type Resolver } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import * as yup from "yup";
 
@@ -11,6 +9,7 @@ import { Button } from "@/shared/ui/Button/Button";
 import { Input } from "@/shared/ui/input/input";
 
 import addIcon from "@/shared/image/icons/add2.svg";
+import crossIcon from "@/shared/image/icons/cross.svg";
 import infoImage from "@/shared/image/webp/info.webp";
 import { Calendar } from "@/features/auth/register-step2/ui/Calendar";
 import { CategorySelect } from "@/features/auth/register-step2/ui/CategorySelect";
@@ -21,42 +20,38 @@ import styles from "./RegisterStep2.module.scss";
 import { setStep2 } from "@/services/slices/registerSlice";
 import { useAppDispatch } from "@/services/hooks";
 
+interface LearnSkill {
+  categoryId: string;
+  subcategoryId: string;
+}
+
 interface RegisterStep2FormValues {
   name: string;
   birthDate: string;
   gender: string;
   cityId: string;
-  categoryId: string;
-  subcategoryId: string;
+  learnSkills?: LearnSkill[];
 }
 
 const validationSchema = yup.object({
-  name: yup
-    .string()
-    .required("Имя обязательно")
-    .min(2, "Имя должно содержать минимум 2 символа")
-    .max(50, "Имя не должно превышать 50 символов"),
+  name: yup.string().required("Имя обязательно").min(2).max(50),
   birthDate: yup.string().required("Дата рождения обязательна"),
   gender: yup.string().required("Пол обязателен").test(
-    "gender-selected",
-    "Выберите пол",
-    (value) => Boolean(value)
+    "gender-selected", "Выберите пол", (v) => Boolean(v)
   ),
   cityId: yup.string().required("Город обязателен").test(
-    "city-selected",
-    "Выберите город",
-    (value) => Boolean(value)
+    "city-selected", "Выберите город", (v) => Boolean(v)
   ),
-  categoryId: yup.string().required("Категория обязательна").test(
-    "category-selected",
-    "Выберите категорию",
-    (value) => Boolean(value)
-  ),
-  subcategoryId: yup.string().required("Подкатегория обязательна").test(
-    "subcategory-selected",
-    "Выберите подкатегорию",
-    (value) => Boolean(value)
-  ),
+  learnSkills: yup.array().of(
+    yup.object({
+      categoryId: yup.string().required("Категория обязательна").test(
+        "cat", "Выберите категорию", (v) => Boolean(v)
+      ),
+      subcategoryId: yup.string().required("Подкатегория обязательна").test(
+        "sub", "Выберите подкатегорию", (v) => Boolean(v)
+      ),
+    })
+  ).min(1),
 });
 
 export const RegisterStep2 = () => {
@@ -72,77 +67,63 @@ export const RegisterStep2 = () => {
     setValue,
     formState: { errors, isValid, submitCount },
   } = useForm<RegisterStep2FormValues>({
-    resolver: yupResolver(validationSchema),
+    resolver: yupResolver(validationSchema) as Resolver<RegisterStep2FormValues>,
     mode: "onChange",
     defaultValues: {
       name: "",
       birthDate: "",
       gender: "",
       cityId: "",
-      categoryId: "",
-      subcategoryId: "",
+      learnSkills: [{ categoryId: "", subcategoryId: "" }],
     },
   });
 
-  // Значения из формы нужны для зависимых полей и подписей в кастомных селектах.
-  const selectedCategoryId = useWatch({ control, name: "categoryId" });
+  // useFieldArray управляет динамическим списком навыков
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "learnSkills",
+  });
 
-  // Освобождаем blob URL превью, чтобы не оставлять лишние ссылки в памяти.
   useEffect(() => {
     return () => {
-      if (avatarPreview) {
-        URL.revokeObjectURL(avatarPreview);
-      }
+      if (avatarPreview) URL.revokeObjectURL(avatarPreview);
     };
   }, [avatarPreview]);
 
-  const handleAvatarClick = () => {
-    fileInputRef.current?.click();
-  };
+  const handleAvatarClick = () => fileInputRef.current?.click();
 
-  const handleAvatarChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
+  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
     if (!file) return;
-
-    if (avatarPreview) {
-      URL.revokeObjectURL(avatarPreview);
-    }
-
+    if (avatarPreview) URL.revokeObjectURL(avatarPreview);
     setAvatarFile(file);
     setAvatarPreview(URL.createObjectURL(file));
   };
 
   const handleBack = () => navigate("/register");
-  const handleContinue = () => {
-    void handleSubmit(onSubmit)();
-  };
+  const handleContinue = () => void handleSubmit(onSubmit)();
 
   const onSubmit = (data: RegisterStep2FormValues) => {
     dispatch(
       setStep2({
         ...data,
+        learnSkills: data.learnSkills ?? [],
         avatar: avatarFile,
       })
     );
 
     navigate("/register/step-3");
-};
-
-  const showSubcategoryError = submitCount > 0 && Boolean(errors.subcategoryId);
+  };
 
   return (
     <div className={styles.container}>
       <div className={styles.content}>
         <section className={styles.formSection}>
           <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
-            {/* Загрузка аватара вынесена в отдельную кнопку, чтобы клик был предсказуемым. */}
+
+            {/* Аватар */}
             <div className={styles.avatarField}>
-              <button
-                type="button"
-                className={styles.avatarButton}
-                onClick={handleAvatarClick}
-                aria-label="Загрузить аватар"
-              >
+              <button type="button" className={styles.avatarButton} onClick={handleAvatarClick}>
                 <Avatar src={avatarPreview || undefined} size={72} />
                 <span className={styles.addIconWrapper}>
                   <img src={addIcon} alt="" className={styles.addIcon} />
@@ -157,121 +138,83 @@ export const RegisterStep2 = () => {
               />
             </div>
 
+            {/* Имя */}
             <Controller
               name="name"
               control={control}
               render={({ field }) => (
-                <Input
-                  label="Имя"
-                  placeholder="Введите ваше имя"
-                  value={field.value}
-                  onChange={field.onChange}
+                <Input label="Имя" placeholder="Введите ваше имя"
+                  value={field.value} onChange={field.onChange}
                   error={errors.name?.message}
                 />
               )}
             />
 
-            {/* Дата и пол стоят в одной строке, как в макете. */}
+            {/* Дата и пол */}
             <div className={styles.row}>
-              <Controller
-                name="birthDate"
-                control={control}
+              <Controller name="birthDate" control={control}
                 render={({ field }) => (
-                  <Calendar
-                    label="Дата рождения"
-                    value={field.value}
-                    onChange={field.onChange}
-                    error={errors.birthDate?.message}
+                  <Calendar label="Дата рождения" value={field.value}
+                    onChange={field.onChange} error={errors.birthDate?.message}
                   />
                 )}
               />
-
-              <Controller
-                name="gender"
-                control={control}
+              <Controller name="gender" control={control}
                 render={({ field }) => (
-                  <GenderSelect
-                    label="Пол"
-                    value={field.value}
-                    onChange={field.onChange}
-                    error={errors.gender?.message}
+                  <GenderSelect label="Пол" value={field.value}
+                    onChange={field.onChange} error={errors.gender?.message}
                   />
                 )}
               />
             </div>
 
-            {/* Город открывается как dropdown с поиском, чтобы было удобнее искать по списку. */}
-            <Controller
-              name="cityId"
-              control={control}
+            {/* Город */}
+            <Controller name="cityId" control={control}
               render={({ field }) => (
-                <CitySelect
-                  label="Город"
-                  value={field.value}
-                  onChange={field.onChange}
-                  error={errors.cityId?.message}
+                <CitySelect label="Город" value={field.value}
+                  onChange={field.onChange} error={errors.cityId?.message}
                 />
               )}
             />
 
-            {/* Категория и подкатегория сделаны как раскрывающиеся панели с вариантами выбора. */}
-            <Controller
-              name="categoryId"
-              control={control}
-              render={({ field }) => (
-                <CategorySelect
-                  label="Категория навыка, которому хотите научиться"
-                  value={field.value}
-                  onChange={field.onChange}
-                  error={errors.categoryId?.message}
-                  onResetSubcategory={() =>
-                    setValue("subcategoryId", "", {
-                      shouldDirty: true,
-                    })
-                  }
+            {/* Динамический список навыков "хочу научиться" */}
+            <div className={styles.learnSkillsList}>
+              {fields.map((field, index) => (
+                <LearnSkillRow
+                  key={field.id}
+                  index={index}
+                  control={control}
+                  errors={errors}
+                  submitCount={submitCount}
+                  setValue={setValue}
+                  canRemove={fields.length > 1}
+                  onRemove={() => remove(index)}
                 />
-              )}
-            />
+              ))}
+            </div>
 
-            <Controller
-              name="subcategoryId"
-              control={control}
-              render={({ field }) => (
-                <SubcategorySelect
-                  label="Подкатегория навыка, которому хотите научиться"
-                  categoryId={selectedCategoryId || ""}
-                  value={field.value}
-                  onChange={field.onChange}
-                  error={errors.subcategoryId?.message}
-                  showError={showSubcategoryError}
-                />
-              )}
-            />
+            {/* Кнопка добавить ещё навык */}
+            <Button
+              type="button"
+              variant="secondary"
+              onClick={() => append({ categoryId: "", subcategoryId: "" })}
+            >
+              + Добавить ещё навык
+            </Button>
 
-            {/* Основные действия формы: возврат назад и переход дальше только после валидации. */}
+            {/* Кнопки навигации */}
             <div className={styles.buttons}>
-              <Button variant="secondary" onClick={handleBack}>
-                Назад
-              </Button>
-              <Button
-                variant="primary"
-                onClick={handleContinue}
-                disabled={!isValid}
-              >
+              <Button variant="secondary" onClick={handleBack}>Назад</Button>
+              <Button variant="primary" onClick={handleContinue} disabled={!isValid}>
                 Продолжить
               </Button>
             </div>
           </form>
         </section>
 
-        {/* Правая колонка статична и не зависит от состояния формы. */}
         <aside className={styles.infoSection}>
           <div className={styles.imageWrapper}>
-            <img
-              src={infoImage}
-              alt="Иллюстрация профиля"
-              className={styles.image}
-            />
+            <img src={infoImage} alt="Иллюстрация профиля" className={styles.image} />
           </div>
           <h3 className={styles.infoTitle}>Расскажите немного о себе</h3>
           <p className={styles.infoText}>
@@ -279,6 +222,68 @@ export const RegisterStep2 = () => {
           </p>
         </aside>
       </div>
+    </div>
+  );
+};
+
+// Вынесено в отдельный компонент чтобы useWatch работал на конкретный индекс
+const LearnSkillRow = ({
+  index, control, errors, submitCount, setValue, canRemove, onRemove,
+}: {
+  index: number;
+  control: any;
+  errors: any;
+  submitCount: number;
+  setValue: any;
+  canRemove: boolean;
+  onRemove: () => void;
+}) => {
+  const selectedCategoryId = useWatch({
+    control,
+    name: `learnSkills.${index}.categoryId`,
+  });
+
+  const showSubcategoryError =
+    submitCount > 0 && Boolean(errors.learnSkills?.[index]?.subcategoryId);
+
+  return (
+    <div className={styles.learnSkillRow}>
+      {canRemove && (
+        <button type="button" className={styles.removeSkillBtn} onClick={onRemove}>
+          <img src={crossIcon} alt="Удалить" />
+        </button>
+      )}
+
+      <Controller
+        name={`learnSkills.${index}.categoryId`}
+        control={control}
+        render={({ field }) => (
+          <CategorySelect
+            label="Категория навыка, которому хотите научиться"
+            value={field.value}
+            onChange={field.onChange}
+            error={errors.learnSkills?.[index]?.categoryId?.message}
+            onResetSubcategory={() =>
+              setValue(`learnSkills.${index}.subcategoryId`, "", { shouldDirty: true })
+            }
+          />
+        )}
+      />
+
+      <Controller
+        name={`learnSkills.${index}.subcategoryId`}
+        control={control}
+        render={({ field }) => (
+          <SubcategorySelect
+            label="Подкатегория навыка, которому хотите научиться"
+            categoryId={selectedCategoryId || ""}
+            value={field.value}
+            onChange={field.onChange}
+            error={errors.learnSkills?.[index]?.subcategoryId?.message}
+            showError={showSubcategoryError}
+          />
+        )}
+      />
     </div>
   );
 };
