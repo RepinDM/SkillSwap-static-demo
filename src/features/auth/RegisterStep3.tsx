@@ -43,7 +43,7 @@ const validationSchema = yup.object({
     .string()
     .required('Описание обязательно')
     .min(10, 'Описание должно содержать минимум 10 символов')
-    .max(200, 'Описание не должно превышать 200 символов'),
+    .max(300, 'Описание не должно превышать 300 символов'),
   images: yup
     .array()
     .of(yup.mixed<File>().required())
@@ -224,8 +224,10 @@ export const RegisterStep3 = () => {
     formData.append("gender", step2?.gender || "");
     formData.append("cityId", step2?.cityId || "");
 
-    if (step2?.subcategoryId) {
-      formData.append("learningSubcategoryIds", step2.subcategoryId);
+    if (step2?.learnSkills && step2.learnSkills.length > 0) {
+      step2.learnSkills.forEach(skill => {
+        formData.append("learningSubcategoryIds", skill.subcategoryId);
+      });
     }
 
     if (step2?.avatar) {
@@ -244,6 +246,7 @@ export const RegisterStep3 = () => {
 
     try {
       await fetch(`${API_URL}/register_user/`, {
+      // await fetch("http://skillswap.ovnet.ru:8000/api/register_user/", {
         method: "POST",
         body: formData,
       });

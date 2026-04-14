@@ -12,8 +12,7 @@ interface RegisterState {
     birthDate: string;
     gender: string;
     cityId: string;
-    categoryId: string;
-    subcategoryId: string;
+    learnSkills: { categoryId: string; subcategoryId: string }[];
     avatar?: File | null;
   } | null;
 
