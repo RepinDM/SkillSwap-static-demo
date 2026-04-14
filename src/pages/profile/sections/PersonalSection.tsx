@@ -4,6 +4,7 @@ import { Button } from "@/shared/ui/Button/Button";
 import { Avatar } from "@/shared/ui/Avatar/Avatar";
 import { Input } from "@/shared/ui/input/input";
 import editPhotoIcon from "@/shared/image/icons/edit-photo.svg";
+import editIcon from "@/shared/image/icons/edit.svg";
 import eyeIcon from "@/shared/image/icons/eye.svg";
 import eyeSlashIcon from "@/shared/image/icons/eye-slash.svg";
 import { Calendar } from "@/features/auth/register-step2/ui/Calendar";
@@ -28,6 +29,15 @@ const PersonalSection = () => {
   const [newPassword, setNewPassword] = useState("");
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
+  const [editableFields, setEditableFields] = useState<{
+    email: boolean;
+    name: boolean;
+    about: boolean;
+  }>({
+    email: false,
+    name: false,
+    about: false,
+  });
 
   useEffect(() => {
     return () => {
@@ -60,6 +70,10 @@ const PersonalSection = () => {
     setAvatarPreview(URL.createObjectURL(file));
   };
 
+  const enableFieldEditing = (field: "email" | "name" | "about") => {
+    setEditableFields((prev) => ({ ...prev, [field]: true }));
+  };
+
   return (
     <div className={styles.section}>
       <div className={styles.formColumn}>
@@ -71,6 +85,17 @@ const PersonalSection = () => {
             onChange={(event) => setEmail(event.target.value)}
             placeholder="Введите почту"
             error={emailError}
+            disabled={!editableFields.email}
+            iconRight={
+              <button
+                type="button"
+                className={styles.editIconButton}
+                onClick={() => enableFieldEditing("email")}
+                aria-label="Редактировать почту"
+              >
+                <img src={editIcon} alt="" />
+              </button>
+            }
           />
         </div>
 
@@ -142,6 +167,17 @@ const PersonalSection = () => {
             value={name}
             onChange={(event) => setName(event.target.value)}
             placeholder="Введите имя"
+            disabled={!editableFields.name}
+            iconRight={
+              <button
+                type="button"
+                className={styles.editIconButton}
+                onClick={() => enableFieldEditing("name")}
+                aria-label="Редактировать имя"
+              >
+                <img src={editIcon} alt="" />
+              </button>
+            }
           />
         </div>
 
@@ -169,12 +205,23 @@ const PersonalSection = () => {
 
         <div className={styles.field}>
           <label className={styles.label}>О себе</label>
-          <textarea
-            className={`${styles.textarea} ${aboutError ? styles.textareaError : ""}`}
-            value={about}
-            onChange={(event) => setAbout(event.target.value)}
-            placeholder="Расскажите немного о себе"
-          />
+          <div className={styles.textareaWrap}>
+            <textarea
+              className={`${styles.textarea} ${aboutError ? styles.textareaError : ""}`}
+              value={about}
+              onChange={(event) => setAbout(event.target.value)}
+              placeholder="Расскажите немного о себе"
+              disabled={!editableFields.about}
+            />
+            <button
+              type="button"
+              className={`${styles.editIconButton} ${styles.textareaEditButton}`}
+              onClick={() => enableFieldEditing("about")}
+              aria-label="Редактировать описание"
+            >
+              <img src={editIcon} alt="" />
+            </button>
+          </div>
           <div className={styles.textareaFooter}>
             {aboutError ? (
               <span className={styles.errorText}>{aboutError}</span>

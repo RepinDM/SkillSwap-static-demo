@@ -47,3 +47,33 @@
   line-height: var(--font-caption-line-height);
   color: var(--text);
 }
+
+.inputContainer {
+  position: relative;
+}
+
+.withIconLeft {
+  padding-left: 52px;
+}
+
+.withIconRight {
+  padding-right: 52px;
+}
+
+.iconRight,
+.iconLeft {
+  position: absolute;
+  top: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transform: translateY(-50%);
+}
+
+.iconLeft {
+  left: 16px;
+}
+
+.iconRight {
+  right: 16px;
+}

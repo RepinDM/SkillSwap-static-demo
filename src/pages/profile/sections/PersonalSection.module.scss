@@ -22,6 +22,14 @@
   position: relative;
 }
 
+.avatarWrap button {
+  cursor: pointer;
+}
+
+.avatarWrap button:hover {
+  opacity: 0.92;
+}
+
 .avatarEditButton {
   position: absolute;
   right: -8px;
@@ -73,10 +81,29 @@
   display: none;
 }
 
+.editIconButton {
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.editIconButton img {
+  display: block;
+  width: 20px;
+  height: 20px;
+}
+
+.textareaWrap {
+  position: relative;
+}
+
 .textarea {
   width: 100%;
   min-height: 120px;
-  padding: 12px 20px;
+  padding: 12px 52px 12px 20px;
   border: 1px solid var(--border-input);
   border-radius: 12px;
   resize: vertical;
@@ -90,6 +117,11 @@
   background: var(--card-input);
 }
 
+.textarea:disabled {
+  color: var(--disabled-text);
+  cursor: not-allowed;
+}
+
 .textarea::placeholder {
   color: var(--caption);
 }
@@ -101,6 +133,12 @@
 .textareaError,
 .textareaError:focus {
   border-color: var(--error);
+}
+
+.textareaEditButton {
+  position: absolute;
+  top: 14px;
+  right: 16px;
 }
 
 .textareaFooter {
@@ -171,9 +209,7 @@
 
 .buttonRow {
   margin-top: 20px;
-  max-width: 280px;
-  margin-right: auto;
-  margin-left: auto;
+  width: 100%;
 }
 
 @media (max-width: 960px) {
@@ -195,7 +231,7 @@
   }
 
   .buttonRow {
-    max-width: none;
+    width: 100%;
   }
 
   .avatarWrap {
