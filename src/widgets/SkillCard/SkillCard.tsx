@@ -44,13 +44,20 @@ export const SkillCard = React.memo(({ card, showFavoriteButton = true }: Props)
             </div>
           {showFavoriteButton && (
             <div className={styles.like_wrapper}>
-              <img
-                onClick={handleToggleLike}
-                src={isLiked? buttonLikePainted : buttonLike}
-                alt="Кнопка добавления в избранное"
-                className={styles.like_icon}
-              />
               <span className={styles.like_count}>{count}</span>
+              <button
+                type="button"
+                onClick={handleToggleLike}
+                className={styles.like_button}
+                aria-pressed={isLiked}
+                aria-label={isLiked ? "Убрать лайк" : "Поставить лайк"}
+              >
+                <img
+                  src={isLiked ? buttonLikePainted : buttonLike}
+                  alt=""
+                  className={styles.like_icon}
+                />
+              </button>
             </div>
           )}
           </div>

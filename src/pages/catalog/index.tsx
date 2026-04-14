@@ -255,7 +255,9 @@ const CatalogPage = () => {
 
   if (isLoading) return <p>Loading...</p>;
 
-  const popular = popularCards.sort((a, b) => likes[b.id].count - likes[a.id].count);
+  const popular = [...popularCards].sort(
+    (a, b) => (likes[b.id]?.count ?? 0) - (likes[a.id]?.count ?? 0),
+  );
 
   return (
     <div style={{ display: "flex", gap: "24px", alignItems: "flex-start" }}>
