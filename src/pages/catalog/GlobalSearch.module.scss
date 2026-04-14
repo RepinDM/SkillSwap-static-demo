@@ -1,0 +1,16 @@
+.activeFilterTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.activeFilterTag {
+  width: fit-content;
+}
+
+.searchResultsCount {
+  margin-bottom: 16px;
+  font-weight: 600;
+  font-size: 20px;
+}
