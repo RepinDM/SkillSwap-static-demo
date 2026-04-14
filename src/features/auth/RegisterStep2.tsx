@@ -30,6 +30,7 @@ interface RegisterStep2FormValues {
   birthDate: string;
   gender: string;
   cityId: string;
+  about?: string;
   learnSkills?: LearnSkill[];
 }
 
@@ -42,6 +43,11 @@ const validationSchema = yup.object({
   cityId: yup.string().required("Город обязателен").test(
     "city-selected", "Выберите город", (v) => Boolean(v)
   ),
+  about: yup
+  .string()
+  .max(300, "Максимум 300 символов")
+  .notRequired(),
+
   learnSkills: yup.array().of(
     yup.object({
       categoryId: yup.string().required("Категория обязательна").test(
@@ -76,6 +82,7 @@ export const RegisterStep2 = () => {
       birthDate: step2?.birthDate || "",
       gender: step2?.gender || "",
       cityId: step2?.cityId || "",
+      about: step2?.about || "",
       learnSkills: step2?.learnSkills?.length
         ? step2.learnSkills
         : [{ categoryId: "", subcategoryId: "" }],
@@ -89,6 +96,7 @@ export const RegisterStep2 = () => {
     setValue("birthDate", step2.birthDate);
     setValue("gender", step2.gender);
     setValue("cityId", step2.cityId);
+    setValue("about", step2.about);
 
     if (step2.learnSkills?.length) {
       setValue("learnSkills", step2.learnSkills);
@@ -190,6 +198,20 @@ export const RegisterStep2 = () => {
               render={({ field }) => (
                 <CitySelect label="Город" value={field.value}
                   onChange={field.onChange} error={errors.cityId?.message}
+                />
+              )}
+            />
+
+            <Controller
+              name="about"
+              control={control}
+              render={({ field }) => (
+                <Input
+                  label="О себе"
+                  placeholder="Расскажите немного о себе"
+                  value={field.value}
+                  onChange={field.onChange}
+                  error={errors.about?.message}
                 />
               )}
             />

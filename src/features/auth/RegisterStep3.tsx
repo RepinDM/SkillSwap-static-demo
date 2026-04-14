@@ -232,6 +232,7 @@ export const RegisterStep3 = () => {
     formData.append("birthDate", step2?.birthDate || "");
     formData.append("gender", step2?.gender || "");
     formData.append("cityId", step2?.cityId || "");
+    formData.append("about", step2?.about || "");
 
     if (step2?.learnSkills && step2.learnSkills.length > 0) {
       step2.learnSkills.forEach(skill => {
