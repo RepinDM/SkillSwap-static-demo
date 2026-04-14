@@ -56,23 +56,21 @@ const skillCardsSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(fetchSkillCards.pending, (state) => {
-        state.status = "loading";
-        state.error = null;
-      })
-      .addCase(fetchSkillCards.fulfilled, (state, action) => {
-        state.status = "success";
-        state.allSkillCards = action.payload.skillCardList;
-        state.categoryItems = action.payload.categoryItems;
-
-        state.searchFilteredSkillCards = filterSkillCards(
-          action.payload.skillCardList,
-          state.searchQuery
-        );
-      })
-      .addCase(fetchSkillCards.rejected, (state, action) => {
-        state.status = "error";
-        state.error = action.error.message || "Ошибка загрузки";
-      });
+      state.status = "loading";
+      state.error = null;
+    })
+    .addCase(fetchSkillCards.fulfilled, (state, action) => {
+      state.status = "success";
+      state.allSkillCards = action.payload.skillCardList;
+      state.searchFilteredSkillCards = filterSkillCards(
+        action.payload.skillCardList,
+        state.searchQuery
+      );
+    })
+    .addCase(fetchSkillCards.rejected, (state, action) => {
+      state.status = "error";
+      state.error = action.error.message || "Ошибка загрузки";
+    });
   },
   selectors: {
     selectAllSkillCards: (state) => state.allSkillCards,
