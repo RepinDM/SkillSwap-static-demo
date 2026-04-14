@@ -131,6 +131,18 @@
   line-height: var(--font-caption-line-height);
 }
 
+.learnSkillsList {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.learnSkillRow {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
 .dropdownPanel {
   position: absolute;
   top: calc(100% + 8px);

@@ -62,6 +62,7 @@ const skillCardsSlice = createSlice({
     .addCase(fetchSkillCards.fulfilled, (state, action) => {
       state.status = "success";
       state.allSkillCards = action.payload.skillCardList;
+      state.categoryItems = action.payload.categoryItems;
       state.searchFilteredSkillCards = filterSkillCards(
         action.payload.skillCardList,
         state.searchQuery
