@@ -1,6 +1,6 @@
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import styles from "./RegisterStep1.module.scss";
@@ -12,8 +12,8 @@ import eyeClosed from "@/shared/image/icons/eye-slash.svg";
 import iconGoogle from "@/shared/image/icons/Google.svg";
 import iconApple from "@/shared/image/icons/Apple.svg";
 import lightBulb from "@/shared/image/webp/light-bulb.webp";
-import { setStep1 } from "@/services/slices/registerSlice";
-import { useAppDispatch } from "@/services/hooks";
+import { selectStep1, setStep1 } from "@/services/slices/registerSlice";
+import { useAppDispatch, useAppSelector } from "@/services/hooks";
 
 const registerStep1Schema = yup.object({
   email: yup
@@ -39,19 +39,29 @@ export const RegisterStep1 = () => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const dispatch = useAppDispatch();
 
+  const step1 = useAppSelector(selectStep1);
+
   const {
     register,
     trigger,
     getValues,
+    setValue,
     formState: { errors, isValid },
   } = useForm<RegisterStep1Values>({
     resolver: yupResolver(registerStep1Schema),
     mode: "onChange",
     defaultValues: {
-      email: "",
-      password: "",
+      email: step1?.email || "",
+      password: step1?.password || "",
     },
   });
+
+  useEffect(() => {
+    if (step1) {
+      setValue("email", step1.email);
+      setValue("password", step1.password);
+    }
+  }, [step1, setValue]);
 
   const handleVisible = () => {
     setIsPasswordVisible((v) => !v);

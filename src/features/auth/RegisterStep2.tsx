@@ -17,8 +17,8 @@ import { CitySelect } from "@/features/auth/register-step2/ui/CitySelect";
 import { GenderSelect } from "@/features/auth/register-step2/ui/GenderSelect";
 import { SubcategorySelect } from "@/features/auth/register-step2/ui/SubcategorySelect";
 import styles from "./RegisterStep2.module.scss";
-import { setStep2 } from "@/services/slices/registerSlice";
-import { useAppDispatch } from "@/services/hooks";
+import { selectStep2, setStep2 } from "@/services/slices/registerSlice";
+import { useAppDispatch, useAppSelector } from "@/services/hooks";
 
 interface LearnSkill {
   categoryId: string;
@@ -61,6 +61,8 @@ export const RegisterStep2 = () => {
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const dispatch = useAppDispatch();
 
+  const step2 = useAppSelector(selectStep2);
+
   const {
     control,
     handleSubmit,
@@ -70,13 +72,28 @@ export const RegisterStep2 = () => {
     resolver: yupResolver(validationSchema) as Resolver<RegisterStep2FormValues>,
     mode: "onChange",
     defaultValues: {
-      name: "",
-      birthDate: "",
-      gender: "",
-      cityId: "",
-      learnSkills: [{ categoryId: "", subcategoryId: "" }],
+      name: step2?.name || "",
+      birthDate: step2?.birthDate || "",
+      gender: step2?.gender || "",
+      cityId: step2?.cityId || "",
+      learnSkills: step2?.learnSkills?.length
+        ? step2.learnSkills
+        : [{ categoryId: "", subcategoryId: "" }],
     },
   });
+
+  useEffect(() => {
+    if (!step2) return;
+
+    setValue("name", step2.name);
+    setValue("birthDate", step2.birthDate);
+    setValue("gender", step2.gender);
+    setValue("cityId", step2.cityId);
+
+    if (step2.learnSkills?.length) {
+      setValue("learnSkills", step2.learnSkills);
+    }
+  }, [step2, setValue]);
 
   // useFieldArray управляет динамическим списком навыков
   const { fields, append, remove } = useFieldArray({
