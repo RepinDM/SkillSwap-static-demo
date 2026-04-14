@@ -1,6 +1,15 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useEffect, useRef, useState } from "react";
-import { Controller, useFieldArray, useForm, useWatch, type Resolver } from "react-hook-form";
+import {
+  Controller,
+  useFieldArray,
+  useForm,
+  useWatch,
+  type Control,
+  type FieldErrors,
+  type Resolver,
+  type UseFormSetValue,
+} from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import * as yup from "yup";
 
@@ -270,10 +279,10 @@ const LearnSkillRow = ({
   index, control, errors, submitCount, setValue, canRemove, onRemove,
 }: {
   index: number;
-  control: any;
-  errors: any;
+  control: Control<RegisterStep2FormValues>;
+  errors: FieldErrors<RegisterStep2FormValues>;
   submitCount: number;
-  setValue: any;
+  setValue: UseFormSetValue<RegisterStep2FormValues>;
   canRemove: boolean;
   onRemove: () => void;
 }) => {
@@ -299,7 +308,7 @@ const LearnSkillRow = ({
         render={({ field }) => (
           <CategorySelect
             label="Категория навыка, которому хотите научиться"
-            value={field.value}
+            value={field.value ?? ""}
             onChange={field.onChange}
             error={errors.learnSkills?.[index]?.categoryId?.message}
             onResetSubcategory={() =>
@@ -316,7 +325,7 @@ const LearnSkillRow = ({
           <SubcategorySelect
             label="Подкатегория навыка, которому хотите научиться"
             categoryId={selectedCategoryId || ""}
-            value={field.value}
+            value={field.value ?? ""}
             onChange={field.onChange}
             error={errors.learnSkills?.[index]?.subcategoryId?.message}
             showError={showSubcategoryError}

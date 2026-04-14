@@ -17,6 +17,16 @@ import { selectUser } from "@/services/slices/authSlice";
 const EMAIL_REGEXP = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const ABOUT_MAX_LENGTH = 300;
 
+const formatBirthDate = (birthDate?: string) => {
+  if (!birthDate) return "";
+
+  const parsedDate = new Date(birthDate);
+
+  return Number.isNaN(parsedDate.getTime())
+    ? birthDate
+    : parsedDate.toISOString().split("T")[0];
+};
+
 const PersonalSection = () => {
   const currentUser = useAppSelector(selectUser);
 
@@ -25,11 +35,7 @@ const PersonalSection = () => {
   // Инициализируем стейт данными из Redux
   const [email, setEmail] = useState(currentUser?.email || "");
   const [name, setName] = useState(currentUser?.name || "");
-  const [birthDate, setBirthDate] = useState<string>(
-    currentUser?.birthDate
-      ? new Date(currentUser.birthDate).toISOString().split("T")[0]
-      : ""
-  );
+  const [birthDate, setBirthDate] = useState<string>(formatBirthDate(currentUser?.birthDate));
   const [gender, setGender] = useState(currentUser?.gender || "");
   const [city, setCity] = useState(currentUser?.city?.id?.toString() || "");
   const [about, setAbout] = useState(currentUser?.about || "");
@@ -45,18 +51,6 @@ const PersonalSection = () => {
     name: false,
     about: false,
   });
-
-  // Если пользователь загрузился позже (например после перезагрузки) — обновляем поля
-  useEffect(() => {
-    if (!currentUser) return;
-    setEmail(currentUser.email || "");
-    setName(currentUser.name || "");
-    setBirthDate(currentUser.birthDate || "");
-    setGender(currentUser.gender || "");
-    setCity(currentUser.city?.id?.toString() || "");
-    setAbout(currentUser.about || "");
-    setAvatarPreview(currentUser.avatar || "");
-  }, [currentUser]);
 
   useEffect(() => {
     return () => {

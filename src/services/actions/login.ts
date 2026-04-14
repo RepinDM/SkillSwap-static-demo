@@ -31,7 +31,7 @@ export const loginUser = createAsyncThunk(
         user: data.user,
       };
 
-    } catch (e) {
+    } catch {
       return rejectWithValue("Ошибка сети");
     }
   }
