@@ -28,7 +28,12 @@
   color: var(--text, #253017);
   cursor: pointer;
   padding: 12px 24px;
+  margin-right: 28px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px; /* 👈 расстояние между текстом и иконкой */
 }
+
 
 .grid {
   display: grid;

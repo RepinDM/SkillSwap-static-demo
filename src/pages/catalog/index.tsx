@@ -31,6 +31,11 @@ const CatalogPage = () => {
   });
 
   const [visibleCount, setVisibleCount] = useState(20);
+  const [isExtended, setIsExtended] = useState({
+    popular: false,
+    new: false,
+    recomended: false
+  })
 
   const handleFiltersChange = useCallback((newFilters: TFilters) => {
     setFilters(newFilters);
@@ -59,6 +64,9 @@ const CatalogPage = () => {
   );
 
   // Карточки прошедшие через фильтры пола/города/режима/подкатегорий
+  const likes = useAppSelector((state) => state.likes.likes);
+
+
   const filteredCards = useMemo(() => {
     return allSkillCards.filter((card) => {
       const cityName = card.user.city?.name;
@@ -247,6 +255,8 @@ const CatalogPage = () => {
 
   if (isLoading) return <p>Loading...</p>;
 
+  const popular = popularCards.sort((a, b) => likes[b.id].count - likes[a.id].count);
+
   return (
     <div style={{ display: "flex", gap: "24px", alignItems: "flex-start" }}>
       <FiltersSidebar values={filters} onChange={handleFiltersChange} />
@@ -283,7 +293,7 @@ const CatalogPage = () => {
           />
         ) : (
           <>
-            <CatalogSection title="Популярное" skillCards={popularCards} />
+            <CatalogSection title="Популярное" skillCards={isExtended.popular? popular : popular.slice(0, 3)} onViewAll={() => setIsExtended((ex) => ({...ex, popular:!ex.popular}))} />
             <CatalogSection title="Новое" skillCards={newCards} />
             <CatalogSection title="Рекомендуем" skillCards={displayedCards} />
           </>

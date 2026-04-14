@@ -14,7 +14,7 @@ export const fetchSkillCards = createAsyncThunk(
     const categoryItems = convertSubcategoriesToCategoryItems(
       data.subcategoryList
     );
-
+    
     return {
       categoryItems: categoryItems,
       skillCardList: skillCardList,

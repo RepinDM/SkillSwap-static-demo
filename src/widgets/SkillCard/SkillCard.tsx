@@ -9,12 +9,26 @@ import { Link } from "react-router-dom";
 import { getAge } from "@/shared/lib/utils/getAge";
 import { getCategoryColor } from "@/shared/lib/utils/getCategoryColors";
 
+import buttonLikePainted from "@/shared/image/icons/like-painted-over.svg"
+import { selectLikesById } from "@/services/slices/likesSlice";
+import { useAppSelector, useAppDispatch } from "@/services/hooks";
+import { toggleLike } from "@/services/slices/likesSlice";
+import React from "react";
+
 type Props = {
   card: TSkillCard;
   showFavoriteButton?: boolean;
 };
+export const SkillCard = React.memo(({ card, showFavoriteButton = true }: Props) => {
 
-export const SkillCard = ({ card, showFavoriteButton = true }: Props) => {
+  const like = useAppSelector(state => selectLikesById(state, card.id));
+
+  const isLiked = like?.isLiked ?? false;
+  const count = like?.count ?? 0;
+
+  const dispatch = useAppDispatch();
+  const handleToggleLike = () => dispatch(toggleLike(card.id))
+
   return (
     <>
        <li className={styles.card}>
@@ -29,10 +43,15 @@ export const SkillCard = ({ card, showFavoriteButton = true }: Props) => {
               />
             </div>
           {showFavoriteButton && (
-            <img
-              src={buttonLike}
-              alt="Кнопка добавления в избранное"
-            />
+            <div className={styles.like_wrapper}>
+              <img
+                onClick={handleToggleLike}
+                src={isLiked? buttonLikePainted : buttonLike}
+                alt="Кнопка добавления в избранное"
+                className={styles.like_icon}
+              />
+              <span className={styles.like_count}>{count}</span>
+            </div>
           )}
           </div>
 
@@ -81,4 +100,4 @@ export const SkillCard = ({ card, showFavoriteButton = true }: Props) => {
         </li>
     </>
   );
-};
+});
