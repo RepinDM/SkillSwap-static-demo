@@ -5,7 +5,7 @@
 // 4. Две реализации правого блока: для авторизованных пользователей (иконка избранного, уведомлений, смены темы, аватар),
 // для нефавторизованных (иконка смены темы, кнопки войти и зарегистрироваться)
 
-import styles from "./header.module.scss";
+import styles from "./Header.module.scss";
 import { Logo } from "@/shared/ui/Logo/Logo";
 import { Button } from "@/shared/ui/Button/Button";
 import { Link } from "react-router-dom";
@@ -23,7 +23,11 @@ import { selectSearchQuery } from "@/services/slices/skillCardsSlice";
 
 export const Header = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [isLoggedIn] = useState(true);
+  const token = localStorage.getItem("accessToken");
+  const userRaw = localStorage.getItem("user");
+
+  const isLoggedIn = Boolean(token);
+  const user = userRaw ? JSON.parse(userRaw) : null;
   //
   // const isLoggedIn = useMemo(() => {
   //   if (typeof window === "undefined") return false;
@@ -81,14 +85,17 @@ export const Header = () => {
             <div style={{ position: "relative" }}>
               <button className={styles.iconBtn} onClick={() => setIsNotifOpen((prev) => !prev)}>
                 <img src={notification} alt="Уведомления" />
-                {isLoggedIn && <span className={styles.badge} />}
+                <span className={styles.badge} />
               </button>
               <NotificationDropdown isOpen={isNotifOpen} onClose={() => setIsNotifOpen(false)}/>
             </div>
             <button className={styles.iconBtn}>
               <img src={likeIcon} alt="Избранное" />
             </button>
-            <Avatar />
+            <Link to="/profile" className={styles.userInfo}>
+              <span className={styles.userName}>{user?.name}</span>
+              <Avatar src={user?.avatar} />
+            </Link>
           </div>
         ) : (
           <>
@@ -96,8 +103,12 @@ export const Header = () => {
               <img src={moonIcon} alt="Смена темы" />
             </button>
             <div className={styles.authButtons}>
-              <Button variant="secondary">Войти</Button>
-              <Button variant="primary">Регистрация</Button>
+              <Link to="/login">
+                <Button variant="secondary">Войти</Button>
+              </Link>
+              <Link to="/register">
+                <Button variant="primary">Регистрация</Button>
+              </Link>
             </div>
           </>
         )}
