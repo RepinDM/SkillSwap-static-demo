@@ -9,12 +9,13 @@ import styles from "./Header.module.scss";
 import { Logo } from "@/shared/ui/Logo/Logo";
 import { Button } from "@/shared/ui/Button/Button";
 import { Link } from "react-router-dom";
+import clsx from "clsx";
 import moonIcon from "@/shared/image/icons/moon.svg";
 import likeIcon from "@/shared/image/icons/like.svg";
 import notification from "@/shared/image/icons/notification.svg";
 import chevronDown from "@/shared/image/icons/chevron-down.svg";
 import { NavDropdown } from "../NavDropdown/NavDropdown";
-import { useState } from "react";//useMemo добавить
+import { useRef, useState } from "react";//useMemo добавить
 import { Avatar } from "@/shared/ui/Avatar/Avatar";
 import { NotificationDropdown } from "../Notifications/NotificationDropdown";
 import { SearchInput } from "@/features/Search/SearchInput";
@@ -23,6 +24,7 @@ import { selectSearchQuery } from "@/services/slices/skillCardsSlice";
 
 export const Header = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownTriggerRef = useRef<HTMLButtonElement>(null);
   const token = localStorage.getItem("accessToken");
   const userRaw = localStorage.getItem("user");
 
@@ -38,7 +40,7 @@ export const Header = () => {
   // }, []);
 
   const toggleDropdown = () => {
-    setIsDropdownOpen(!isDropdownOpen);
+    setIsDropdownOpen((prev) => !prev);
   };
 
   const closeDropdown = () => {
@@ -58,14 +60,27 @@ export const Header = () => {
         <Link to="/about">О проекте</Link>
         <div>
           <button
+            ref={dropdownTriggerRef}
             className={styles.dropDownBtn}
             onClick={toggleDropdown}
             aria-expanded={isDropdownOpen}
+            aria-label={isDropdownOpen ? "Скрыть все навыки" : "Показать все навыки"}
+            type="button"
           >
             <span>Все навыки</span>
-            <img src={chevronDown} alt="Стрелка вниз"></img>
+            <img
+              src={chevronDown}
+              alt=""
+              className={clsx(styles.chevronIcon, {
+                [styles.chevronIconOpen]: isDropdownOpen,
+              })}
+            />
           </button>
-          <NavDropdown isOpen={isDropdownOpen} onClose={closeDropdown} />
+          <NavDropdown
+            isOpen={isDropdownOpen}
+            onClose={closeDropdown}
+            triggerRef={dropdownTriggerRef}
+          />
         </div>
       </nav>
       <div className={styles.searchWrapper}>

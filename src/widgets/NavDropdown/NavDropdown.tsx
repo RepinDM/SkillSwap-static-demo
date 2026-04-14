@@ -1,4 +1,4 @@
-import { type FC, type ReactNode, useEffect, useRef } from "react";
+import { type FC, type ReactNode, useEffect, useRef, type RefObject } from "react";
 import { Link } from "react-router-dom";
 
 import briefcaseIcon from "@/shared/image/icons/briefcase.svg";
@@ -26,9 +26,10 @@ const iconMap: Record<string, string> = {
 interface NavDropdownProps {
   isOpen: boolean;
   onClose: () => void;
+  triggerRef: RefObject<HTMLButtonElement | null>;
 }
 
-export const NavDropdown: FC<NavDropdownProps> = ({ isOpen, onClose }) => {
+export const NavDropdown: FC<NavDropdownProps> = ({ isOpen, onClose, triggerRef }) => {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const categoryItems = useAppSelector(selectCategoryItems);
 
@@ -40,9 +41,12 @@ export const NavDropdown: FC<NavDropdownProps> = ({ isOpen, onClose }) => {
     };
 
     const handleClickOutside = (e: MouseEvent) => {
+      const targetNode = e.target as Node;
+
       if (
         dropdownRef.current &&
-        !dropdownRef.current.contains(e.target as Node)
+        !dropdownRef.current.contains(targetNode) &&
+        !triggerRef.current?.contains(targetNode)
       ) {
         onClose();
       }
@@ -55,7 +59,7 @@ export const NavDropdown: FC<NavDropdownProps> = ({ isOpen, onClose }) => {
       document.removeEventListener("keydown", handleKeyDown);
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [isOpen, onClose]);
+  }, [isOpen, onClose, triggerRef]);
 
   if (!isOpen) return null;
 
