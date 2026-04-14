@@ -12,7 +12,7 @@ export type TUser = {
   avatar?: string // Основной аватар пользователя
   about?: string // Текст "О себе"
   city: TCity // Город пользователя
-  birthDate?: Date // Дата рождения пользователя
+  birthDate?: string // Дата рождения пользователя
   gender?: TGender // Пол пользователя
 }
 
@@ -20,7 +20,9 @@ export type TUser = {
 export type TUserInfo = Pick<TUser, 'id' | 'name' | 'avatar' | 'about' | 'city' | 'birthDate' | 'gender'>
 
 // Данные пользователя, связанные с авторизацией
-export type TUserAuth = Pick<TUser, 'email' | 'password'>
+// export type TUserAuth = Pick<TUser, 'email' | 'password'>
+
+export type TUserAuth = Omit<TUser, 'password'>
 
 // Расширенный тип пользователя с лайками
 export type TUserWithLikes = TUser & {

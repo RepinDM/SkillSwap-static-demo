@@ -11,37 +11,56 @@ import { Calendar } from "@/features/auth/register-step2/ui/Calendar";
 import { CitySelect } from "@/features/auth/register-step2/ui/CitySelect";
 import { GenderSelect } from "@/features/auth/register-step2/ui/GenderSelect";
 import styles from "./PersonalSection.module.scss";
+import { useAppSelector } from "@/services/hooks";
+import { selectUser } from "@/services/slices/authSlice";
 
 const EMAIL_REGEXP = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const ABOUT_MAX_LENGTH = 300;
 
 const PersonalSection = () => {
+  const currentUser = useAppSelector(selectUser);
+
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [email, setEmail] = useState("");
-  const [name, setName] = useState("");
-  const [birthDate, setBirthDate] = useState("");
-  const [gender, setGender] = useState("");
-  const [city, setCity] = useState("");
-  const [about, setAbout] = useState("");
-  const [avatarPreview, setAvatarPreview] = useState("");
+
+  // Инициализируем стейт данными из Redux
+  const [email, setEmail] = useState(currentUser?.email || "");
+  const [name, setName] = useState(currentUser?.name || "");
+  const [birthDate, setBirthDate] = useState<string>(
+    currentUser?.birthDate
+      ? new Date(currentUser.birthDate).toISOString().split("T")[0]
+      : ""
+  );
+  const [gender, setGender] = useState(currentUser?.gender || "");
+  const [city, setCity] = useState(currentUser?.city?.id?.toString() || "");
+  const [about, setAbout] = useState(currentUser?.about || "");
+  const [avatarPreview, setAvatarPreview] = useState(currentUser?.avatar || "");
+
   const [showPasswordFields, setShowPasswordFields] = useState(false);
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
-  const [editableFields, setEditableFields] = useState<{
-    email: boolean;
-    name: boolean;
-    about: boolean;
-  }>({
+  const [editableFields, setEditableFields] = useState({
     email: false,
     name: false,
     about: false,
   });
 
+  // Если пользователь загрузился позже (например после перезагрузки) — обновляем поля
+  useEffect(() => {
+    if (!currentUser) return;
+    setEmail(currentUser.email || "");
+    setName(currentUser.name || "");
+    setBirthDate(currentUser.birthDate || "");
+    setGender(currentUser.gender || "");
+    setCity(currentUser.city?.id?.toString() || "");
+    setAbout(currentUser.about || "");
+    setAvatarPreview(currentUser.avatar || "");
+  }, [currentUser]);
+
   useEffect(() => {
     return () => {
-      if (avatarPreview) {
+      if (avatarPreview && avatarPreview.startsWith("blob:")) {
         URL.revokeObjectURL(avatarPreview);
       }
     };
@@ -62,16 +81,17 @@ const PersonalSection = () => {
   const handleAvatarChange = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
-
-    if (avatarPreview) {
-      URL.revokeObjectURL(avatarPreview);
-    }
-
+    if (avatarPreview?.startsWith("blob:")) URL.revokeObjectURL(avatarPreview);
     setAvatarPreview(URL.createObjectURL(file));
   };
 
   const enableFieldEditing = (field: "email" | "name" | "about") => {
     setEditableFields((prev) => ({ ...prev, [field]: true }));
+  };
+
+  const handleSave = async () => {
+    // TODO: отправить на бэкенд когда появится эндпоинт
+    console.log("Сохранить:", { email, name, birthDate, gender, city, about });
   };
 
   return (
@@ -82,7 +102,7 @@ const PersonalSection = () => {
             label="Почта"
             type="email"
             value={email}
-            onChange={(event) => setEmail(event.target.value)}
+            onChange={(e) => setEmail(e.target.value)}
             placeholder="Введите почту"
             error={emailError}
             disabled={!editableFields.email}
@@ -115,21 +135,15 @@ const PersonalSection = () => {
                 <Input
                   type={showCurrentPassword ? "text" : "password"}
                   value={currentPassword}
-                  onChange={(event) => setCurrentPassword(event.target.value)}
+                  onChange={(e) => setCurrentPassword(e.target.value)}
                   placeholder="Введите старый пароль"
                 />
                 <button
                   type="button"
                   className={styles.passwordToggle}
                   onClick={() => setShowCurrentPassword((prev) => !prev)}
-                  aria-label={
-                    showCurrentPassword ? "Скрыть старый пароль" : "Показать старый пароль"
-                  }
                 >
-                  <img
-                    src={showCurrentPassword ? eyeSlashIcon : eyeIcon}
-                    alt=""
-                  />
+                  <img src={showCurrentPassword ? eyeSlashIcon : eyeIcon} alt="" />
                 </button>
               </div>
             </div>
@@ -140,21 +154,15 @@ const PersonalSection = () => {
                 <Input
                   type={showNewPassword ? "text" : "password"}
                   value={newPassword}
-                  onChange={(event) => setNewPassword(event.target.value)}
+                  onChange={(e) => setNewPassword(e.target.value)}
                   placeholder="Введите новый пароль"
                 />
                 <button
                   type="button"
                   className={styles.passwordToggle}
                   onClick={() => setShowNewPassword((prev) => !prev)}
-                  aria-label={
-                    showNewPassword ? "Скрыть новый пароль" : "Показать новый пароль"
-                  }
                 >
-                  <img
-                    src={showNewPassword ? eyeSlashIcon : eyeIcon}
-                    alt=""
-                  />
+                  <img src={showNewPassword ? eyeSlashIcon : eyeIcon} alt="" />
                 </button>
               </div>
             </div>
@@ -165,7 +173,7 @@ const PersonalSection = () => {
           <Input
             label="Имя"
             value={name}
-            onChange={(event) => setName(event.target.value)}
+            onChange={(e) => setName(e.target.value)}
             placeholder="Введите имя"
             disabled={!editableFields.name}
             iconRight={
@@ -187,7 +195,6 @@ const PersonalSection = () => {
             value={birthDate}
             onChange={setBirthDate}
           />
-
           <GenderSelect
             label="Пол"
             value={gender}
@@ -209,7 +216,7 @@ const PersonalSection = () => {
             <textarea
               className={`${styles.textarea} ${aboutError ? styles.textareaError : ""}`}
               value={about}
-              onChange={(event) => setAbout(event.target.value)}
+              onChange={(e) => setAbout(e.target.value)}
               placeholder="Расскажите немного о себе"
               disabled={!editableFields.about}
             />
@@ -226,18 +233,16 @@ const PersonalSection = () => {
             {aboutError ? (
               <span className={styles.errorText}>{aboutError}</span>
             ) : (
-              <span className={styles.hintText}>
-                До {ABOUT_MAX_LENGTH} символов
-              </span>
+              <span className={styles.hintText}>До {ABOUT_MAX_LENGTH} символов</span>
             )}
-            <span className={styles.counter}>
-              {about.length}/{ABOUT_MAX_LENGTH}
-            </span>
+            <span className={styles.counter}>{about.length}/{ABOUT_MAX_LENGTH}</span>
           </div>
         </div>
 
         <div className={styles.buttonRow}>
-          <Button disabled={!isFormValid}>Сохранить</Button>
+          <Button disabled={!isFormValid} onClick={handleSave}>
+            Сохранить
+          </Button>
         </div>
       </div>
 
