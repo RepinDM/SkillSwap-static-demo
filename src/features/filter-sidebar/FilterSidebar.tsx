@@ -2,8 +2,6 @@ import { useMemo, useState } from "react";
 
 import { useAppSelector } from "@/services/hooks";
 
-import { Input } from "@/shared/ui/input/input";
-
 import styles from "./FilterSidebar.module.scss";
 import crossIcon from "@/shared/image/icons/cross.svg";
 import chevronDownIcon from "@/shared/image/icons/chevron-down.svg";
@@ -12,6 +10,8 @@ import type { TFilters } from "@/entities/filters/type";
 import type { TGender } from "@/entities/user/types";
 import type { TSkillType } from "@/entities/skill/types";
 import { selectAllSkillCards, selectCategoryItems } from "@/services/slices/skillCardsSlice";
+import { Checkbox } from "@/shared/ui/Checkbox/Checkbox";
+import { RadioButton } from "@/shared/ui/RadioButton/RadioButton";
 
 type Props = {
   values: TFilters;
@@ -137,29 +137,32 @@ const uniqueCities = useMemo(() => {
         <div className={styles.filterGroup}>
           <ul className={styles.radioGroup}>
             <li className={styles.container}>
-              <Input
-                type="radio"
+              <RadioButton
+                name="filter-mode"
+                value="all"
                 label="Всё"
                 checked={values.mode === "all"}
                 onChange={() => handleModeChange("all")}
               />
             </li>
-              <li className={styles.container}>
-                <Input
-                type="radio"
+            <li className={styles.container}>
+              <RadioButton
+                name="filter-mode"
+                value="learn"
                 label="Хочу научиться"
                 checked={values.mode === "learn"}
                 onChange={() => handleModeChange("learn")}
               />
-              </li>
-              <li className={styles.container}>
-                <Input
-                type="radio"
+            </li>
+            <li className={styles.container}>
+              <RadioButton
+                name="filter-mode"
+                value="teach"
                 label="Могу научить"
                 checked={values.mode === "teach"}
                 onChange={() => handleModeChange("teach")}
               />
-              </li>
+            </li>
           </ul>
         </div>
 
@@ -168,56 +171,63 @@ const uniqueCities = useMemo(() => {
           <h4 className={styles.sectionTitle}>Навыки</h4>
 
           <ul className={styles.categoriesList}>
-            {visibleCategories.map(category => (
-              <li key={category.id} className={styles.categoryItem}>
-                <div className={styles.categoryHeader}>
-                  <div className={styles.container}>
-                  <Input
-                    type="checkbox"
-                    label={category.name}
-                    checked={category.subcategories.every(sub =>
-                      values.skillIds.includes(sub.id)
-                    )}
-                    onChange={() =>
-                      handleCategoryToggle(
-                        category.subcategories.map(sub => sub.id)
-                      )
-                    }
-                  />
-                </div>
+            {visibleCategories.map((category) => {
+              const subs = category.subcategories;
+              const allChecked = subs.every((sub) =>
+                values.skillIds.includes(sub.id)
+              );
+              const someChecked = subs.some((sub) =>
+                values.skillIds.includes(sub.id)
+              );
 
-                <button
-                    className={styles.accordionButton}
-                    onClick={() => toggleCategory(category.id)}
-                  >
-                    <img
-                      src={
-                        expandedCategories.includes(category.id)
-                          ? chevronUpIcon
-                          : chevronDownIcon
-                      }
-                    />
-                  </button>
-                </div>
+              return (
+                <li key={category.id} className={styles.categoryItem}>
+                  <div className={styles.categoryHeader}>
+                    <div className={styles.container}>
+                      <Checkbox
+                        label={category.name}
+                        checked={allChecked}
+                        indeterminate={someChecked && !allChecked}
+                        onChange={() =>
+                          handleCategoryToggle(subs.map((sub) => sub.id))
+                        }
+                      />
+                    </div>
 
-                {expandedCategories.includes(category.id) && (
-                  <ul className={styles.subcategoriesList}>
-                    {category.subcategories.map(sub => (
-                      <li key={sub.id} className={styles.container}>
-                        <Input
-                          type="checkbox"
-                          label={sub.name}
-                          checked={values.skillIds.includes(sub.id)}
-                          onChange={() =>
-                            handleSubcategoryToggle(sub.id)
-                          }
-                        />
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </li>
-            ))}
+                    <button
+                      className={styles.accordionButton}
+                      onClick={() => toggleCategory(category.id)}
+                      type="button"
+                    >
+                      <img
+                        src={
+                          expandedCategories.includes(category.id)
+                            ? chevronUpIcon
+                            : chevronDownIcon
+                        }
+                        alt=""
+                      />
+                    </button>
+                  </div>
+
+                  {expandedCategories.includes(category.id) && (
+                    <ul className={styles.subcategoriesList}>
+                      {subs.map((sub) => (
+                        <li key={sub.id} className={styles.container}>
+                          <Checkbox
+                            label={sub.name}
+                            checked={values.skillIds.includes(sub.id)}
+                            onChange={() =>
+                              handleSubcategoryToggle(sub.id)
+                            }
+                          />
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </li>
+              );
+            })}
           </ul>
 
           <button
@@ -237,8 +247,9 @@ const uniqueCities = useMemo(() => {
 
           <ul className={styles.radioGroup}>
             <li className={styles.container}>
-              <Input
-                type="radio"
+              <RadioButton
+                name="filter-gender"
+                value="any"
                 label="Не имеет значения"
                 checked={values.gender === null}
                 onChange={() => handleGenderChange(null)}
@@ -246,8 +257,9 @@ const uniqueCities = useMemo(() => {
             </li>
 
             <li className={styles.container}>
-              <Input
-                type="radio"
+              <RadioButton
+                name="filter-gender"
+                value="male"
                 label="Мужской"
                 checked={values.gender === "male"}
                 onChange={() => handleGenderChange("male")}
@@ -255,8 +267,9 @@ const uniqueCities = useMemo(() => {
             </li>
 
             <li className={styles.container}>
-              <Input
-                type="radio"
+              <RadioButton
+                name="filter-gender"
+                value="female"
                 label="Женский"
                 checked={values.gender === "female"}
                 onChange={() => handleGenderChange("female")}
@@ -272,8 +285,7 @@ const uniqueCities = useMemo(() => {
           <ul className={styles.citiesList}>
             {visibleCities.map(city => (
               <li key={city} className={styles.container}>
-                <Input
-                  type="checkbox"
+                <Checkbox
                   label={city}
                   checked={values.cities.includes(city)}
                   onChange={() => handleCityToggle(city)}
