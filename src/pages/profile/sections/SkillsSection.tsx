@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { useAppSelector } from "@/services/hooks";
-import { selectAllSkillCards } from "@/services/slices/skillCardsSlice";
+import {
+  selectAllSkillCards,
+  selectStatus,
+} from "@/services/slices/skillCardsSlice";
 import { selectUser } from "@/services/slices/authSlice";
 import { Tag } from "@/shared/ui/Tag/Tag";
 import { Button } from "@/shared/ui/Button/Button";
@@ -13,34 +16,27 @@ import { EditLearnSkillsModal } from "@/features/ProfileSkillModal/EditLearnSkil
 const SkillsSection = () => {
   const currentUser = useAppSelector(selectUser);
   const allCards = useAppSelector(selectAllSkillCards);
+  const status = useAppSelector(selectStatus);
 
   const [showTeachModal, setShowTeachModal] = useState(false);
   const [showLearnModal, setShowLearnModal] = useState(false);
 
-  // Находим карточку текущего пользователя
+  const isLoading = status === "loading";
+
   const myCard = allCards.find((c) => c.user.id === currentUser?.id);
 
-  if (!myCard) {
-    return (
-      <div className={styles.empty}>
-        <p>У вас пока нет навыков</p>
-        <Button variant="primary" onClick={() => setShowTeachModal(true)}>
-          + Добавить навык
-        </Button>
-      </div>
-    );
-  }
+  if (isLoading) return <p>Loading...</p>;
 
-  const { teachSkill, learnSkills } = myCard;
-   const images = teachSkill.images || [];
+  const teachSkill = myCard?.teachSkill;
+  const learnSkills = myCard?.learnSkills || [];
+  const images = teachSkill?.images || [];
 
   return (
     <div className={styles.section}>
 
-      {/* ── Блок "Могу научить" ── */}
       <div className={styles.block}>
         <div className={styles.blockHeader}>
-          <h3 className={styles.blockTitle}>Могу научить</h3>
+          <h2 className={styles.blockTitle}>Могу научить</h2>
 
           <Button
             variant="secondary"
@@ -51,18 +47,20 @@ const SkillsSection = () => {
           </Button>
         </div>
 
-        <div className={styles.teachCard}>
-          <div className={styles.teachInfo}>
-            <Tag
-              label={teachSkill.subcategory.category.name}
-              bgColor={getCategoryColor(teachSkill.subcategory.category.slug)}
-            />
-            <h4 className={styles.teachTitle}>{teachSkill.title}</h4>
-            <p className={styles.teachDescription}>{teachSkill.description}</p>
-          </div>
-
-          {teachSkill.images && teachSkill.images.length > 0 && (
-            <div className={styles.teachImages}>
+        {teachSkill && (
+          <div className={styles.teachCard}>
+            <div className={styles.teachInfo}>
+              <Tag
+                label={teachSkill.subcategory.category.name}
+                bgColor={getCategoryColor(
+                  teachSkill.subcategory.category.slug
+                )}
+              />
+              <h3 className={styles.teachTitle}>{teachSkill.title}</h3>
+              <p className={styles.teachDescription}>
+                {teachSkill.description}
+              </p>
+            </div>
 
             {images.length > 0 && (
               <div className={styles.teachImages}>
@@ -83,15 +81,15 @@ const SkillsSection = () => {
                 ))}
               </div>
             )}
-            </div>
-          )}
-        </div>
+          </div>
+        )}
       </div>
 
-      {/* ── Блок "Хочу научиться" ── */}
+      {/* ── Хочу научиться ── */}
       <div className={styles.block}>
         <div className={styles.blockHeader}>
-          <h3 className={styles.blockTitle}>Хочу научиться</h3>
+          <h2 className={styles.blockTitle}>Хочу научиться</h2>
+
           <Button
             variant="secondary"
             onClick={() => setShowLearnModal(true)}
@@ -107,15 +105,15 @@ const SkillsSection = () => {
           <ul className={styles.learnList}>
             {learnSkills.map((skill) => (
               <li key={skill.id} className={styles.learnItem}>
-                <div className={styles.learnItemLeft}>
-                  <Tag
-                    label={skill.subcategory.category.name}
-                    bgColor={getCategoryColor(skill.subcategory.category.slug)}
-                  />
-                  <span className={styles.learnSkillName}>
-                    {skill.subcategory.name}
-                  </span>
-                </div>
+                <Tag
+                  label={skill.subcategory.category.name}
+                  bgColor={getCategoryColor(
+                    skill.subcategory.category.slug
+                  )}
+                />
+                <span className={styles.learnSkillName}>
+                  {skill.subcategory.name}
+                </span>
               </li>
             ))}
           </ul>
@@ -126,16 +124,17 @@ const SkillsSection = () => {
         isOpen={showTeachModal}
         onClose={() => setShowTeachModal(false)}
         initialData={{
-          title: teachSkill.title,
-          description: teachSkill.description,
+          title: teachSkill?.title || "",
+          description: teachSkill?.description || "",
         }}
       />
 
       <EditLearnSkillsModal
         isOpen={showLearnModal}
         onClose={() => setShowLearnModal(false)}
-        initialData={learnSkills.map(s => ({
-          name: s.subcategory.name
+        initialData={learnSkills.map((s) => ({
+          categoryId: String(s.subcategory.category.id),
+          subcategoryId: String(s.subcategory.id),
         }))}
       />
     </div>
