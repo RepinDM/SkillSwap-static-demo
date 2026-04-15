@@ -1,0 +1,66 @@
+.authorColumn {
+  background: var(--card-input);
+  padding: 32px;
+  border-radius: 12px;
+  width: 324px;
+}
+
+.authorHeader {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.authorInfo {
+  flex: 1;
+}
+
+.authorName {
+  font-family: var(--font-heading);
+  font-weight: var(--font-h2-weight);
+  font-size: var(--font-h2-size);
+  line-height: var(--font-h2-line-height);
+  color: var(--text);
+  margin: 0 0 4px 0;
+}
+
+.authorMeta {
+  font-size: var(--font-caption-size);
+  line-height: var(--font-caption-line-height);
+  color: var(--caption);
+  margin: 0 0 8px 0;
+}
+
+.authorAbout {
+  font-size: var(--font-body-size);
+  line-height: var(--font-body-line-height);
+  color: var(--text);
+  margin-bottom: 24px;
+  font-weight: var(--font-body-weight);
+}
+
+.skillBlock {
+  margin-bottom: 24px;
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.blockTitle {
+  font-family: var(--font-primary);
+  font-weight: var(--font-h4-weight);
+  font-size: var(--font-h4-size);
+  line-height: var(--font-h4-line-height);
+  color: var(--text);
+  margin-bottom: 12px;
+}
+
+.learnList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
