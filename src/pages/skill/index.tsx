@@ -1,8 +1,9 @@
 import { useParams } from "react-router-dom";
 import { useAppSelector } from "@/services/hooks";
-import { useState, useRef } from "react";
+import { useMemo, useRef, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
+import type { Swiper as SwiperType } from "swiper";
 
 import { SkillCard } from "@/widgets/SkillCard/SkillCard";
 import { UserSkillPage } from "./UserSkillPage";
@@ -13,7 +14,6 @@ import chevronRightIcon from "@/shared/image/icons/chevron-right.svg";
 import { getAge } from "@/shared/lib/utils/getAge";
 import { selectAllSkillCards } from "@/services/slices/skillCardsSlice";
 
-// Импорт стилей Swiper
 import "swiper/css";
 import "swiper/css/navigation";
 
@@ -25,45 +25,43 @@ export const SkillPage = () => {
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [isPrevVisible, setIsPrevVisible] = useState(false);
   const [isNextVisible, setIsNextVisible] = useState(true);
-  const swiperRef = useRef<any>(null);
+  const mainSwiperRef = useRef<SwiperType | null>(null);
+  const relatedSwiperRef = useRef<SwiperType | null>(null);
 
   const card = allCards.find((c) => c.id === Number(id));
+  const related = allCards.filter(
+    (c) =>
+      c.id !== Number(id) &&
+      c.teachSkill.subcategory.id === card?.teachSkill.subcategory.id
+  );
+  const displayImages = card?.teachSkill.images ?? [];
+  const relatedCards = useMemo(() => related, [related]);
+  const safeSelectedImageIndex = Math.min(
+    selectedImageIndex,
+    Math.max(displayImages.length - 1, 0)
+  );
 
   if (!card) return <p>Навык не найден</p>;
 
   const { user, teachSkill, learnSkills } = card;
-  const images = teachSkill.images ?? [];
-  const displayImages = images;
-
-  // Похожие предложения
-  const related = allCards
-    .filter(
-      (c) =>
-        c.id !== card.id &&
-        c.teachSkill.subcategory.id === teachSkill.subcategory.id
-    );
 
   const handleImageSelect = (index: number) => {
     setSelectedImageIndex(index);
+    mainSwiperRef.current?.slideTo(index);
   };
 
   // Безопасное получение возраста
   const userAge = user.birthDate ? getAge(user.birthDate) : undefined;
 
-  // Функции для навигации слайдера похожих предложений
   const handlePrevClick = () => {
-    if (swiperRef.current) {
-      swiperRef.current.slidePrev();
-    }
+    relatedSwiperRef.current?.slidePrev();
   };
 
   const handleNextClick = () => {
-    if (swiperRef.current) {
-      swiperRef.current.slideNext();
-    }
+    relatedSwiperRef.current?.slideNext();
   };
 
-  const handleSlideChange = (swiper: any) => {
+  const handleSlideChange = (swiper: SwiperType) => {
     setIsPrevVisible(!swiper.isBeginning);
     setIsNextVisible(!swiper.isEnd);
   };
@@ -122,21 +120,35 @@ export const SkillPage = () => {
                         nextEl: `.${styles.swiperNext}`,
                         prevEl: `.${styles.swiperPrev}`,
                       }}
+                      onSwiper={(swiper) => {
+                        mainSwiperRef.current = swiper;
+                      }}
                       onSlideChange={(swiper) => setSelectedImageIndex(swiper.activeIndex)}
-                      initialSlide={selectedImageIndex}
+                      initialSlide={safeSelectedImageIndex}
                       className={styles.mainSwiper}
+                      key={card.id}
                     >
                       {displayImages.map((img, i) => (
-                        <SwiperSlide key={i}>
-                          <img src={img} alt={`${teachSkill.title} - ${i + 1}`} className={styles.mainImage} />
+                        <SwiperSlide key={img || i}>
+                          <img
+                            src={img}
+                            alt={`${teachSkill.title} - ${i + 1}`}
+                            className={styles.mainImage}
+                          />
                         </SwiperSlide>
                       ))}
                     </Swiper>
                     
-                    <button className={`${styles.swiperNav} ${styles.swiperPrev}`}>
+                    <button
+                      className={`${styles.swiperNav} ${styles.swiperPrev}`}
+                      type="button"
+                    >
                       <img src={chevronRightIcon} alt="Назад" className={styles.prevIcon} />
                     </button>
-                    <button className={`${styles.swiperNav} ${styles.swiperNext}`}>
+                    <button
+                      className={`${styles.swiperNav} ${styles.swiperNext}`}
+                      type="button"
+                    >
                       <img src={chevronRightIcon} alt="Вперед" />
                     </button>
                   </div>
@@ -151,8 +163,9 @@ export const SkillPage = () => {
                         return (
                           <button
                             key={i}
-                            className={`${styles.thumbnail} ${selectedImageIndex === i ? styles.activeThumbnail : ""}`}
+                            className={`${styles.thumbnail} ${safeSelectedImageIndex === i ? styles.activeThumbnail : ""}`}
                             onClick={() => handleImageSelect(i)}
+                            type="button"
                           >
                             <img src={img} alt={`Миниатюра ${i + 1}`} />
                             {isLastThumbnail && remainingCount > 0 && (
@@ -181,12 +194,12 @@ export const SkillPage = () => {
             <h2 className={styles.relatedTitle}>Похожие предложения</h2>
             <div className={styles.relatedNav}>
               {isPrevVisible && (
-                <button className={styles.relatedNavButton} onClick={handlePrevClick}>
+                <button className={styles.relatedNavButton} onClick={handlePrevClick} type="button">
                   <img src={chevronRightIcon} alt="Назад" className={styles.relatedPrevIcon} />
                 </button>
               )}
               {isNextVisible && (
-                <button className={styles.relatedNavButton} onClick={handleNextClick}>
+                <button className={styles.relatedNavButton} onClick={handleNextClick} type="button">
                   <img src={chevronRightIcon} alt="Вперед" />
                 </button>
               )}
@@ -196,7 +209,7 @@ export const SkillPage = () => {
           <div className={styles.relatedSliderWrapper}>
             <Swiper
               onSwiper={(swiper) => {
-                swiperRef.current = swiper;
+                relatedSwiperRef.current = swiper;
                 handleSlideChange(swiper);
               }}
               onSlideChange={handleSlideChange}
@@ -204,7 +217,7 @@ export const SkillPage = () => {
               spaceBetween={20}
               className={styles.relatedSwiper}
             >
-              {related.map((c) => (
+              {relatedCards.map((c) => (
                 <SwiperSlide key={c.id} className={styles.relatedSlide}>
                   <SkillCard card={c} showFavoriteButton={true} />
                 </SwiperSlide>

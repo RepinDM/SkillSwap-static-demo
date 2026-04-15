@@ -136,7 +136,7 @@
 .mainSwiper {
   width: 100%;
   height: 100%;
-  
+
   :global(.swiper-slide) {
     display: flex;
     align-items: center;
@@ -337,18 +337,21 @@
 
 .relatedSwiper {
   width: 100%;
-  
+
   :global(.swiper-wrapper) {
     display: flex;
   }
 }
 
 .relatedSlide {
-  width: auto !important;
-  max-width: 280px;
+  width: 324px !important;
+  flex-shrink: 0;
 }
 
-// Убираем стандартные стрелки Swiper
+.relatedSlide > * {
+  width: 100%;
+}
+
 .mainSwiper :global(.swiper-button-next),
 .mainSwiper :global(.swiper-button-prev) {
   display: none;
