@@ -118,12 +118,23 @@ const uniqueCities = useMemo(() => {
     setShowAllCities(false);
   };
 
+  const activeFiltersCount = useMemo(() => {
+  let count = 0;
+
+  if (values.mode !== "all") count += 1;
+  if (values.gender !== null) count += 1;
+  if (values.cities.length > 0) count += values.cities.length;
+  if (values.skillIds.length > 0) count += values.skillIds.length;
+
+  return count;
+}, [values]);
+
   return (
     <aside className={styles.sidebar}>
       {/* HEADER */}
       <div className={styles.header}>
         <h3 className={styles.title}>
-          Фильтры ({values.skillIds.length})
+          Фильтры ({activeFiltersCount})
         </h3>
 
         <button className={styles.resetButton} onClick={handleReset}>
