@@ -24,6 +24,9 @@ type Props = {
   initialData?: {
     title: string;
     description: string;
+    imageUrls?: string[];
+    categoryId?: string;
+    subcategoryId?: string;
   };
 };
 
@@ -37,6 +40,8 @@ export const EditTeachSkillModal = ({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isDragOver, setIsDragOver] = useState(false);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
+  const [existingImageUrls, setExistingImageUrls] = useState<string[]>([]);
+  const previewUrlsRef = useRef<string[]>([]);
 
   const {
     register,
@@ -60,42 +65,64 @@ export const EditTeachSkillModal = ({
     name: "categoryId",
   });
 
-  // INIT
+    useEffect(() => {
+      if (!selectedCategoryId) return;
+      setValue("subcategoryId", "");
+    }, [selectedCategoryId, setValue]);
+
   useEffect(() => {
-    if (!isOpen) return;
+    if (!isOpen || !initialData) return;
 
     reset({
-      title: initialData?.title || "",
-      description: initialData?.description || "",
-      categoryId: "",
-      subcategoryId: "",
+      title: initialData.title,
+      description: initialData.description,
+      categoryId: initialData.categoryId || "",
+      subcategoryId: initialData.subcategoryId || "",
       images: [],
     });
 
+    setExistingImageUrls(initialData.imageUrls || []);
     setImagePreviews([]);
   }, [isOpen, initialData, reset]);
 
+  useEffect(() => {
+    setValue("subcategoryId", "");
+  }, [selectedCategoryId]);
+
+  const removeExistingImage = (index: number) => {
+    setExistingImageUrls((prev) => prev.filter((_, i) => i !== index));
+  };
+
   if (!isOpen) return null;
 
-  // IMAGES (простая логика как в регистрации)
   const processFiles = (files: FileList | null) => {
     if (!files) return;
 
     const newFiles = Array.from(files);
     const current = getValues("images") || [];
-
     const updated = [...current, ...newFiles].slice(0, 7);
 
+    // очистка старых URL
+    previewUrlsRef.current.forEach((url) => URL.revokeObjectURL(url));
+
+    const newUrls = updated.map((file) => URL.createObjectURL(file));
+    previewUrlsRef.current = newUrls;
+
     setValue("images", updated);
-    setImagePreviews(updated.map((f) => URL.createObjectURL(f)));
+    setImagePreviews(newUrls);
   };
 
   const removeImage = (index: number) => {
     const current = getValues("images") || [];
     const updated = current.filter((_, i) => i !== index);
 
+    previewUrlsRef.current.forEach((url) => URL.revokeObjectURL(url));
+
+    const newUrls = updated.map((file) => URL.createObjectURL(file));
+    previewUrlsRef.current = newUrls;
+
     setValue("images", updated);
-    setImagePreviews(updated.map((f) => URL.createObjectURL(f)));
+    setImagePreviews(newUrls);
   };
 
   // DRAG & DROP
@@ -115,7 +142,7 @@ export const EditTeachSkillModal = ({
   };
 
   const onSubmit = (data: FormData) => {
-    console.log(data);
+    console.log({...data, existingImageUrls});
     onClose();
   };
 
@@ -199,8 +226,29 @@ export const EditTeachSkillModal = ({
             onChange={(e) => processFiles(e.target.files)}
           />
 
-          {/* PREVIEWS */}
+
           <div className={styles.imagePreviewList}>
+            {existingImageUrls.map((src, i) => (
+              <div key={`existing-${i}`} className={styles.imagePreviewItem}>
+                <img src={src} />
+                <button type="button" onClick={() => removeExistingImage(i)}>
+                  <img src={crossIcon} />
+                </button>
+              </div>
+            ))}
+
+            {imagePreviews.map((src, i) => (
+              <div key={`new-${i}`} className={styles.imagePreviewItem}>
+                <img src={src} />
+                <button type="button" onClick={() => removeImage(i)}>
+                  <img src={crossIcon} />
+                </button>
+              </div>
+            ))}
+          </div>
+
+          {/* PREVIEWS */}
+          {/* <div className={styles.imagePreviewList}>
             {imagePreviews.map((src, i) => (
               <div key={i} className={styles.imagePreviewItem}>
                 <img src={src} />
@@ -209,7 +257,7 @@ export const EditTeachSkillModal = ({
                 </button>
               </div>
             ))}
-          </div>
+          </div> */}
 
           {/* BUTTONS */}
           <div className={styles.buttons}>

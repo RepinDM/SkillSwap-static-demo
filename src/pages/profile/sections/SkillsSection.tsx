@@ -126,6 +126,9 @@ const SkillsSection = () => {
         initialData={{
           title: teachSkill?.title || "",
           description: teachSkill?.description || "",
+          categoryId: String(teachSkill?.subcategory?.category?.id || ""),
+          subcategoryId: String(teachSkill?.subcategory?.id || ""),
+          imageUrls: images,
         }}
       />
 
