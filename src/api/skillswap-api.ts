@@ -25,7 +25,7 @@ export type TUserSkillsResponse = {
 };
 
 export const getUserSkills = () =>
-  fetch(`${API_URL}/get_user_skill_list`)
+  fetch(`${API_URL}get_user_skill_list`)
     .then((res) => checkResponse<TUserSkillsResponse>(res))
     .then((data) => {
       console.log("PARSED DATA:", data);

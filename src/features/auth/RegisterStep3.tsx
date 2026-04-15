@@ -254,12 +254,24 @@ export const RegisterStep3 = () => {
       formData.append("images", file);
     });
 
+    for (const [key, value] of formData.entries()) {
+      console.log(key, value);
+    }
+
     try {
-      await fetch(`${API_URL}/register_user/`, {
-      // await fetch("http://skillswap.ovnet.ru:8000/api/register_user/", {
+      const res = await fetch(`${API_URL}register_user/`, {
         method: "POST",
         body: formData,
       });
+
+      const text = await res.text();
+
+      console.log("STATUS:", res.status);
+      console.log("RESPONSE:", text);
+
+      if (!res.ok) {
+        throw new Error(text);
+      }
 
       setShowSkillModal(false);
       setShowSuccessModal(true);

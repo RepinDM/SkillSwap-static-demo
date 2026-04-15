@@ -9,7 +9,7 @@ export const loginUser = createAsyncThunk(
   ) => {
     try {
       const response = await fetch(
-        `${API_URL}/login/`,
+        `${API_URL}login/`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
