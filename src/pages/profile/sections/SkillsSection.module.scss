@@ -24,22 +24,7 @@
 }
 
 .blockTitle {
-    font-size: 18px;
-    font-weight: 600;
     margin: 0;
-}
-
-.empty {
-    padding: 40px;
-    text-align: center;
-    background: #fff;
-    border-radius: 16px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.04);
-
-  p {
-    margin-bottom: 12px;
-    color: #666;
-  }
 }
 
 .editButton {
@@ -48,7 +33,6 @@
 
 .emptyLearn {
     color: #888;
-    font-size: 14px;
 }
 
 .teachCard {
@@ -66,13 +50,10 @@
 }
 
 .teachTitle {
-    font-size: 20px;
-    font-weight: 600;
     margin: 0;
 }
 
 .teachDescription {
-    font-size: 14px;
     color: #555;
     margin: 0;
     line-height: 1.4;
@@ -108,9 +89,7 @@
   position: absolute;
   inset: 0;
   background: rgba(0, 0, 0, 0.55);
-  color: #fff;
-  font-size: 14px;
-  font-weight: 600;
+  color: var(--card-input);
   border-radius: 10px;
 
   display: flex;
@@ -129,24 +108,18 @@
 }
 
 .learnItem {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+    display: flex;
+    align-items: center;
+    gap: 30px;
 
-  padding: 10px 12px;
-  border: 1px solid #eee;
-  border-radius: 12px;
-  background: #fafafa;
+    padding: 10px 12px;
+    border: 1px solid #eee;
+    border-radius: 12px;
 }
 
 .learnItemLeft {
   display: flex;
   align-items: center;
   gap: 10px;
-}
-
-.learnSkillName {
-  font-size: 14px;
-  color: #333;
 }
 
