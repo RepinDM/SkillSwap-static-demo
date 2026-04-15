@@ -85,10 +85,6 @@ export const EditTeachSkillModal = ({
     setImagePreviews([]);
   }, [isOpen, initialData, reset]);
 
-  useEffect(() => {
-    setValue("subcategoryId", "");
-  }, [selectedCategoryId]);
-
   const removeExistingImage = (index: number) => {
     setExistingImageUrls((prev) => prev.filter((_, i) => i !== index));
   };
@@ -230,8 +226,12 @@ export const EditTeachSkillModal = ({
           <div className={styles.imagePreviewList}>
             {existingImageUrls.map((src, i) => (
               <div key={`existing-${i}`} className={styles.imagePreviewItem}>
-                <img src={src} />
-                <button type="button" onClick={() => removeExistingImage(i)}>
+                <img src={src} className={styles.previewImage} />
+                <button
+                  type="button"
+                  className={styles.removeImageBtn}
+                  onClick={() => removeExistingImage(i)}
+                >
                   <img src={crossIcon} />
                 </button>
               </div>
@@ -239,8 +239,12 @@ export const EditTeachSkillModal = ({
 
             {imagePreviews.map((src, i) => (
               <div key={`new-${i}`} className={styles.imagePreviewItem}>
-                <img src={src} />
-                <button type="button" onClick={() => removeImage(i)}>
+                <img src={src} className={styles.previewImage} />
+                <button
+                  type="button"
+                  className={styles.removeImageBtn}
+                  onClick={() => removeImage(i)}
+                >
                   <img src={crossIcon} />
                 </button>
               </div>
