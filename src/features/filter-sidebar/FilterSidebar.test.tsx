@@ -2,9 +2,12 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import FiltersSidebar from "./FilterSidebar";
 import { useAppSelector } from "@/services/hooks";
-import { selectCategoryItems } from "@/services/slices/skillCardsSlice";
-import { selectAllSkillCards } from "@/services/slices/skillCardsSlice";
+import {
+  selectAllSkillCards,
+  selectCategoryItems,
+} from "@/services/slices/skillCardsSlice";
 import "@testing-library/jest-dom";
+import type { TFilters } from "@/entities/filters/type";
 
 vi.mock("@/services/hooks", () => ({
   useAppSelector: vi.fn(),
@@ -37,175 +40,190 @@ const mockCategories = [
   },
 ];
 
+const mockSkillCards = [
+  {
+    user: { city: { name: "Moscow" } },
+  },
+  {
+    user: { city: { name: "Kazan" } },
+  },
+];
+
+const defaultValues: TFilters = {
+  mode: "all",
+  gender: null,
+  cities: [],
+  skillIds: [],
+};
+
+const renderSidebar = (
+  values: TFilters = defaultValues,
+  onChange = vi.fn()
+) => {
+  render(<FiltersSidebar values={values} onChange={onChange} />);
+
+  return { onChange };
+};
+
 beforeEach(() => {
-  (useAppSelector as any).mockImplementation((selector: any) => {
-  if (selector === selectCategoryItems) {
-    return mockCategories;
-  }
-  return [];
-});
-});
+  vi.clearAllMocks();
 
-describe("фильтры", () => {
-  it("0 фильтров", () => {
-    const onChange = vi.fn();
-    render(
-      <FiltersSidebar
-        values={{
-          mode: "all",
-          gender: null,
-          cities: [],
-          skillIds: [],
-        }}
-        onChange={onChange}
-      />
-    );
+  // Компонент использует два selector-а: категории и список карточек для городов.
+  vi.mocked(useAppSelector).mockImplementation((selector) => {
+    if (selector === selectCategoryItems) {
+      return mockCategories;
+    }
 
-    const title = screen.getByText(/Фильтры/i);
-    expect(title.textContent).toContain("(0)");
+    if (selector === selectAllSkillCards) {
+      return mockSkillCards;
+    }
 
-  });
-  it("2 фильтра", () => {
-    const onChange = vi.fn();
-    render(
-      <FiltersSidebar
-        values={{
-          mode: "all",
-          gender: "female",
-          cities: ["Moscow"],
-          skillIds: [],
-        }}
-        onChange={onChange}
-      />
-    );
-
-    const title = screen.getByText(/Фильтры/i);
-    expect(title.textContent).toContain("(2)");
-
-  });
-})
-
-it("фильтр хочу научиться", () => {
-  const onChange = vi.fn();
-
-  render(
-    <FiltersSidebar
-      values={{ mode: "all", gender: null, cities: [], skillIds: [] }}
-      onChange={onChange}
-    />
-  );
-
-  fireEvent.click(screen.getByLabelText("Хочу научиться"));
-
-  expect(onChange).toHaveBeenCalledWith(
-    expect.objectContaining({ mode: "learn" })
-  );
-});
-
-it("фильтр могу научить", () => {
-  const onChange = vi.fn();
-
-  render(
-    <FiltersSidebar
-      values={{ mode: "all", gender: null, cities: [], skillIds: [] }}
-      onChange={onChange}
-    />
-  );
-
-  fireEvent.click(screen.getByLabelText("Могу научить"));
-
-  expect(onChange).toHaveBeenCalledWith(
-    expect.objectContaining({ mode: "teach" })
-  );
-});
-
-it("сброс фильтров", () => {
-  const onChange = vi.fn();
-
-  render(
-    <FiltersSidebar
-      values={{
-        mode: "learn",
-        gender: "male",
-        cities: ["Almaty"],
-        skillIds: [1, 2],
-      }}
-      onChange={onChange}
-    />
-  );
-
-  fireEvent.click(screen.getByText("Сбросить"));
-
-  expect(onChange).toHaveBeenCalledWith({
-    mode: "all",
-    gender: null,
-    cities: [],
-    skillIds: [],
+    return [];
   });
 });
 
-it("выбор категории", () => {
-  const onChange = vi.fn();
+describe("FiltersSidebar", () => {
+  it("показывает 0 активных фильтров по умолчанию", () => {
+    renderSidebar();
 
-  render(
-    <FiltersSidebar
-      values={{
-        mode: "all",
-        gender: null,
-        cities: [],
-        skillIds: [],
-      }}
-      onChange={onChange}
-    />
-  );
+    expect(screen.getByText(/Фильтры \(0\)/i)).toBeInTheDocument();
+  });
 
-  const frontend = screen.getByText("Backend")
-  fireEvent.click(frontend);
-  const firstCall = onChange.mock.calls[0][0];
-  expect(firstCall.skillIds).toEqual([21, 22]);
-  fireEvent.click(frontend);
-  expect(onChange).toHaveBeenCalledTimes(2);
+  it("корректно считает активные фильтры", () => {
+    renderSidebar({
+      mode: "all",
+      gender: "female",
+      cities: ["Moscow"],
+      skillIds: [11],
+    });
 
-});
+    expect(screen.getByText(/Фильтры \(3\)/i)).toBeInTheDocument();
+  });
 
-it("клик по подкатегории", () => {
-  const onChange = vi.fn();
+  it("меняет режим на all", () => {
+    const { onChange } = renderSidebar({
+      ...defaultValues,
+      mode: "learn",
+    });
 
-  render(
-    <FiltersSidebar
-      values={{
-        mode: "all",
-        gender: null,
-        cities: [],
-        skillIds: [],
-      }}
-      onChange={onChange}
-    />
-  );
+    fireEvent.click(screen.getByLabelText("Всё"));
 
-  const element = screen.getAllByTestId("button");
-  fireEvent.click(element[0]);
-
-  const subcat = screen.getByText('React');
-  fireEvent.click(subcat);
-  expect(onChange.mock.calls[0][0].skillIds).toContain(11); // React
-  // expect(onChange).toHaveBeenCalled(1);
-});
-
-
-
-describe('кнопка все категории', () => {
-  it("изменение текста при клике", () => {
-    render(
-      <FiltersSidebar
-        values={{ mode: "all", gender: null, cities: [], skillIds: [] }}
-        onChange={vi.fn()}
-      />
+    expect(onChange).toHaveBeenCalledWith(
+      expect.objectContaining({ mode: "all" })
     );
+  });
 
-    const toggleButton = screen.getByText("Все категории");
+  it("меняет режим на learn", () => {
+    const { onChange } = renderSidebar();
+
+    fireEvent.click(screen.getByLabelText("Хочу научиться"));
+
+    expect(onChange).toHaveBeenCalledWith(
+      expect.objectContaining({ mode: "learn" })
+    );
+  });
+
+  it("меняет режим на teach", () => {
+    const { onChange } = renderSidebar();
+
+    fireEvent.click(screen.getByLabelText("Могу научить"));
+
+    expect(onChange).toHaveBeenCalledWith(
+      expect.objectContaining({ mode: "teach" })
+    );
+  });
+
+  it("сбрасывает фильтры к начальному состоянию", () => {
+    const { onChange } = renderSidebar({
+      mode: "learn",
+      gender: "male",
+      cities: ["Almaty"],
+      skillIds: [11, 12],
+    });
+
+    fireEvent.click(screen.getByRole("button", { name: /Сбросить/i }));
+
+    expect(onChange).toHaveBeenCalledWith(defaultValues);
+  });
+
+  it("выбирает категорию и добавляет все ее подкатегории", () => {
+    const { onChange } = renderSidebar();
+
+    fireEvent.click(screen.getByLabelText("Backend"));
+
+    expect(onChange).toHaveBeenCalledWith(
+      expect.objectContaining({ skillIds: [21, 22] })
+    );
+  });
+
+  it("снимает категорию и убирает все ее подкатегории", () => {
+    const { onChange } = renderSidebar({
+      ...defaultValues,
+      skillIds: [21, 22],
+    });
+
+    fireEvent.click(screen.getByLabelText("Backend"));
+
+    expect(onChange).toHaveBeenCalledWith(
+      expect.objectContaining({ skillIds: [] })
+    );
+  });
+
+  it("открывает и закрывает список подкатегорий категории", () => {
+    renderSidebar();
+
+    const toggleButton = screen.getByRole("button", {
+      name: "Переключить подкатегории Frontend",
+    });
+
+    // Проверяем именно раскрытие/сворачивание UI, а не внутренний state.
     fireEvent.click(toggleButton);
-    expect(screen.getByText("Скрыть категории")).toBeInTheDocument();
+    expect(screen.getByText("React")).toBeInTheDocument();
+
+    fireEvent.click(toggleButton);
+    expect(screen.queryByText("React")).not.toBeInTheDocument();
   });
 
-})
+  it("выбирает подкатегорию навыка", () => {
+    const { onChange } = renderSidebar();
+
+    fireEvent.click(
+      screen.getByRole("button", {
+        name: "Переключить подкатегории Frontend",
+      })
+    );
+    fireEvent.click(screen.getByLabelText("React"));
+
+    expect(onChange).toHaveBeenCalledWith(
+      expect.objectContaining({ skillIds: [11] })
+    );
+  });
+
+  it("снимает подкатегорию навыка", () => {
+    const { onChange } = renderSidebar({
+      ...defaultValues,
+      skillIds: [11],
+    });
+
+    fireEvent.click(
+      screen.getByRole("button", {
+        name: "Переключить подкатегории Frontend",
+      })
+    );
+    fireEvent.click(screen.getByLabelText("React"));
+
+    expect(onChange).toHaveBeenCalledWith(
+      expect.objectContaining({ skillIds: [] })
+    );
+  });
+
+  it("меняет текст кнопки показа всех категорий", () => {
+    renderSidebar();
+
+    fireEvent.click(screen.getByRole("button", { name: /Все категории/i }));
+
+    expect(
+      screen.getByRole("button", { name: /Скрыть категории/i })
+    ).toBeInTheDocument();
+  });
+});
