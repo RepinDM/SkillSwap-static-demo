@@ -19,6 +19,7 @@ import { TeachSkillModal } from '../TeachSkillModal/components/SkillModal/TeachS
 import { ExchangeCreatedModal } from '../ExchangeCreatedModal/ExchangeCreatedModal';
 import { API_URL } from '@/api/config';
 import { setAuthData } from '@/services/slices/authSlice';
+import type { TUserAuth } from '@/entities/user/types';
 
 interface IRegisterStep3Form {
   skillName: string;
@@ -27,6 +28,12 @@ interface IRegisterStep3Form {
   description: string;
   images: File[];
 }
+
+type RegisterResponse = {
+  accessToken: string;
+  refreshToken: string;
+  user: TUserAuth;
+};
 
 const validationSchema = yup.object({
   skillName: yup
@@ -68,7 +75,7 @@ export const RegisterStep3 = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   const dispatch = useAppDispatch();
-  const [registerResponse, setRegisterResponse] = useState<any>(null);
+  const [registerResponse, setRegisterResponse] = useState<RegisterResponse | null>(null);
 
   const step1 = useAppSelector(selectStep1);
   const step2 = useAppSelector(selectStep2);
@@ -266,7 +273,7 @@ export const RegisterStep3 = () => {
       return;
     }
 
-    const data = await res.json();
+    const data: RegisterResponse = await res.json();
     setRegisterResponse(data);
     setShowSkillModal(false);
     setShowSuccessModal(true);

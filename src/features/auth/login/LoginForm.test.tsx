@@ -7,20 +7,22 @@ import { MemoryRouter } from "react-router-dom";
 import * as hooks from "@/services/hooks";
 import { loginUser } from "@/services/actions/login";
 import { describe, expect, it, vi } from "vitest";
+import type { AppDispatch } from "@/services/store";
+import type * as ReactRouterDom from "react-router-dom";
 
 vi.mock("@/services/actions/login");
 
 const mockNavigate = vi.fn();
 
 vi.mock("react-router-dom", async () => {
-  const actual = await vi.importActual<any>("react-router-dom");
+  const actual = await vi.importActual<typeof ReactRouterDom>("react-router-dom");
   return {
     ...actual,
     useNavigate: () => mockNavigate,
   };
 });
 
-const renderWithProviders = (state?: any) => {
+const renderWithProviders = (state?: Partial<{ isLoading: boolean; error: string | null; user: null }>) => {
   const store = configureStore({
     reducer: {
       auth: authReducer,
@@ -58,9 +60,9 @@ describe("LoginForm", () => {
       type: "auth/loginUser/fulfilled",
     });
 
-    vi.spyOn(hooks, "useAppDispatch").mockReturnValue(dispatch as any);
+    vi.spyOn(hooks, "useAppDispatch").mockReturnValue(dispatch as AppDispatch);
 
-    (loginUser as any).fulfilled = {
+    loginUser.fulfilled = {
       match: () => true,
     };
 
