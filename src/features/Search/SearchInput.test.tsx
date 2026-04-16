@@ -2,7 +2,6 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { SearchInput } from "./SearchInput";
 import { useAppDispatch } from "@/services/hooks";
-import { setSearchQuery } from "@/services/slices/skillCardsSlice";
 import { useNavigate, useLocation } from "react-router-dom";
 import type { Mock } from "vitest";
 
@@ -54,8 +53,10 @@ describe("SearchInput", () => {
 
     vi.advanceTimersByTime(300);
 
-    expect(setSearchQuery).toHaveBeenCalledWith("react");
-    expect(dispatch).toHaveBeenCalled();
+    expect(dispatch).toHaveBeenCalledWith({
+      type: "setSearchQuery",
+      payload: "react",
+    });
   });
 
   it("navigates to / if not on main page", () => {
