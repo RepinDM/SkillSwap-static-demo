@@ -7,6 +7,8 @@ import favoritesSlice from './slices/favoritesSlice'
 import { listenerMiddleware } from './middleware/saveFavorites.middleware';
 import { loadFavoriteState } from './preloadedState';
 import { loadLikesState } from './preloadedState';
+import exchangeRequestsSlice from './slices/exchangeRequestsSlice';
+
 
 export const store = configureStore({
   reducer: {
@@ -19,6 +21,8 @@ export const store = configureStore({
   preloadedState: {
     favorites: {byId: loadFavoriteState()},
     likes: loadLikesState()
+    exchangeRequests: exchangeRequestsSlice,
+
   },
 
   middleware: (getDefaultMiddleware) =>

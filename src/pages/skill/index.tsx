@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useAppSelector } from "@/services/hooks";
 import { useMemo, useRef, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -18,13 +18,14 @@ import "swiper/css";
 import "swiper/css/navigation";
 
 import styles from "./SkillPage.module.scss";
+import clsx from "clsx";
+import { selectIsAuthenticated } from "@/services/slices/authSlice";
+import { ExchangeSuggestedModal } from "@/features/ExchangeSuggestedModal/ExchangeSuggestedModal";
 
 export const SkillPage = () => {
   const { id } = useParams<{ id: string }>();
   const allCards = useAppSelector(selectAllSkillCards);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
-  const [isPrevVisible, setIsPrevVisible] = useState(false);
-  const [isNextVisible, setIsNextVisible] = useState(true);
   const mainSwiperRef = useRef<SwiperType | null>(null);
   const relatedSwiperRef = useRef<SwiperType | null>(null);
 
@@ -53,18 +54,9 @@ export const SkillPage = () => {
   // Безопасное получение возраста
   const userAge = user.birthDate ? getAge(user.birthDate) : undefined;
 
-  const handlePrevClick = () => {
-    relatedSwiperRef.current?.slidePrev();
-  };
-
-  const handleNextClick = () => {
-    relatedSwiperRef.current?.slideNext();
-  };
-
-  const handleSlideChange = (swiper: SwiperType) => {
-    setIsPrevVisible(!swiper.isBeginning);
-    setIsNextVisible(!swiper.isEnd);
-  };
+  const isAuthenticated = useAppSelector(selectIsAuthenticated);
+  const navigate = useNavigate();
+  const [isExchangeOpen, setIsExchangeOpen] = useState(false);
 
   return (
     <main className={styles.page}>
@@ -107,7 +99,20 @@ export const SkillPage = () => {
 
               <p className={styles.description}>{teachSkill.description || "Описание навыка пока не добавлено."}</p>
 
-              <button className={styles.exchangeButton}>Предложить обмен</button>
+              <button
+                className={styles.exchangeButton}
+                onClick={() => {
+                  if (isAuthenticated) {
+                    setIsExchangeOpen(true);
+                  } else {
+                    navigate("/login", {
+                      state: { from: { pathname: `/skill/${id}` } },
+                    });
+                  }
+                }}
+              >
+                Предложить обмен
+              </button>
             </div>
 
             <div className={styles.galleryColumn}>
@@ -193,26 +198,33 @@ export const SkillPage = () => {
           <div className={styles.relatedHeader}>
             <h2 className={styles.relatedTitle}>Похожие предложения</h2>
             <div className={styles.relatedNav}>
-              {isPrevVisible && (
-                <button className={styles.relatedNavButton} onClick={handlePrevClick} type="button">
-                  <img src={chevronRightIcon} alt="Назад" className={styles.relatedPrevIcon} />
+
+                <button
+                  className={clsx(styles.relatedNavButton, styles.relatedNavButtonLeft)}
+                  onClick={() => relatedSwiperRef.current?.slidePrev()}
+                  type="button"
+                >
+                  <img src={chevronRightIcon} alt="Назад" />
                 </button>
-              )}
-              {isNextVisible && (
-                <button className={styles.relatedNavButton} onClick={handleNextClick} type="button">
+
+                <button
+                  className={clsx(styles.relatedNavButton, styles.relatedNavButtonRight)}
+                  onClick={() => relatedSwiperRef.current?.slideNext()}
+                  type="button"
+                >
                   <img src={chevronRightIcon} alt="Вперед" />
                 </button>
-              )}
+
             </div>
           </div>
           
           <div className={styles.relatedSliderWrapper}>
             <Swiper
+              modules={[Navigation]}
               onSwiper={(swiper) => {
                 relatedSwiperRef.current = swiper;
-                handleSlideChange(swiper);
+                swiper.navigation?.destroy();
               }}
-              onSlideChange={handleSlideChange}
               slidesPerView="auto"
               spaceBetween={20}
               className={styles.relatedSwiper}
@@ -226,6 +238,11 @@ export const SkillPage = () => {
           </div>
         </section>
       )}
+      <ExchangeSuggestedModal
+        isOpen={isExchangeOpen}
+        onClose={() => setIsExchangeOpen(false)}
+        card={card}
+      />
     </main>
   );
 };

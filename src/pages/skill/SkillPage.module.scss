@@ -267,24 +267,13 @@
   margin-bottom: 24px;
 }
 
-.relatedList {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
 .relatedSection {
   width: 100%;
   margin-bottom: 60px;
+  position: relative;
 }
 
 .relatedHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   margin-bottom: 24px;
 }
 
@@ -302,37 +291,44 @@
   gap: 12px;
 }
 
-.relatedNavButton {
-  width: 40px;
-  height: 40px;
-  background: var(--card-input);
-  border: 1px solid var(--border-input);
-  border-radius: 50%;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s;
-  
-  &:hover {
-    background: var(--button-hover);
-    border-color: var(--accent);
-  }
-  
-  img {
-    width: 20px;
-    height: 20px;
-  }
-}
-
 .relatedPrevIcon {
   transform: rotate(180deg);
 }
 
 .relatedSliderWrapper {
-  position: relative;
+
   width: 100%;
-  overflow: hidden;
+  overflow: visible;
+  z-index: 0;
+}
+
+.relatedNavButton {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--card-input);
+  border: 1px solid var(--border-input);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+}
+
+.relatedNavButtonLeft {
+  left: 0;
+  transform: translate(-50%, -50%) scaleX(-1);
+}
+
+.relatedNavButtonRight {
+  right: 0;
+  transform: translate(50%, -50%);
 }
 
 .relatedSwiper {
@@ -356,3 +352,4 @@
 .mainSwiper :global(.swiper-button-prev) {
   display: none;
 }
+
