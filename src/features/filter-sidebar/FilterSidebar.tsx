@@ -206,6 +206,7 @@ const uniqueCities = useMemo(() => {
                     </div>
 
                     <button
+                      data-testid="button"
                       className={styles.accordionButton}
                       onClick={() => toggleCategory(category.id)}
                       type="button"
@@ -242,6 +243,7 @@ const uniqueCities = useMemo(() => {
           </ul>
 
           <button
+            data-testid="allCat"
             className={styles.showAllButton}
             onClick={() => setShowAllCategories(!showAllCategories)}
           >
