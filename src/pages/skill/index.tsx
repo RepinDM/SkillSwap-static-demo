@@ -241,6 +241,7 @@ export const SkillPage = () => {
       <ExchangeSuggestedModal
         isOpen={isExchangeOpen}
         onClose={() => setIsExchangeOpen(false)}
+        card={card}
       />
     </main>
   );

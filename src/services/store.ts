@@ -3,6 +3,7 @@ import skillCardsSlice from './slices/skillCardsSlice'
 import registerSlice from './slices/registerSlice';
 import authSlice from './slices/authSlice';
 import likesSlice from './slices/likesSlice'
+import exchangeRequestsSlice from './slices/exchangeRequestsSlice';
 
 export const store = configureStore({
   reducer: {
@@ -10,6 +11,7 @@ export const store = configureStore({
     register: registerSlice,
     auth: authSlice,
     likes: likesSlice,
+    exchangeRequests: exchangeRequestsSlice,
   },
 
   middleware: (getDefaultMiddleware) =>
