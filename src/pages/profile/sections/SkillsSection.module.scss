@@ -6,10 +6,10 @@
 }
 
 .block {
-    background: #fff;
+    background: var(--card-bg, #fff);
     border-radius: 16px;
     padding: 20px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.20);
     display: flex;
     flex-direction: column;
     gap: 16px;
@@ -25,14 +25,16 @@
 
 .blockTitle {
     margin: 0;
+    font-family: var(--font-h2-family);
+    font-size: var(--font-h2-size);
 }
 
 .editButton {
-    max-width: 300px;
+    max-width: 230px;
 }
 
 .emptyLearn {
-    color: #888;
+    color: var(--caption);
 }
 
 .teachCard {
@@ -51,18 +53,20 @@
 
 .teachTitle {
     margin: 0;
+    font-size: var(--font-h3-size);
+    font-family: var(--font-h3-family);
 }
 
 .teachDescription {
-    color: #555;
+    color: var(--text-secondary);
     margin: 0;
-    line-height: 1.4;
+    line-height: 1.5;
 }
 
 .imageWrapper {
     position: relative;
-    max-width: 100px;
-    max-height: 100px;
+    max-width: 95px;
+    max-height: 95px;
     flex-shrink: 0;
 }
 
@@ -115,7 +119,7 @@
     gap: 30px;
 
     padding: 10px 12px;
-    border: 1px solid #eee;
+    border: 1px solid var(--border-input-learn);
     border-radius: 12px;
 }
 

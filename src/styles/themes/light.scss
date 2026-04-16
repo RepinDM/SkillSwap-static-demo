@@ -3,14 +3,16 @@
   --text: #253017; /* основной цвет текста */
   --caption: #69735d; /* второстепенный текст (подписи, описание) */
   --disabled-text: #9ca197; /* неактивный / отключённый текст */
+  --text-secondary:#373636;
 
   /* UI ЭЛЕМЕНТЫ */
   --toggle: #b2b9a9; /* цвет переключателей (switch, checkbox) */
   --disabled: #e4e8df; /* фон или границы отключённых элементов */
   --card-input: #ffffff; /* фон карточек и полей ввода */
   --accent: #abd27a;
-
+  --remove-btn-color:#999;
   --logo-text-color: var(--text); 
+  --card-hover:#f5f5f5;
 
   /* ИНТЕРАКЦИИ */
   --text-link: #508826; /* цвет ссылок */
@@ -55,6 +57,8 @@
 
   /*  ФОН  */
   --background: #f9faf7; /* основной фон страницы */
+  --background-modal: #fff;
+
 
   /* СОСТОЯНИЯ (ОШИБКИ / ПРЕДУПРЕЖДЕНИЯ)  */
   --alarm: #e0796e; /* предупреждение (warning) */
@@ -73,6 +77,8 @@
   --border-input: #69735d; /* граница инпутов */
   --border-radio-checkbox: #000; /* граница radio/checkbox */
   --input-radius: 12px; /* скругление полей ввода */
+  --border-input-learn:#cacaca;
+  --border-input-add:#1c9b0bd0;
 
   /* УВЕДОМЛЕНИЯ */
   --toast-background: #deebc5; /* фон уведомлений (toast) */
