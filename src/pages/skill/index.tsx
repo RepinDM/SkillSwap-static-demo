@@ -1,5 +1,5 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { useAppSelector } from "@/services/hooks";
+import { useAppDispatch, useAppSelector } from "@/services/hooks";
 import { useMemo, useRef, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
@@ -8,6 +8,7 @@ import type { Swiper as SwiperType } from "swiper";
 import { SkillCard } from "@/widgets/SkillCard/SkillCard";
 import { UserSkillPage } from "./UserSkillPage";
 import buttonLike from "@/shared/image/icons/like.svg";
+import buttonLikePainted from "@/shared/image/icons/like-painted-over.svg";
 import shareIcon from "@/shared/image/icons/share.svg";
 import moreIcon from "@/shared/image/icons/more-square.svg";
 import chevronRightIcon from "@/shared/image/icons/chevron-right.svg";
@@ -21,11 +22,15 @@ import styles from "./SkillPage.module.scss";
 import clsx from "clsx";
 import { selectIsAuthenticated } from "@/services/slices/authSlice";
 import { ExchangeSuggestedModal } from "@/features/ExchangeSuggestedModal/ExchangeSuggestedModal";
+import { selectFavorites, toggleFavorites } from "@/services/slices/favoritesSlice";
+import { toggleLike } from "@/services/slices/likesSlice";
 
 export const SkillPage = () => {
   const { id } = useParams<{ id: string }>();
+  const dispatch = useAppDispatch();
   const allCards = useAppSelector(selectAllSkillCards);
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
+  const favorites = useAppSelector(selectFavorites);
   const navigate = useNavigate();
   const [isExchangeOpen, setIsExchangeOpen] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
@@ -48,10 +53,23 @@ export const SkillPage = () => {
   if (!card) return <p>Навык не найден</p>;
 
   const { user, teachSkill, learnSkills } = card;
+  const isFavorite = Boolean(favorites[card.id]);
 
   const handleImageSelect = (index: number) => {
     setSelectedImageIndex(index);
     mainSwiperRef.current?.slideTo(index);
+  };
+
+  const handleToggleFavorite = () => {
+    if (!isAuthenticated) {
+      navigate("/login", {
+        state: { from: { pathname: `/skill/${id}` } },
+      });
+      return;
+    }
+
+    dispatch(toggleLike(card.id));
+    dispatch(toggleFavorites(card.id));
   };
 
   // Безопасное получение возраста
@@ -75,13 +93,24 @@ export const SkillPage = () => {
         <div className={styles.rightBlock}>
           <div className={styles.topActions}>
             <div className={styles.actionButtons}>
-              <button className={styles.iconButton}>
-                <img src={buttonLike} alt="Избранное" />
+              <button
+                className={clsx(styles.iconButton, {
+                  [styles.iconButtonActive]: isFavorite,
+                })}
+                onClick={handleToggleFavorite}
+                aria-pressed={isFavorite}
+                aria-label={isFavorite ? "Убрать из избранного" : "Добавить в избранное"}
+                type="button"
+              >
+                <img
+                  src={isFavorite ? buttonLikePainted : buttonLike}
+                  alt="Избранное"
+                />
               </button>
-              <button className={styles.iconButton}>
+              <button className={styles.iconButton} type="button">
                 <img src={shareIcon} alt="Поделиться" />
               </button>
-              <button className={styles.iconButton}>
+              <button className={styles.iconButton} type="button">
                 <img src={moreIcon} alt="Еще" />
               </button>
             </div>
