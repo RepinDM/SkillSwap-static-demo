@@ -31,7 +31,7 @@ export const SkillCard = React.memo(({ card, showFavoriteButton = true }: Props)
 
   return (
     <>
-       <li className={styles.card}>
+       <div className={styles.card}>
           <div className={styles.user}>
             <div className={styles.userInfo}>
               <User
@@ -104,7 +104,7 @@ export const SkillCard = React.memo(({ card, showFavoriteButton = true }: Props)
               Подробнее
             </Button>
           </Link>
-        </li>
+        </div>
     </>
   );
 });
