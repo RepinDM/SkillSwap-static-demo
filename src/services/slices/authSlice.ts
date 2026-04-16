@@ -1,20 +1,7 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import { loginUser } from "../actions/login";
 import type { TUserAuth } from "@/entities/user/types";
-
-// interface AuthUser {
-//   id: number;
-//   name: string;
-//   email: string;
-//   avatar?: string;
-//   about?: string;
-//   gender?: TGender;
-//   birthDate?: string;
-//   city?: {
-//     id: number;
-//     name: string;
-//   };
-// }
+import { editUser } from "../actions/editUser";
 
 interface AuthState {
   user: TUserAuth | null;
@@ -56,6 +43,19 @@ const authSlice = createSlice({
     clearAuthError(state) {
       state.error = null;
     },
+    updateAccessToken(state, action: PayloadAction<string>) {
+      state.accessToken = action.payload;
+    },
+    setAuthData(state, action: PayloadAction<{ accessToken: string; refreshToken: string; user: TUserAuth }>) {
+      state.user = action.payload.user;
+      state.accessToken = action.payload.accessToken;
+      state.refreshToken = action.payload.refreshToken;
+      state.isAuthenticated = true;
+      state.error = null;
+      localStorage.setItem("accessToken", action.payload.accessToken);
+      localStorage.setItem("refreshToken", action.payload.refreshToken);
+      localStorage.setItem("user", JSON.stringify(action.payload.user));
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -79,7 +79,25 @@ const authSlice = createSlice({
         .addCase(loginUser.rejected, (state, action) => {
             state.isLoading = false;
             state.error = action.payload as string;
-        });
+        })
+
+        .addCase(editUser.fulfilled, (state, action) => {
+          state.user = action.payload.user ?? action.payload;
+          state.isLoading = false;
+          state.error = null;
+          localStorage.setItem("user", JSON.stringify(state.user));
+
+          const freshToken = localStorage.getItem("accessToken");
+          if (freshToken) state.accessToken = freshToken;
+        })
+        .addCase(editUser.pending, (state) => {
+          state.isLoading = true;
+          state.error = null;
+        })
+        .addCase(editUser.rejected, (state, action) => {
+          state.isLoading = false;
+          state.error = action.payload as string || "Ошибка обновления";
+        })
   },
   selectors: {
     selectUser: (state) => state.user,
@@ -89,7 +107,7 @@ const authSlice = createSlice({
   },
 });
 
-export const { logout, clearAuthError } = authSlice.actions;
+export const { logout, clearAuthError, setAuthData } = authSlice.actions;
 export const {
   selectUser,
   selectIsAuthenticated,

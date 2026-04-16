@@ -6,10 +6,11 @@ import {
   useFieldArray,
   useWatch,
 } from "react-hook-form";
-import { useAppSelector } from "@/services/hooks";
-import { selectCategoryItems } from "@/services/slices/skillCardsSlice";
+import { useAppDispatch, useAppSelector } from "@/services/hooks";
+import { selectCategoryItems, selectStatus } from "@/services/slices/skillCardsSlice";
 
 import styles from "./EditLearnSkillsModal.module.scss";
+import { saveLearnSkills } from "@/services/actions/skills";
 
 type SkillItem = {
   categoryId: string;
@@ -24,12 +25,19 @@ type Props = {
   isOpen: boolean;
   onClose: () => void;
   initialData?: SkillItem[];
+  currentTeachSkill: {
+    title: string;
+    description: string;
+    subcategoryId: string;
+    imageUrls: string[];
+  };
 };
 
 export const EditLearnSkillsModal = ({
   isOpen,
   onClose,
   initialData,
+  currentTeachSkill,
 }: Props) => {
   const categoryItems = useAppSelector(selectCategoryItems);
 
@@ -44,11 +52,14 @@ export const EditLearnSkillsModal = ({
     name: "skills",
   });
 
-  // ✅ ВАЖНО: watch один раз, НЕ внутри map
   const watchedSkills = useWatch({
     control,
     name: "skills",
   });
+
+  const dispatch = useAppDispatch();
+  const status = useAppSelector(selectStatus);
+  const isSaving = status === "loading";
 
   useEffect(() => {
     if (!isOpen) return;
@@ -67,7 +78,10 @@ export const EditLearnSkillsModal = ({
   if (!isOpen) return null;
 
   const onSubmit = (data: FormValues) => {
-    console.log(data);
+    dispatch(saveLearnSkills({
+      skills: data.skills,
+      currentTeachSkill,
+    }));
     onClose();
   };
 
@@ -151,8 +165,8 @@ export const EditLearnSkillsModal = ({
               Отмена
             </Button>
 
-            <Button variant="primary" type="submit">
-              Сохранить
+            <Button type="submit" variant="primary" disabled={isSaving}>
+              {isSaving ? "Сохранение..." : "Сохранить"}
             </Button>
           </div>
         </form>

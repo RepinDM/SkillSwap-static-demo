@@ -2,6 +2,7 @@ import type { FC } from "react";
 import { Button } from "@/shared/ui/Button/Button";
 import type { TSkill } from "@/entities/skill/types";
 import styles from "./TeachSkillModal.module.scss";
+import icon from "@/shared/image/icons/edit.svg";
 
 interface teachSkillModalProps {
   isOpen: boolean;
@@ -47,7 +48,7 @@ export const TeachSkillModal: FC<teachSkillModalProps> = ({
               <Button
                 variant="secondary"
                 onClick={onEdit}
-                iconRight={<img src="/edit.svg" alt="edit" />}
+                iconRight={<img src={icon} alt="Иконка редактирования" />}
               >
                 Редактировать
               </Button>
