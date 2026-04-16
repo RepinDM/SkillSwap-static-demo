@@ -12,6 +12,7 @@ import { getCategoryColor } from "@/shared/lib/utils/getCategoryColors";
 import styles from "./SkillsSection.module.scss";
 import { EditTeachSkillModal } from "@/features/ProfileSkillModal/EditTeachSkillModal";
 import { EditLearnSkillsModal } from "@/features/ProfileSkillModal/EditLearnSkillsModal";
+import { Loader } from "@/shared/ui/Loader";
 
 const SkillsSection = () => {
   const currentUser = useAppSelector(selectUser);
@@ -25,7 +26,7 @@ const SkillsSection = () => {
 
   const myCard = allCards.find((c) => c.user.id === currentUser?.id);
 
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading) return <Loader label="Загрузка навыков" />;
 
   const teachSkill = myCard?.teachSkill;
   const learnSkills = myCard?.learnSkills || [];

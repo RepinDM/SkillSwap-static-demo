@@ -49,7 +49,7 @@ export const editUser = createAsyncThunk(
       }
 
       return data;
-    } catch (e) {
+    } catch {
       return rejectWithValue("Ошибка сети");
     }
   }

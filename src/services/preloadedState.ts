@@ -16,7 +16,7 @@ export const loadFavoriteState = () => {
 };
 
 export const loadLikesState = () => {
-  let favorites = loadFavoriteState();
+  const favorites = loadFavoriteState();
   const likes: Record<number, { count: number; isLiked: boolean }> = {};
 
   Object.keys(favorites).forEach((id) => {

@@ -5,6 +5,10 @@
 }
 
 .main {
-  flex: 1;
+  /* basis 0 — иначе flex ориентируется на «узкий» контент и main не получает высоту */
+  flex: 1 1 0%;
   width: 100%;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
 }

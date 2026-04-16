@@ -27,14 +27,6 @@ export const FiltersSidebar = ({ values, onChange }: Props) => {
   const [showAllCategories, setShowAllCategories] = useState(false);
   const [showAllCities, setShowAllCities] = useState(false);
 
-  // const citiesFromServer = useAppSelector(state =>
-  // state.skillCards.allSkillCards
-  //   .map(c => c.user.city?.name)
-  //   .filter((city): city is string => !!city)
-  // );
-
-  // const uniqueCities = Array.from(new Set(citiesFromServer));
-
 
 const allSkillCards = useAppSelector(selectAllSkillCards);
 

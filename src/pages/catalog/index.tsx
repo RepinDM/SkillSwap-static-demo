@@ -14,6 +14,7 @@ import { useCallback, useMemo, useState } from "react";
 import styles from "./GlobalSearch.module.scss";
 import { Button } from "@/shared/ui/Button/Button";
 import crossIcon from "@/shared/image/icons/cross.svg";
+import { Loader } from "@/shared/ui/Loader";
 
 const CatalogPage = () => {
   const allSkillCards = useAppSelector(selectAllSkillCards);
@@ -253,7 +254,7 @@ const CatalogPage = () => {
   const isSearching = searchQuery.trim().length > 0;
   const isFiltering = filters.mode !== "all" || filters.skillIds.length > 0;
 
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading) return <Loader label="Загрузка каталога" />;
 
   const popular = [...popularCards].sort(
     (a, b) => (likes[b.id]?.count ?? 0) - (likes[a.id]?.count ?? 0),

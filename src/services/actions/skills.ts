@@ -53,7 +53,7 @@ export const saveTeachSkill = createAsyncThunk(
       const result = await updateUserSkills(formData);
       dispatch(fetchSkillCards());
       return result;
-    } catch (e) {
+    } catch {
       return rejectWithValue("Ошибка сохранения навыка");
     }
   }
@@ -93,7 +93,7 @@ export const saveLearnSkills = createAsyncThunk(
       const result = await updateUserSkills(formData);
       dispatch(fetchSkillCards());
       return result;
-    } catch (e) {
+    } catch {
       return rejectWithValue("Ошибка сохранения навыков");
     }
   }

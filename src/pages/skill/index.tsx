@@ -25,6 +25,9 @@ import { ExchangeSuggestedModal } from "@/features/ExchangeSuggestedModal/Exchan
 export const SkillPage = () => {
   const { id } = useParams<{ id: string }>();
   const allCards = useAppSelector(selectAllSkillCards);
+  const isAuthenticated = useAppSelector(selectIsAuthenticated);
+  const navigate = useNavigate();
+  const [isExchangeOpen, setIsExchangeOpen] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const mainSwiperRef = useRef<SwiperType | null>(null);
   const relatedSwiperRef = useRef<SwiperType | null>(null);
@@ -53,10 +56,6 @@ export const SkillPage = () => {
 
   // Безопасное получение возраста
   const userAge = user.birthDate ? getAge(user.birthDate) : undefined;
-
-  const isAuthenticated = useAppSelector(selectIsAuthenticated);
-  const navigate = useNavigate();
-  const [isExchangeOpen, setIsExchangeOpen] = useState(false);
 
   return (
     <main className={styles.page}>

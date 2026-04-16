@@ -1,6 +1,30 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import type { TSkillCard } from "@/entities/skill/types";
 import { ExchangeSuggestedModal } from "./ExchangeSuggestedModal";
 import { useState } from "react";
+
+const mockCard: TSkillCard = {
+  id: 1,
+  user: {
+    id: 10,
+    name: "Анна",
+    city: { name: "Москва" },
+  },
+  teachSkill: {
+    id: 1,
+    userId: 10,
+    subcategory: {
+      id: 1,
+      name: "Подкатегория",
+      category: { id: 1, name: "Категория", slug: "demo" },
+    },
+    title: "Демо-навык",
+    description: "Описание для Storybook",
+    skillType: "teach",
+    createdDate: new Date(),
+  },
+  learnSkills: [],
+};
 
 const meta: Meta<typeof ExchangeSuggestedModal> = {
   title: "features/ExchangeSuggestedModal",
@@ -15,7 +39,11 @@ const ModalWithState = () => {
   return (
     <>
       <button onClick={() => setIsOpen(true)}>Показать модалку успеха</button>
-      <ExchangeSuggestedModal isOpen={isOpen} onClose={() => setIsOpen(false)} />
+      <ExchangeSuggestedModal
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        card={mockCard}
+      />
     </>
   );
 };
@@ -28,5 +56,6 @@ export const Open: Story = {
   args: {
     isOpen: true,
     onClose: () => {},
+    card: mockCard,
   },
 };

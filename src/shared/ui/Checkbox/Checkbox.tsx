@@ -57,14 +57,16 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
       assignRef(ref, node);
     };
 
+    const isChecked = Boolean(checked);
+
     useLayoutEffect(() => {
       const el = innerRef.current;
       if (el) {
-        el.indeterminate = Boolean(indeterminate) && !Boolean(checked);
+        el.indeterminate = indeterminate && !isChecked;
       }
-    }, [indeterminate, checked]);
+    }, [indeterminate, isChecked]);
 
-    const showRemove = Boolean(indeterminate) && !Boolean(checked);
+    const showRemove = indeterminate && !isChecked;
     const iconSrc = showRemove ? checkboxRemove : checked ? checkboxDone : checkboxEmpty;
     return (
       <div className={styles.root}>

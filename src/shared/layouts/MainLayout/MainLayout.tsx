@@ -10,7 +10,17 @@ export const Layout = () => {
   return (
     <div className={styles.layout}>
       <Header />
-      <main className={styles.main}><Outlet /></main>
+      <main
+        className={styles.main}
+        style={{
+          flex: "1 1 0%",
+          minHeight: 0,
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
+        <Outlet />
+      </main>
       <Footer />
     </div>
   );

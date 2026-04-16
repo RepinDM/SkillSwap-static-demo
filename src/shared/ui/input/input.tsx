@@ -1,5 +1,6 @@
 import React, { forwardRef, useId } from "react";
 import type { InputHTMLAttributes } from "react";
+import clsx from "clsx";
 import styles from "./input.module.scss";
 import type { InputType } from "./input.types";
 
@@ -14,6 +15,7 @@ interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, "type" 
   disabled?: boolean;
   iconLeft?: React.ReactNode;
   iconRight?: React.ReactNode;
+  className?: string;
 }
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(
@@ -29,6 +31,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       disabled = false,
       iconLeft,
       iconRight,
+      className,
       ...props
     },
     ref
@@ -49,9 +52,13 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             id={inputId}
             ref={ref}
             type={type}
-            className={`${styles.input} ${error ? styles.inputError : ""} ${
-              iconLeft ? styles.withIconLeft : ""
-            } ${iconRight ? styles.withIconRight : ""}`}
+            className={clsx(
+              styles.input,
+              error && styles.inputError,
+              iconLeft && styles.withIconLeft,
+              iconRight && styles.withIconRight,
+              className,
+            )}
             value={value}
             onChange={onChange}
             placeholder={placeholder}
