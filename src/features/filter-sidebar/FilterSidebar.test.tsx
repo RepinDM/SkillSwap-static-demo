@@ -45,7 +45,6 @@ beforeEach(() => {
   return [];
 });
 });
-afterEach(() => vi.resetAllMocks());
 
 describe("фильтры", () => {
   it("0 фильтров", () => {
@@ -165,8 +164,6 @@ it("выбор категории", () => {
   const firstCall = onChange.mock.calls[0][0];
   expect(firstCall.skillIds).toEqual([21, 22]);
   fireEvent.click(frontend);
-  const secondCall = onChange.mock.calls[1][0];
-  // expect(secondCall.skillIds).toEqual([]);
   expect(onChange).toHaveBeenCalledTimes(2);
 
 });
