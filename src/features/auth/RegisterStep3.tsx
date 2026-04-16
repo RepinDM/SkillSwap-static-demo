@@ -68,6 +68,7 @@ export const RegisterStep3 = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   const dispatch = useAppDispatch();
+  const [registerResponse, setRegisterResponse] = useState<any>(null);
 
   const step1 = useAppSelector(selectStep1);
   const step2 = useAppSelector(selectStep2);
@@ -235,11 +236,9 @@ export const RegisterStep3 = () => {
   formData.append("cityId", step2?.cityId || "");
   formData.append("about", step2?.about || "");
 
-  if (step2?.learnSkills && step2.learnSkills.length > 0) {
-    step2.learnSkills.forEach(skill => {
-      formData.append("learningSubcategoryIds", skill.subcategoryId);
-    });
-  }
+  step2?.learnSkills?.forEach(skill => {
+    formData.append("learningSubcategoryIds", skill.subcategoryId);
+  });
 
   if (step2?.avatar) {
     formData.append("avatar", step2.avatar);
@@ -251,7 +250,7 @@ export const RegisterStep3 = () => {
   formData.append("skillSubcategoryId", step3.subcategoryId);
   formData.append("description", step3.description);
 
-  step3.images.forEach((file) => {
+  step3.images.forEach(file => {
     formData.append("images", file);
   });
 
@@ -261,29 +260,19 @@ export const RegisterStep3 = () => {
       body: formData,
     });
 
-    const text = await res.text();
-    console.log("STATUS:", res.status);
-    console.log("RESPONSE:", text);
-
     if (!res.ok) {
-      throw new Error(text);
+      const errorText = await res.text();
+      console.error("SERVER ERROR:", errorText);
+      return;
     }
 
-    const data = JSON.parse(text);
-
-    if (data.accessToken && data.refreshToken && data.user) {
-      dispatch(setAuthData({
-        accessToken: data.accessToken,
-        refreshToken: data.refreshToken,
-        user: data.user,
-      }));
-    }
-
+    const data = await res.json();
+    setRegisterResponse(data);
     setShowSkillModal(false);
     setShowSuccessModal(true);
 
   } catch (e) {
-    console.error("ERROR", e);
+    console.error("ERROR:", e);
   }
 };
 
@@ -459,6 +448,15 @@ export const RegisterStep3 = () => {
         isOpen={showSuccessModal}
         onClose={() => {
           setShowSuccessModal(false);
+
+          if (registerResponse?.accessToken && registerResponse?.refreshToken && registerResponse?.user) {
+            dispatch(setAuthData({
+              accessToken: registerResponse.accessToken,
+              refreshToken: registerResponse.refreshToken,
+              user: registerResponse.user,
+            }));
+          }
+
           dispatch(clearRegister());
           navigate("/");
         }}

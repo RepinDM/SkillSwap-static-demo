@@ -20,8 +20,6 @@ const favoritesSlice = createSlice({
       } else{
         state.byId[id] = true
       }
-
-      console.log(JSON.stringify(state.byId))
     }
   },
   selectors: {

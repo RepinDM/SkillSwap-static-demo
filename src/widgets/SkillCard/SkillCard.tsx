@@ -101,10 +101,7 @@ export const SkillCard = React.memo(({ card, showFavoriteButton = true }: Props)
             </ul>
           </div>
           <Link to={`/skill/${card.id}`} className={styles.link}>
-            <Button
-              variant="primary"
-              onClick={() => console.log("click", card)}
-            >
+            <Button variant="primary" >
               Подробнее
             </Button>
           </Link>
