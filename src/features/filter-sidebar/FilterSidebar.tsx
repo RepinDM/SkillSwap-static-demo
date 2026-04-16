@@ -137,10 +137,10 @@ const uniqueCities = useMemo(() => {
           Фильтры ({activeFiltersCount})
         </h3>
 
-        <button className={styles.resetButton} onClick={handleReset}>
-          Сбросить
-          <img src={crossIcon} className={styles.resetIcon} />
-        </button>
+          <button className={styles.resetButton} onClick={handleReset}>
+            Сбросить
+            <img src={crossIcon} className={styles.resetIcon} />
+          </button>
       </div>
 
       <div className={styles.filtersWrapper}>
@@ -209,6 +209,8 @@ const uniqueCities = useMemo(() => {
                       className={styles.accordionButton}
                       onClick={() => toggleCategory(category.id)}
                       type="button"
+                      aria-expanded={expandedCategories.includes(category.id)}
+                      aria-label={`Переключить подкатегории ${category.name}`}
                     >
                       <img
                         src={
@@ -244,6 +246,7 @@ const uniqueCities = useMemo(() => {
           <button
             className={styles.showAllButton}
             onClick={() => setShowAllCategories(!showAllCategories)}
+            type="button"
           >
             {showAllCategories ? "Скрыть категории" : "Все категории"}
             <img
@@ -308,6 +311,7 @@ const uniqueCities = useMemo(() => {
           <button
             className={styles.showAllButton}
             onClick={() => setShowAllCities(!showAllCities)}
+            type="button"
           >
             {showAllCities ? "Скрыть города" : "Все города"}
             <img
