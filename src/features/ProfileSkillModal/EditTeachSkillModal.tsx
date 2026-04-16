@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useForm, Controller, useWatch } from "react-hook-form";
-import { useAppSelector } from "@/services/hooks";
-import { selectCategoryItems } from "@/services/slices/skillCardsSlice";
+import { useAppDispatch, useAppSelector } from "@/services/hooks";
+import { selectCategoryItems, selectStatus } from "@/services/slices/skillCardsSlice";
 
 import styles from "./EditTeachSkillModal.module.scss";
 import { Button } from "@/shared/ui/Button/Button";
@@ -9,6 +9,7 @@ import { Input } from "@/shared/ui/input/input";
 
 import galleryAddIcon from "@/shared/image/icons/gallery-add.svg";
 import crossIcon from "@/shared/image/icons/cross.svg";
+import { saveTeachSkill } from "@/services/actions/skills";
 
 type FormData = {
   title: string;
@@ -21,6 +22,7 @@ type FormData = {
 type Props = {
   isOpen: boolean;
   onClose: () => void;
+  currentLearnSkills: { subcategoryId: string }[];
   initialData?: {
     title: string;
     description: string;
@@ -34,6 +36,7 @@ export const EditTeachSkillModal = ({
   isOpen,
   onClose,
   initialData,
+  currentLearnSkills,
 }: Props) => {
   const categoryItems = useAppSelector(selectCategoryItems);
 
@@ -42,6 +45,10 @@ export const EditTeachSkillModal = ({
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   const [existingImageUrls, setExistingImageUrls] = useState<string[]>([]);
   const previewUrlsRef = useRef<string[]>([]);
+  const dispatch = useAppDispatch();
+
+  const status = useAppSelector(selectStatus);
+  const isSaving = status === "loading";
 
   const {
     register,
@@ -65,13 +72,12 @@ export const EditTeachSkillModal = ({
     name: "categoryId",
   });
 
-    useEffect(() => {
-      if (!selectedCategoryId) return;
-      setValue("subcategoryId", "");
-    }, [selectedCategoryId, setValue]);
+  const prevCategoryIdRef = useRef<string>("");
 
   useEffect(() => {
     if (!isOpen || !initialData) return;
+
+    prevCategoryIdRef.current = initialData.categoryId || "";
 
     reset({
       title: initialData.title,
@@ -84,6 +90,13 @@ export const EditTeachSkillModal = ({
     setExistingImageUrls(initialData.imageUrls || []);
     setImagePreviews([]);
   }, [isOpen, initialData, reset]);
+
+  // Сбрасываем subcategoryId только если категория реально изменилась пользователем
+  useEffect(() => {
+    if (selectedCategoryId === prevCategoryIdRef.current) return;
+    prevCategoryIdRef.current = selectedCategoryId;
+    setValue("subcategoryId", "");
+  }, [selectedCategoryId, setValue]);
 
   const removeExistingImage = (index: number) => {
     setExistingImageUrls((prev) => prev.filter((_, i) => i !== index));
@@ -138,7 +151,11 @@ export const EditTeachSkillModal = ({
   };
 
   const onSubmit = (data: FormData) => {
-    console.log({...data, existingImageUrls});
+    dispatch(saveTeachSkill({
+      ...data,
+      existingImageUrls,
+      currentLearnSkills,
+    }));
     onClose();
   };
 
@@ -222,11 +239,17 @@ export const EditTeachSkillModal = ({
             onChange={(e) => processFiles(e.target.files)}
           />
 
-
           <div className={styles.imagePreviewList}>
             {existingImageUrls.map((src, i) => (
               <div key={`existing-${i}`} className={styles.imagePreviewItem}>
                 <img src={src} className={styles.previewImage} />
+                {/**input НЕ менять на компонент Input */}
+                <input
+                  type="hidden"
+                  name="existingTeachSkillImages"
+                  value={src}
+                />
+
                 <button
                   type="button"
                   className={styles.removeImageBtn}
@@ -251,26 +274,14 @@ export const EditTeachSkillModal = ({
             ))}
           </div>
 
-          {/* PREVIEWS */}
-          {/* <div className={styles.imagePreviewList}>
-            {imagePreviews.map((src, i) => (
-              <div key={i} className={styles.imagePreviewItem}>
-                <img src={src} />
-                <button type="button" onClick={() => removeImage(i)}>
-                  <img src={crossIcon} />
-                </button>
-              </div>
-            ))}
-          </div> */}
-
           {/* BUTTONS */}
           <div className={styles.buttons}>
             <Button type="button" variant="secondary" onClick={onClose}>
               Отмена
             </Button>
 
-            <Button type="submit" variant="primary">
-              Сохранить
+            <Button type="submit" variant="primary" disabled={isSaving}>
+              {isSaving ? "Сохранение..." : "Сохранить"}
             </Button>
           </div>
         </form>

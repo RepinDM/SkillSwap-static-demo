@@ -1,7 +1,7 @@
 import type { TSkillCard } from "@/entities/skill/types";
 import type { TCategoryItem } from "@/entities/category/types";
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
-import { fetchSkillCards } from "../actions/skills";
+import { fetchSkillCards, saveLearnSkills, saveTeachSkill } from "../actions/skills";
 
 interface SkillCardsState {
   allSkillCards: TSkillCard[];
@@ -71,7 +71,26 @@ const skillCardsSlice = createSlice({
     .addCase(fetchSkillCards.rejected, (state, action) => {
       state.status = "error";
       state.error = action.error.message || "Ошибка загрузки";
-    });
+    })
+
+    .addCase(saveTeachSkill.pending, (state) => {
+      state.status = "loading";
+    })
+    .addCase(saveTeachSkill.fulfilled, (state) => {
+      state.status = "success";
+    })
+    .addCase(saveTeachSkill.rejected, (state) => {
+      state.status = "error";
+    })
+    .addCase(saveLearnSkills.pending, (state) => {
+      state.status = "loading";
+    })
+    .addCase(saveLearnSkills.fulfilled, (state) => {
+      state.status = "success";
+    })
+    .addCase(saveLearnSkills.rejected, (state) => {
+      state.status = "error";
+    })
   },
   selectors: {
     selectAllSkillCards: (state) => state.allSkillCards,
