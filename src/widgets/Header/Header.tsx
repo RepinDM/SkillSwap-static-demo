@@ -25,6 +25,7 @@ import { selectSearchQuery } from "@/services/slices/skillCardsSlice";
 export const Header = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownTriggerRef = useRef<HTMLButtonElement>(null);
+  const notificationTriggerRef = useRef<HTMLButtonElement>(null);
   const token = localStorage.getItem("accessToken");
   const userRaw = localStorage.getItem("user");
 
@@ -98,11 +99,22 @@ export const Header = () => {
               <img src={moonIcon} alt="Смена темы" />
             </button>
             <div style={{ position: "relative" }}>
-              <button className={styles.iconBtn} onClick={() => setIsNotifOpen((prev) => !prev)}>
+              <button
+                ref={notificationTriggerRef}
+                className={styles.iconBtn}
+                onClick={() => setIsNotifOpen((prev) => !prev)}
+                aria-expanded={isNotifOpen}
+                aria-label={isNotifOpen ? "Скрыть уведомления" : "Показать уведомления"}
+                type="button"
+              >
                 <img src={notification} alt="Уведомления" />
                 <span className={styles.badge} />
               </button>
-              <NotificationDropdown isOpen={isNotifOpen} onClose={() => setIsNotifOpen(false)}/>
+              <NotificationDropdown
+                isOpen={isNotifOpen}
+                onClose={() => setIsNotifOpen(false)}
+                triggerRef={notificationTriggerRef}
+              />
             </div>
             <Link to="/profile/favorites" className={styles.iconBtn}>
               <img src={likeIcon} alt="Избранное" />

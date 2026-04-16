@@ -1,4 +1,4 @@
-import type { FC } from "react";
+import type { FC, RefObject } from "react";
 import { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import styles from "./NotificationDropdown.module.scss";
@@ -6,6 +6,7 @@ import styles from "./NotificationDropdown.module.scss";
 interface Props {
   isOpen: boolean;
   onClose: () => void;
+  triggerRef: RefObject<HTMLButtonElement | null>;
 }
 
 const mockNew = [
@@ -38,14 +39,21 @@ const mockSeen = [
   },
 ];
 
-export const NotificationDropdown: FC<Props> = ({ isOpen, onClose }) => {
+export const NotificationDropdown: FC<Props> = ({ isOpen, onClose, triggerRef }) => {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!isOpen) return;
 
     const handleClickOutside = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) {
+      const target = e.target as Node;
+
+      // Игнорируем клик по самой кнопке-колокольчику, чтобы она работала как toggle.
+      if (triggerRef.current?.contains(target)) {
+        return;
+      }
+
+      if (ref.current && !ref.current.contains(target)) {
        onClose();
       }
     };
@@ -61,7 +69,7 @@ export const NotificationDropdown: FC<Props> = ({ isOpen, onClose }) => {
       document.removeEventListener("mousedown", handleClickOutside);
       document.removeEventListener("keydown", handleEsc);
     };
-  }, [isOpen, onClose]);
+  }, [isOpen, onClose, triggerRef]);
 
   if (!isOpen) return null;
 
