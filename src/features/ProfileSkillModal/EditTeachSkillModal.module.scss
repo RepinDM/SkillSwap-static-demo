@@ -14,7 +14,7 @@
 .overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: var(--overlay);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -24,18 +24,20 @@
 .modal {
   width: 520px;
   background: var(--background-modal);
+  border: 1px solid var(--surface-border);
   border-radius: 16px;
   padding: 24px;
   display: flex;
   flex-direction: column;
   gap: 16px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+  box-shadow: var(--surface-shadow);
 }
 
 .title {
   font-size: 20px;
   font-weight: 600;
   margin: 0;
+  color: var(--text);
 }
 
 .form {
@@ -53,11 +55,13 @@
 .input,
 .textarea {
   width: 100%;
-  border: 1px solid #ddd;
+  border: 1px solid var(--border-input);
   border-radius: 10px;
   padding: 10px 12px;
   font-size: 14px;
   outline: none;
+  color: var(--text);
+  background: var(--card-input);
 }
 
 .textarea {
@@ -168,7 +172,8 @@
   height: 80px;
   border-radius: 8px;
   overflow: hidden;
-  border: 1px solid var(--border-input);
+  border: 1px solid var(--surface-border);
+  background: var(--surface-elevated);
 }
 
 .previewImage {
@@ -202,4 +207,13 @@
     height: 12px;
     filter: brightness(0) invert(1);
   }
+}
+
+.select {
+  width: 100%;
+  border: 1px solid var(--border-input);
+  border-radius: 10px;
+  padding: 10px 12px;
+  color: var(--text);
+  background: var(--card-input);
 }

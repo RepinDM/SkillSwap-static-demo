@@ -2,15 +2,21 @@
   background: var(--card-input);
   max-inline-size: 324px;
   border-radius: 16px;
+  border: 1px solid var(--surface-border);
   padding: 20px;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-  transition: 0.2s ease;
+  box-shadow: var(--surface-shadow-strong);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease,
+    background-color 0.2s ease;
 
   &:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+    border-color: var(--accent);
+    box-shadow: var(--surface-shadow-strong-hover);
   }
 }
 

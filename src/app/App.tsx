@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import { fetchSkillCards } from '@/services/actions/skills';
 import { AppRouter } from './routes/router';
 import { selectUser } from '@/services/slices/authSlice';
+import { ThemeProvider } from "@/shared/hooks/useTheme";
 
 export function App() {
   const dispatch = useAppDispatch();
@@ -12,5 +13,9 @@ export function App() {
     dispatch(fetchSkillCards());
   }, [dispatch, user?.id]);
 
-  return <AppRouter />;
+  return (
+    <ThemeProvider>
+      <AppRouter />
+    </ThemeProvider>
+  );
 }

@@ -11,6 +11,7 @@ import { Button } from "@/shared/ui/Button/Button";
 import { Link } from "react-router-dom";
 import clsx from "clsx";
 import moonIcon from "@/shared/image/icons/moon.svg";
+import sunIcon from "@/shared/image/icons/sun.svg";
 import likeIcon from "@/shared/image/icons/like.svg";
 import notification from "@/shared/image/icons/notification.svg";
 import chevronDown from "@/shared/image/icons/chevron-down.svg";
@@ -21,11 +22,13 @@ import { NotificationDropdown } from "../Notifications/NotificationDropdown";
 import { SearchInput } from "@/features/Search/SearchInput";
 import { useAppSelector } from "@/services/hooks";
 import { selectSearchQuery } from "@/services/slices/skillCardsSlice";
+import { useTheme } from "@/shared/hooks/useTheme";
 
 export const Header = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownTriggerRef = useRef<HTMLButtonElement>(null);
   const notificationTriggerRef = useRef<HTMLButtonElement>(null);
+  const { isDark, toggleTheme } = useTheme();
   const token = localStorage.getItem("accessToken");
   const userRaw = localStorage.getItem("user");
 
@@ -51,6 +54,8 @@ export const Header = () => {
   const searchValue = useAppSelector(selectSearchQuery);
 
   const [isNotifOpen, setIsNotifOpen] = useState(false);
+  const themeIcon = isDark ? sunIcon : moonIcon;
+  const themeButtonLabel = isDark ? "Включить светлую тему" : "Включить тёмную тему";
   
   return (
     <header className={styles.header}>
@@ -95,8 +100,15 @@ export const Header = () => {
       <div className={styles.authBlock}>
         {isLoggedIn ? (
           <div className={styles.userActions}>
-            <button className={styles.iconBtn}>
-              <img src={moonIcon} alt="Смена темы" />
+            <button
+              className={clsx(styles.iconBtn, styles.themeButton, {
+                [styles.themeButtonActive]: isDark,
+              })}
+              onClick={toggleTheme}
+              aria-label={themeButtonLabel}
+              type="button"
+            >
+              <img src={themeIcon} alt="" />
             </button>
             <div style={{ position: "relative" }}>
               <button
@@ -107,7 +119,11 @@ export const Header = () => {
                 aria-label={isNotifOpen ? "Скрыть уведомления" : "Показать уведомления"}
                 type="button"
               >
-                <img src={notification} alt="Уведомления" />
+                <img
+                  src={notification}
+                  alt="Уведомления"
+                  className={styles.headerActionIcon}
+                />
                 <span className={styles.badge} />
               </button>
               <NotificationDropdown
@@ -117,7 +133,11 @@ export const Header = () => {
               />
             </div>
             <Link to="/profile/favorites" className={styles.iconBtn}>
-              <img src={likeIcon} alt="Избранное" />
+              <img
+                src={likeIcon}
+                alt="Избранное"
+                className={styles.headerActionIcon}
+              />
             </Link>
             <Link to="/profile" className={styles.userInfo}>
               <span className={styles.userName}>{user?.name}</span>
@@ -126,8 +146,15 @@ export const Header = () => {
           </div>
         ) : (
           <>
-            <button className={styles.iconBtn}>
-              <img src={moonIcon} alt="Смена темы" />
+            <button
+              className={clsx(styles.iconBtn, styles.themeButton, {
+                [styles.themeButtonActive]: isDark,
+              })}
+              onClick={toggleTheme}
+              aria-label={themeButtonLabel}
+              type="button"
+            >
+              <img src={themeIcon} alt="" />
             </button>
             <div className={styles.authButtons}>
               <Link to="/login">

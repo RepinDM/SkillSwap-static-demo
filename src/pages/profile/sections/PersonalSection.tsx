@@ -307,12 +307,14 @@ const PersonalSection = () => {
         </div>
 
         <div className={styles.buttonRow}>
-          {saveSuccess && (
-            <span className={styles.successText}>Данные сохранены!</span>
-          )}
-          <Button disabled={!isFormValid || isSaving} onClick={handleSave}>
-            {isSaving ? "Сохранение..." : "Сохранить"}
-          </Button>
+          <div className={styles.buttonBlock}>
+            <Button disabled={!isFormValid || isSaving} onClick={handleSave}>
+              {isSaving ? "Сохранение..." : "Сохранить"}
+            </Button>
+            {saveSuccess && (
+              <span className={styles.successText}>Данные сохранены!</span>
+            )}
+          </div>
         </div>
       </div>
 

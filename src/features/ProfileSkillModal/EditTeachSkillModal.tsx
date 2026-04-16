@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { startTransition, useEffect, useRef, useState } from "react";
 import { useForm, Controller, useWatch } from "react-hook-form";
 import { useAppDispatch, useAppSelector } from "@/services/hooks";
 import { selectCategoryItems, selectStatus } from "@/services/slices/skillCardsSlice";
@@ -87,8 +87,10 @@ export const EditTeachSkillModal = ({
       images: [],
     });
 
-    setExistingImageUrls(initialData.imageUrls || []);
-    setImagePreviews([]);
+    startTransition(() => {
+      setExistingImageUrls(initialData.imageUrls || []);
+      setImagePreviews([]);
+    });
   }, [isOpen, initialData, reset]);
 
   // Сбрасываем subcategoryId только если категория реально изменилась пользователем
@@ -165,8 +167,10 @@ export const EditTeachSkillModal = ({
 
   return (
     <div className={styles.overlay}>
+      {/* Контейнер модалки строится на theme-токенах,
+          чтобы внешний вид автоматически менялся между light и dark mode. */}
       <div className={styles.modal}>
-        <h2>Редактировать навык</h2>
+        <h2 className={styles.title}>Редактировать навык</h2>
 
         <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
 
@@ -226,6 +230,8 @@ export const EditTeachSkillModal = ({
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
           >
+            {/* Зона загрузки переиспользует общие цвета темы,
+                поэтому в dark mode не остаётся белым инородным блоком. */}
             <img src={galleryAddIcon} />
             <p>Перетащите или выберите изображения</p>
           </div>

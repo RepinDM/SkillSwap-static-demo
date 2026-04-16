@@ -34,6 +34,7 @@
   display: block;
   width: 20px;
   height: 20px;
+  filter: var(--header-chevron-filter);
   transition: transform 0.2s ease;
 }
 
@@ -57,6 +58,7 @@
 }
 
 .iconBtn {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -71,6 +73,37 @@
     height: 24px;
     object-fit: contain;
   }
+}
+
+.themeButton {
+  width: fit-content;
+  height: auto;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.themeButton:hover {
+  background: transparent;
+  border-color: transparent;
+  transform: none;
+}
+
+.themeButtonActive {
+  box-shadow: none;
+}
+
+.themeButton img {
+  filter: var(--theme-icon-filter);
+}
+
+.headerActionIcon {
+  filter: var(--header-action-icon-filter);
 }
 
 .authButtons {
@@ -137,5 +170,5 @@
 .userName {
   font-family: var(--font-body-family);
   font-size: var(--font-body-size);
-  color: rgba(12, 12, 12, 1);
+  color: var(--text);
 }

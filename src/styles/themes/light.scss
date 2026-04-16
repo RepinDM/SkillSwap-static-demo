@@ -58,7 +58,23 @@
   /*  ФОН  */
   --background: #f9faf7; /* основной фон страницы */
   --background-modal: #fff;
-
+  --page-gradient: none;
+  --surface-elevated: rgb(255 255 255 / 88%);
+  --icon-button-hover: rgb(171 210 122 / 0.18);
+  --surface-border: transparent;
+  --surface-shadow: none;
+  --surface-shadow-strong: 0 2px 8px rgb(0 0 0 / 0.04);
+  --surface-shadow-strong-hover: 0 6px 16px rgb(0 0 0 / 0.08);
+  --interactive-ring-subtle: transparent;
+  --nav-icon-wrapper-border: transparent;
+  --nav-icon-wrapper-shadow: none;
+  --nav-icon-wrapper-ring: transparent;
+  --nav-icon-filter: none;
+  --header-chevron-filter: none;
+  --active-filter-cross-filter: none;
+  --theme-icon-filter: none;
+  --header-action-icon-filter: none;
+  --skill-list-item-border: transparent;
 
   /* СОСТОЯНИЯ (ОШИБКИ / ПРЕДУПРЕЖДЕНИЯ)  */
   --alarm: #e0796e; /* предупреждение (warning) */

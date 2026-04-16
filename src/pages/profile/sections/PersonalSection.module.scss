@@ -212,6 +212,21 @@
   width: 100%;
 }
 
+.buttonBlock {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.successText {
+  color: var(--text-link);
+  font-size: var(--font-caption-size);
+  line-height: var(--font-caption-line-height);
+  text-align: center;
+}
+
 @media (max-width: 960px) {
   .section {
     grid-template-columns: 1fr;

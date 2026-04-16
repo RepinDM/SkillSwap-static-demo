@@ -9,6 +9,10 @@
   width: fit-content;
 }
 
+.activeFilterTag img {
+  filter: var(--active-filter-cross-filter);
+}
+
 .searchResultsCount {
   margin-bottom: 16px;
   font-weight: 600;
