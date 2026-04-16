@@ -4,16 +4,11 @@ import type { TUserInfo } from "@/entities/user/types";
 import { API_URL } from "./config";
 
 const checkResponse = <T>(res: Response): Promise<T> => {
-  console.log("RESPONSE STATUS:", res.status);
-  console.log("RESPONSE OK:", res.ok);
-
   return res.ok
     ? res.json().then((data) => {
-        console.log("RESPONSE JSON:", data);
         return data;
       })
     : res.json().then((err) => {
-        console.error("RESPONSE ERROR:", err);
         return Promise.reject(err);
       });
 };
@@ -28,7 +23,6 @@ export const getUserSkills = () =>
   fetch(`${API_URL}get_user_skill_list`)
     .then((res) => checkResponse<TUserSkillsResponse>(res))
     .then((data) => {
-      console.log("PARSED DATA:", data);
 
       return {
         userSkillList: data.userSkillList,
@@ -36,7 +30,6 @@ export const getUserSkills = () =>
         userList: data.userList};
     })
     .catch((error) => {
-      console.error("GET USER SKILLS ERROR:", error);
       throw error;
     });
 
