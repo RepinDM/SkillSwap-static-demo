@@ -243,6 +243,13 @@ export const EditTeachSkillModal = ({
             {existingImageUrls.map((src, i) => (
               <div key={`existing-${i}`} className={styles.imagePreviewItem}>
                 <img src={src} className={styles.previewImage} />
+                {/**input НЕ менять на компонент Input */}
+                <input
+                  type="hidden"
+                  name="existingTeachSkillImages"
+                  value={src}
+                />
+
                 <button
                   type="button"
                   className={styles.removeImageBtn}

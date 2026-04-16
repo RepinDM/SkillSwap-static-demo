@@ -42,7 +42,7 @@ export const saveTeachSkill = createAsyncThunk(
       // Существующие URL картинок — бэкенд их пока игнорирует,
       // но передаём на будущее
       payload.existingImageUrls.forEach((url) =>
-        formData.append("existingImageUrls", url)
+        formData.append("existingTeachSkillImages", url)
       );
 
       // Передаём текущие learn-навыки чтобы бэкенд их не удалил
@@ -82,7 +82,7 @@ export const saveLearnSkills = createAsyncThunk(
       formData.append("description", payload.currentTeachSkill.description);
       formData.append("skillSubcategoryId", payload.currentTeachSkill.subcategoryId);
       payload.currentTeachSkill.imageUrls.forEach((url) =>
-        formData.append("existingImageUrls", url)
+        formData.append("existingTeachSkillImages", url)
       );
 
       // Новые learn-навыки
