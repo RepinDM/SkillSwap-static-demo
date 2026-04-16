@@ -18,13 +18,12 @@ import "swiper/css";
 import "swiper/css/navigation";
 
 import styles from "./SkillPage.module.scss";
+import clsx from "clsx";
 
 export const SkillPage = () => {
   const { id } = useParams<{ id: string }>();
   const allCards = useAppSelector(selectAllSkillCards);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
-  const [isPrevVisible, setIsPrevVisible] = useState(false);
-  const [isNextVisible, setIsNextVisible] = useState(true);
   const mainSwiperRef = useRef<SwiperType | null>(null);
   const relatedSwiperRef = useRef<SwiperType | null>(null);
 
@@ -52,19 +51,6 @@ export const SkillPage = () => {
 
   // Безопасное получение возраста
   const userAge = user.birthDate ? getAge(user.birthDate) : undefined;
-
-  const handlePrevClick = () => {
-    relatedSwiperRef.current?.slidePrev();
-  };
-
-  const handleNextClick = () => {
-    relatedSwiperRef.current?.slideNext();
-  };
-
-  const handleSlideChange = (swiper: SwiperType) => {
-    setIsPrevVisible(!swiper.isBeginning);
-    setIsNextVisible(!swiper.isEnd);
-  };
 
   return (
     <main className={styles.page}>
@@ -193,26 +179,33 @@ export const SkillPage = () => {
           <div className={styles.relatedHeader}>
             <h2 className={styles.relatedTitle}>Похожие предложения</h2>
             <div className={styles.relatedNav}>
-              {isPrevVisible && (
-                <button className={styles.relatedNavButton} onClick={handlePrevClick} type="button">
-                  <img src={chevronRightIcon} alt="Назад" className={styles.relatedPrevIcon} />
+
+                <button
+                  className={clsx(styles.relatedNavButton, styles.relatedNavButtonLeft)}
+                  onClick={() => relatedSwiperRef.current?.slidePrev()}
+                  type="button"
+                >
+                  <img src={chevronRightIcon} alt="Назад" />
                 </button>
-              )}
-              {isNextVisible && (
-                <button className={styles.relatedNavButton} onClick={handleNextClick} type="button">
+
+                <button
+                  className={clsx(styles.relatedNavButton, styles.relatedNavButtonRight)}
+                  onClick={() => relatedSwiperRef.current?.slideNext()}
+                  type="button"
+                >
                   <img src={chevronRightIcon} alt="Вперед" />
                 </button>
-              )}
+
             </div>
           </div>
           
           <div className={styles.relatedSliderWrapper}>
             <Swiper
+              modules={[Navigation]}
               onSwiper={(swiper) => {
                 relatedSwiperRef.current = swiper;
-                handleSlideChange(swiper);
+                swiper.navigation?.destroy();
               }}
-              onSlideChange={handleSlideChange}
               slidesPerView="auto"
               spaceBetween={20}
               className={styles.relatedSwiper}
