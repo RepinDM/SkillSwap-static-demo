@@ -14,6 +14,7 @@ import { selectLikesById } from "@/services/slices/likesSlice";
 import { useAppSelector, useAppDispatch } from "@/services/hooks";
 import { toggleLike } from "@/services/slices/likesSlice";
 import React from "react";
+import { toggleFavorites } from "@/services/slices/favoritesSlice";
 
 type Props = {
   card: TSkillCard;
@@ -27,7 +28,10 @@ export const SkillCard = React.memo(({ card, showFavoriteButton = true }: Props)
   const count = like?.count ?? 0;
 
   const dispatch = useAppDispatch();
-  const handleToggleLike = () => dispatch(toggleLike(card.id))
+  const handleToggleLike = () => {
+    dispatch(toggleLike(card.id));
+    dispatch(toggleFavorites(card.id))
+  }
 
   return (
     <>
