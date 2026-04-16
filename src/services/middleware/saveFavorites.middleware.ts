@@ -18,24 +18,3 @@ listenerMiddleware.startListening({
     );
   },
 });
-
-// import type { Middleware } from "@reduxjs/toolkit";
-// import { toggleFavorites } from "../slices/favoritesSlice";
-
-// export const saveFavoritesMiddleware: Middleware = (store) => (next) => (action) => {
-//   const result = next(action);
-
-//   if (toggleFavorites.match(action)) {
-//     const state = store.getState();
-//     const userId = state.auth.user?.id;
-//     const favorites = state.favorites.byId;
-//     localStorage.setItem(
-//       `favorites_${userId}`,
-//       JSON.stringify(favorites)
-//     );
-
-//     console.log(localStorage)
-//   }
-
-//   return result;
-// };
