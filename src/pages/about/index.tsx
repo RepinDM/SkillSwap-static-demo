@@ -8,7 +8,7 @@ const teamMembers = [
   { name: "Белозерцева Полина", email: "belozertsevapolina@yandex.ru" },
   { name: "Емельянов Игорь", email: "igor3melya@yandex.ru" },
   { name: "Спичихин Ярослав", email: "yaspichihin@yandex.ru" },
-  { name: "Кошанов Адлет", email: "adletkoshanov@gmail.com" },
+  { name: "Кошанов Альберт", email: "adletkoshanov@gmail.com" },
   { name: "Низовская Елена", email: "lennie22@yandex.ru" },
 ];
 
