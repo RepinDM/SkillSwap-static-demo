@@ -16,12 +16,12 @@ export const store = configureStore({
     register: registerSlice,
     auth: authSlice,
     likes: likesSlice,
+    exchangeRequests: exchangeRequestsSlice,
     favorites: favoritesSlice,
   },
   preloadedState: {
     favorites: {byId: loadFavoriteState()},
-    likes: loadLikesState()
-    exchangeRequests: exchangeRequestsSlice,
+    likes: loadLikesState(),
 
   },
 
