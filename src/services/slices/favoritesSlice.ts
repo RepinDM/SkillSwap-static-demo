@@ -24,7 +24,6 @@ const favoritesSlice = createSlice({
       console.log(JSON.stringify(state.byId))
     }
   },
-  extraReducers: (builder) => {},
   selectors: {
     selectFavorites: (state) => state.byId
   }

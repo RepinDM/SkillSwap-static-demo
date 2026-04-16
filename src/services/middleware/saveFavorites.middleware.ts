@@ -7,7 +7,7 @@ export const listenerMiddleware = createListenerMiddleware();
 listenerMiddleware.startListening({
   actionCreator: toggleFavorites,
 
-  effect: (action, api) => {
+  effect: (_, api) => {
     const state = api.getState() as RootState;
     const userId = state.auth.user?.id;
     const favorites = state.favorites.byId;

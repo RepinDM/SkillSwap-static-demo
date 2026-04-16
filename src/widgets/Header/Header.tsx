@@ -104,9 +104,9 @@ export const Header = () => {
               </button>
               <NotificationDropdown isOpen={isNotifOpen} onClose={() => setIsNotifOpen(false)}/>
             </div>
-            <button className={styles.iconBtn}>
+            <Link to="/profile/favorites" className={styles.iconBtn}>
               <img src={likeIcon} alt="Избранное" />
-            </button>
+            </Link>
             <Link to="/profile" className={styles.userInfo}>
               <span className={styles.userName}>{user?.name}</span>
               <Avatar src={user?.avatar} />
