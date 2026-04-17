@@ -6,7 +6,9 @@
   padding: 20px;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   box-shadow: var(--surface-shadow-strong);
+  height: 425px;
   transition:
     transform 0.2s ease,
     box-shadow 0.2s ease,
