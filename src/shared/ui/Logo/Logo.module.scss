@@ -1,0 +1,19 @@
+.logo {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.image {
+  width: 40px;
+  height: 40px;
+}
+
+.text {
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--logo-text-color);
+  line-height: 32px;
+  font-family: var(--font-heading);
+  letter-spacing: -0.264px;
+}

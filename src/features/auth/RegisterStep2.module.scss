@@ -1,0 +1,354 @@
+@use "./registerStepBase.scss" as stepBase;
+
+.container {
+  @include stepBase.step-container;
+}
+
+.content {
+  @include stepBase.step-shell;
+
+  @media (max-width: 968px) {
+    @include stepBase.step-mobile-shell;
+  }
+}
+
+.formSection,
+.infoSection {
+  border-radius: 20px;
+  background: var(--card-input);
+}
+
+.formSection {
+  @include stepBase.step-card;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  width: 100%;
+  max-width: 376px;
+  margin: 0 auto;
+}
+
+.avatarField {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 4px;
+}
+
+.avatarButton {
+  position: relative;
+  display: inline-flex;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.addIconWrapper {
+  position: absolute;
+  right: -1px;
+  bottom: 3px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 2px solid var(--card-input);
+}
+
+.addIcon {
+  width: 12px;
+  height: 12px;
+}
+
+.hiddenInput {
+  display: none;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.field,
+.fieldHalf {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.label {
+  color: var(--text);
+  font-size: var(--font-caption-size);
+  font-weight: 500;
+  line-height: var(--font-caption-line-height);
+}
+
+.trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  min-height: 48px;
+  padding: 12px 16px;
+  border: 1px solid var(--border-input);
+  border-radius: 12px;
+  background: var(--card-input);
+  color: var(--text);
+  font-family: var(--font-body-family);
+  font-size: var(--font-body-size);
+  line-height: var(--font-body-line-height);
+  cursor: pointer;
+  text-align: left;
+}
+
+.trigger:disabled {
+  color: var(--disabled-text);
+  background: var(--card-input);
+  cursor: not-allowed;
+}
+
+.triggerError {
+  border-color: var(--error);
+}
+
+.placeholder {
+  color: var(--caption);
+}
+
+.errorMessage {
+  color: var(--error);
+  font-size: var(--font-caption-size);
+  line-height: var(--font-caption-line-height);
+}
+
+.learnSkillsList {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.learnSkillRow {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.dropdownPanel {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  z-index: 20;
+  width: 100%;
+  border: 1px solid var(--border-input);
+  border-radius: 14px;
+  background: var(--card-input);
+  box-shadow: 0 16px 40px rgb(37 48 23 / 12%);
+  overflow: hidden;
+}
+
+.smallPanel {
+  padding: 8px 0;
+}
+
+.cityPanel {
+  padding: 8px 0 0;
+}
+
+.datePanel {
+  min-width: 304px;
+  padding: 12px;
+}
+
+.optionsList {
+  max-height: 210px;
+  overflow-y: auto;
+  padding: 4px 0;
+}
+
+.optionButton {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 14px;
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  font-family: var(--font-body-family);
+  font-size: var(--font-body-size);
+  line-height: var(--font-body-line-height);
+  text-align: left;
+  cursor: pointer;
+}
+
+.optionButton:hover {
+  background: var(--button-hover);
+}
+
+.searchRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 10px 8px;
+  border-bottom: 1px solid var(--disabled);
+}
+
+.searchInput {
+  width: 100%;
+  min-height: 40px;
+  padding: 10px 12px;
+  border: 1px solid var(--border-input);
+  border-radius: 10px;
+  outline: none;
+  font: inherit;
+  color: var(--text);
+}
+
+.searchInput::placeholder {
+  color: var(--caption);
+}
+
+.clearButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.calendarHeader {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(92px, 0.65fr);
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.calendarSelect {
+  width: 100%;
+  min-height: 38px;
+  padding: 8px 10px;
+  border: 1px solid var(--border-input);
+  border-radius: 10px;
+  background: var(--card-input);
+  color: var(--text);
+  font: inherit;
+}
+
+.weekDays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.weekDay {
+  color: var(--caption);
+  font-size: 12px;
+  text-align: center;
+}
+
+.daysGrid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+.dayCell {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 32px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text);
+  cursor: pointer;
+}
+
+.dayCell:hover {
+  background: var(--button-hover);
+}
+
+.dayMuted {
+  color: var(--disabled-text);
+}
+
+.daySelected {
+  background: var(--accent);
+}
+
+.calendarActions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.buttons {
+  display: flex;
+  gap: 20px;
+  margin-top: 24px;
+}
+
+.infoSection {
+  @include stepBase.step-info-card;
+}
+
+.imageWrapper {
+  margin-bottom: 40px;
+}
+
+.image {
+  width: 300px;
+  height: 300px;
+  object-fit: contain;
+}
+
+.infoTitle {
+  margin: 0 0 12px;
+  color: var(--text);
+  font-family: var(--font-heading);
+  font-size: var(--font-h2-size);
+  font-weight: var(--font-h2-weight);
+  line-height: var(--font-h2-line-height);
+}
+
+.infoText {
+  max-width: 380px;
+  margin: 0;
+  color: var(--caption);
+  font-size: var(--font-body-size);
+  line-height: var(--font-body-line-height);
+}
+
+@media (max-width: 968px) {
+  .formSection,
+  .infoSection {
+    @include stepBase.step-mobile-card;
+  }
+
+  .buttons {
+    gap: 12px;
+  }
+}
+
+@media (max-width: 640px) {
+  .row,
+  .buttons {
+    flex-direction: column;
+  }
+}

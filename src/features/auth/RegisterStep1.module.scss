@@ -1,0 +1,132 @@
+@use "./registerStepBase.scss" as stepBase;
+
+.main {
+  @include stepBase.step-shell;
+
+  @media (max-width: 968px) {
+    @include stepBase.step-mobile-shell;
+  }
+}
+
+.main_section {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  @include stepBase.step-card;
+  gap: 32px;
+}
+
+.inputForm {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  max-width: 376px;
+  margin: 0 auto;
+}
+
+.input {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.login {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  color: var(--text);
+
+  font-family: var(--font-body-family);
+  font-weight: var(--font-body-weight);
+  font-size: var(--font-body-size);
+  line-height: var(--font-body-line-height);
+
+  &::before,
+  &::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background-color: var(--disabled);
+  }
+
+  &::before {
+    margin-right: 8px;
+  }
+
+  &::after {
+    margin-left: 8px;
+  }
+}
+
+.passwordWrapper {
+  position: relative;
+  width: 100%;
+  display: flow-root;
+}
+
+.eyeButton {
+  position: absolute;
+  top: 53px;
+  right: 20px;
+  transform: translateY(-50%);
+  cursor: pointer;
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  background: transparent no-repeat center / contain;
+}
+
+.info {
+  @include stepBase.step-info-card;
+}
+
+.layout {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  max-width: 380px;
+}
+
+.text {
+  font-family: var(--font-h2-family);
+  font-weight: var(--font-h2-weight);
+  font-size: var(--font-h2-size);
+  line-height: var(--font-h2-line-height);
+}
+
+.textDetails {
+  font-family: var(--font-body-family);
+  font-weight: var(--font-body-weight);
+  font-size: var(--font-body-size);
+  line-height: var(--font-body-line-height);
+  text-align: center;
+}
+
+.img {
+  width: 300px;
+  height: 300px;
+  object-fit: contain;
+  margin-bottom: 40px;
+}
+
+.main_section > :last-child {
+  width: 100%;
+  max-width: 376px;
+  margin: 0 auto;
+}
+
+@media (max-width: 968px) {
+  .main_section,
+  .info {
+    @include stepBase.step-mobile-card;
+  }
+}

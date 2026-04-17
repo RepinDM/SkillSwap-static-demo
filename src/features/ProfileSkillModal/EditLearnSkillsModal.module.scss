@@ -1,0 +1,79 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--overlay);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal {
+  width: 520px;
+  background: var(--background-modal);
+  border: 1px solid var(--surface-border);
+  border-radius: 16px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  box-shadow: var(--surface-shadow);
+}
+
+.title {
+  font-size: var(--font-h3-size);
+  text-shadow: 1px 1px #868686ac;
+  margin: 0;
+  color: var(--text);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.select {
+  flex: 1;
+  border: 1px solid var(--border-input);
+  border-radius: 10px;
+  padding: 10px 12px;
+  color: var(--text);
+  background: var(--card-input);
+  cursor: pointer;
+  min-width: 0;
+}
+
+.removeBtn {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: var(--remove-btn-color);
+  transition: 0.2s;
+}
+
+.addBtn {
+  margin-top: 10px;
+  background: transparent;
+  border: 2px dashed var(--border-input-add);
+  padding: 10px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.2s;
+  color: var(--text);
+}
+
+.addBtn:hover {
+  background: var(--card-hover);
+}
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 12px;
+  gap: 10px;
+}

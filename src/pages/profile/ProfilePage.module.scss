@@ -1,0 +1,28 @@
+.page {
+  display: grid;
+  grid-template-columns: 324px minmax(0, 1fr);
+  gap: 24px;
+  width: 100%;
+  padding: 0 0 36px;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  min-height: 460px;
+  border-radius: 24px;
+  border: 1px solid var(--surface-border);
+  background: var(--card-input);
+  box-shadow: var(--surface-shadow);
+  padding: 60px;
+}
+
+@media (max-width: 960px) {
+  .page {
+    grid-template-columns: 1fr;
+  }
+
+  .content {
+    padding: 24px 20px 28px;
+  }
+}

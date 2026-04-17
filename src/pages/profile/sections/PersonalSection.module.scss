@@ -1,0 +1,262 @@
+.section {
+  display: grid;
+  grid-template-columns: minmax(0, 510px) 280px;
+  justify-content: center;
+  align-items: start;
+  gap: 196px;
+}
+
+.formColumn {
+  width: 100%;
+  padding-top: 8px;
+}
+
+.visualColumn {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 40px;
+}
+
+.avatarWrap {
+  position: relative;
+}
+
+.avatarWrap button {
+  cursor: pointer;
+}
+
+.avatarWrap button:hover {
+  opacity: 0.92;
+}
+
+.avatarEditButton {
+  position: absolute;
+  right: -8px;
+  bottom: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--accent);
+  cursor: pointer;
+  box-shadow: 0 10px 24px rgb(37 48 23 / 18%);
+}
+
+.avatarEditButton img {
+  width: 20px;
+  height: 20px;
+  filter: brightness(0) invert(1);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.label {
+  color: var(--caption);
+  font-family: var(--font-caption-family);
+  font-size: var(--font-caption-size);
+  line-height: var(--font-caption-line-height);
+}
+
+.placeholder {
+  color: var(--disabled-text);
+}
+
+.hiddenInput {
+  display: none;
+}
+
+.editIconButton {
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.editIconButton img {
+  display: block;
+  width: 20px;
+  height: 20px;
+}
+
+.textareaWrap {
+  position: relative;
+}
+
+.textarea {
+  width: 100%;
+  min-height: 120px;
+  padding: 12px 52px 12px 20px;
+  border: 1px solid var(--border-input);
+  border-radius: 12px;
+  resize: vertical;
+  outline: none;
+  box-sizing: border-box;
+  font-family: var(--font-body-family);
+  font-size: var(--font-body-size);
+  font-weight: var(--font-body-weight);
+  line-height: var(--font-body-line-height);
+  color: var(--text);
+  background: var(--card-input);
+}
+
+.textarea:disabled {
+  color: var(--disabled-text);
+  cursor: not-allowed;
+}
+
+.textarea::placeholder {
+  color: var(--caption);
+}
+
+.textarea:focus {
+  border-color: var(--accent);
+}
+
+.textareaError,
+.textareaError:focus {
+  border-color: var(--error);
+}
+
+.textareaEditButton {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+}
+
+.textareaFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 6px;
+}
+
+.errorText {
+  color: var(--error);
+  font-size: var(--font-caption-size);
+  line-height: var(--font-caption-line-height);
+}
+
+.hintText,
+.counter {
+  color: var(--caption);
+  font-size: var(--font-caption-size);
+  line-height: var(--font-caption-line-height);
+}
+
+.passwordLink {
+  margin-bottom: 16px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--text-link);
+  font-family: var(--font-body-family);
+  font-size: var(--font-body-size);
+  line-height: var(--font-body-line-height);
+  cursor: pointer;
+}
+
+.passwordFields {
+  margin-bottom: 16px;
+}
+
+.passwordInputWrap {
+  position: relative;
+}
+
+.passwordInputWrap :global(input) {
+  padding-right: 52px;
+}
+
+.passwordToggle {
+  position: absolute;
+  top: 50%;
+  right: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  transform: translateY(-50%);
+}
+
+.passwordToggle img {
+  width: 20px;
+  height: 20px;
+}
+
+.buttonRow {
+  margin-top: 20px;
+  width: 100%;
+}
+
+.buttonBlock {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.successText {
+  color: var(--text-link);
+  font-size: var(--font-caption-size);
+  line-height: var(--font-caption-line-height);
+  text-align: center;
+}
+
+@media (max-width: 960px) {
+  .section {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .visualColumn {
+    order: -1;
+    justify-content: center;
+    padding-top: 0;
+  }
+}
+
+@media (max-width: 640px) {
+  .row {
+    grid-template-columns: 1fr;
+  }
+
+  .buttonRow {
+    width: 100%;
+  }
+
+  .avatarWrap {
+    transform: scale(0.84);
+    transform-origin: top center;
+  }
+
+  .textareaFooter {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 4px;
+  }
+}

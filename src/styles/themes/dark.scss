@@ -1,0 +1,121 @@
+[data-theme="dark"] {
+  /* ТЕКСТ */
+  --text: #f4f7f1;
+  --caption: #9aa39a;
+  --disabled-text: #6d756d;
+  --text-secondary: #c4ccc2;
+
+  /* UI ЭЛЕМЕНТЫ */
+  --toggle: #818b81;
+  --disabled: #242926;
+  --card-input: #171c19;
+  --accent: #abd27a;
+  --remove-btn-color: #9aa39a;
+  --logo-text-color: var(--text);
+  --card-hover: #1f2521;
+
+  /* ИНТЕРАКЦИИ */
+  --text-link: #c2e68f;
+  --button-pressed: #7ea84c;
+  --button-hover: #262d27;
+
+  --button-primary-background: #abd27a;
+  --button-primary-background-hover: #d2e9b3;
+  --button-primary-background-active: #89b357;
+  --button-primary-background-disabled: #353b35;
+
+  --button-primary-color: #10130f;
+  --button-primary-color-hover: #10130f;
+  --button-primary-color-active: #10130f;
+  --button-primary-color-disabled: #7b847b;
+
+  --button-secondary-background: #161a17;
+  --button-secondary-background-hover: #242a25;
+  --button-secondary-background-active: #121613;
+  --button-secondary-background-disabled: #151916;
+
+  --button-secondary-color: #eef3e6;
+  --button-secondary-color-hover: #d7ddd5;
+  --button-secondary-color-active: #eef3e6;
+  --button-secondary-color-disabled: #7b847b;
+
+  --button-secondary-border: #404942;
+  --button-secondary-border-hover: #6b786e;
+  --button-secondary-border-active: #abd27a;
+  --button-secondary-border-disabled: #2d332f;
+
+  --button-tertiary-background: transparent;
+  --button-tertiary-color: #eef3e6;
+  --button-tertiary-color-disabled: #7b847b;
+
+  --dropdown-background: #171c19;
+  --dropdown-border: #475249;
+  --dropdown-category-title-color: #eef3e6;
+  --dropdown-category-link-color: #eef3e6;
+  --dropdown-category-link-color-hover: #c2e68f;
+
+  /* ФОН */
+  --background: #101310;
+  --background-modal: #171c19;
+  --page-gradient: none;
+  --surface-elevated: #1b211d;
+  --icon-button-hover: #2a322b;
+  --surface-border: var(--border-input);
+  --surface-shadow: 0 16px 36px rgb(0 0 0 / 0.12);
+  --surface-shadow-strong: 0 10px 24px rgb(0 0 0 / 0.12);
+  --surface-shadow-strong-hover: 0 16px 32px rgb(0 0 0 / 0.18);
+  --interactive-ring-subtle: rgb(171 210 122 / 0.16);
+  --nav-icon-wrapper-border: rgb(255 255 255 / 0.08);
+  --nav-icon-wrapper-shadow:
+    inset 0 0 0 1px rgb(0 0 0 / 0.08),
+    0 8px 18px rgb(0 0 0 / 0.18);
+  --nav-icon-wrapper-ring: rgb(171 210 122 / 0.12);
+  --nav-icon-filter:
+    brightness(0) saturate(100%) invert(81%) sepia(26%) saturate(700%) hue-rotate(36deg) brightness(96%) contrast(94%)
+    drop-shadow(0 0 6px rgb(171 210 122 / 0.18));
+  --header-chevron-filter:
+    brightness(0) saturate(100%) invert(80%) sepia(35%) saturate(742%) hue-rotate(35deg) brightness(100%) contrast(96%)
+    drop-shadow(0 0 4px rgb(171 210 122 / 0.16));
+  --active-filter-cross-filter:
+    brightness(0) saturate(100%) invert(79%) sepia(37%) saturate(744%) hue-rotate(36deg) brightness(98%) contrast(94%)
+    drop-shadow(0 0 4px rgb(171 210 122 / 0.16));
+  --theme-icon-filter:
+    brightness(0) saturate(100%) invert(79%) sepia(37%) saturate(744%) hue-rotate(36deg) brightness(98%) contrast(94%)
+    drop-shadow(0 0 4px rgb(171 210 122 / 0.14));
+  --header-action-icon-filter:
+    brightness(0) saturate(100%) invert(79%) sepia(37%) saturate(744%) hue-rotate(36deg) brightness(98%) contrast(94%)
+    drop-shadow(0 0 4px rgb(171 210 122 / 0.12));
+  --skill-list-item-border: var(--border-input);
+
+  /* СОСТОЯНИЯ */
+  --alarm: #e79b8f;
+  --error: #ff8d74;
+
+  /* ТЕГИ */
+  --tag-business-career: #302b3c;
+  --tag-creativity-art: #3a2734;
+  --tag-foreign-languages: #403a20;
+  --tag-education-development: #243642;
+  --tag-home-comfort: #3d3027;
+  --tag-health-lifestyle: #243a26;
+  --tag-plus: #273245;
+
+  /* ФОРМЫ */
+  --border-input: #4d5850;
+  --border-radio-checkbox: #eef3e6;
+  --input-radius: 12px;
+  --border-input-learn: #3f4941;
+  --border-input-add: #7ea84c;
+
+  /* УВЕДОМЛЕНИЯ */
+  --toast-background: #20251f;
+
+  /* РЕДАКТИРОВАНИЕ */
+  --editing: #212620;
+
+  /* OVERLAY */
+  --overlay: rgb(6 8 7 / 72%);
+
+  /* Z-INDEX */
+  --z-index-dropdown: 10;
+}

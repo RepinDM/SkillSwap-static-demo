@@ -1,0 +1,76 @@
+@use "./fonts/fonts";
+@use "./variables";
+@use "./themes/light";
+@use "./themes/dark";
+@use "./reset";
+
+html {
+  background-color: var(--background);
+}
+
+body {
+  margin: 0;
+  color: var(--text);
+  background-color: var(--background);
+  background-image: var(--page-gradient);
+  font-family: "Roboto", sans-serif;
+  font-weight: var(--font-body-weight);
+  font-size: var(--font-body-size);
+  line-height: var(--font-body-line-height);
+  max-width: 1440px;
+  min-height: 100vh;
+  margin: 0 auto;
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+h1,
+.h1 {
+  font-family:  "Jost", sans-serif;
+  font-weight: var(--font-h1-weight);
+  font-size: var(--font-h1-size);
+  line-height: var(--font-h1-line-height);
+}
+
+h2,
+.h2 {
+  font-family: "Jost", sans-serif;
+  font-weight: var(--font-h2-weight);
+  font-size: var(--font-h2-size);
+  line-height: var(--font-h2-line-height);
+}
+
+h3,
+.h3 {
+  font-family: "Jost", sans-serif;
+  font-weight: var(--font-h3-weight);
+  font-size: var(--font-h3-size);
+  line-height: var(--font-h3-line-height);
+}
+
+h4,
+.h4 {
+  font-family: "Jost", sans-serif;
+  font-weight: var(--font-h4-weight);
+  font-size: var(--font-h4-size);
+  line-height: var(--font-h4-line-height);
+}
+
+.body {
+  font-family: "Roboto", sans-serif;
+  font-weight: var(--font-body-weight);
+  font-size: var(--font-body-size);
+  line-height: var(--font-body-line-height);
+}
+
+.caption {
+  font-family: "Roboto", sans-serif;
+  font-weight: var(--font-caption-weight);
+  font-size: var(--font-caption-size);
+  line-height: var(--font-caption-line-height);
+}

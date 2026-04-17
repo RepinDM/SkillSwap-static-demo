@@ -1,0 +1,204 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 32px;
+  padding-top: 42px;
+  padding-bottom: 20px;
+  padding-left: 36px;
+  padding-right: 36px;
+  flex-shrink: 0;
+}
+
+.navigation {
+  display: flex;
+  align-items: center;
+  padding-left: 48px;
+  gap: 30px;
+  font-family: var(--font-body-family);
+  font-weight: var(--font-body-weight);
+  font-size: var(--font-body-size);
+  line-height: var(--font-body-line-height);
+  flex-shrink: 0;
+}
+
+.navigation a,
+.dropDownBtn {
+  display: flex;
+  align-items: center;
+  font: inherit;
+  line-height: inherit;
+  color: inherit;
+}
+
+.dropDownBtn {
+  gap: 4px;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.chevronIcon {
+  display: block;
+  width: 20px;
+  height: 20px;
+  filter: var(--header-chevron-filter);
+  transition: transform 0.2s ease;
+}
+
+.chevronIconOpen {
+  transform: rotate(180deg);
+}
+
+.authBlock {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 24px;
+  flex-shrink: 0;
+}
+
+.userActions {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 20px;
+}
+
+.iconBtn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  width: fit-content;
+
+  img {
+    display: block;
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+  }
+}
+
+.themeButton {
+  width: fit-content;
+  height: auto;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.themeButton:hover {
+  background: transparent;
+  border-color: transparent;
+  transform: none;
+}
+
+.themeButtonActive {
+  box-shadow: none;
+}
+
+.themeButton img {
+  filter: var(--theme-icon-filter);
+}
+
+.headerActionIcon {
+  filter: var(--header-action-icon-filter);
+}
+
+.authButtons {
+  display: flex;
+  flex-direction: row;
+  flex-shrink: 0;
+  gap: 8px;
+}
+
+.searchWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex: 1;
+  min-width: 0;
+  width: 100%;
+}
+
+.searchWrapper > :last-child {
+  flex: 1;
+  min-width: 0;
+}
+
+.searchIcon {
+  width: 20px;
+  height: 20px;
+  left: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: var(--caption);
+  mask-image: url("../../shared/image/icons/search.svg");
+  mask-size: contain;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  position: absolute;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.searchWrapper .searchInput {
+  width: 100%;
+  min-height: 64px;
+  padding: 0 24px 0 56px;
+  border: none;
+  background-color: var(--card-input);
+  border-radius: 20px;
+  box-sizing: border-box;
+  outline: none;
+  transition: border-color 0.2s ease;
+  font-family: var(--font-body-family);
+  font-size: var(--font-body-size);
+  font-weight: var(--font-body-weight);
+  line-height: 1.35;
+  color: var(--text);
+  appearance: none;
+  -webkit-appearance: none;
+
+  &::placeholder {
+    color: var(--caption);
+  }
+}
+
+.searchWrapper .searchInput::-webkit-search-decoration,
+.searchWrapper .searchInput::-webkit-search-cancel-button,
+.searchWrapper .searchInput::-webkit-search-results-button,
+.searchWrapper .searchInput::-webkit-search-results-decoration {
+  -webkit-appearance: none;
+}
+
+.badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 12px;
+  height: 12px;
+  background: rgba(224, 121, 110, 1);
+  border-radius: 50%;
+}
+
+.userInfo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.userName {
+  font-family: var(--font-body-family);
+  font-size: var(--font-body-size);
+  color: var(--text);
+}
