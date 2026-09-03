@@ -248,9 +248,9 @@
 }
 
 .deleteProfileButton:hover {
-  border-color: var(--accent);
+  border-color: var(--error);
   background: var(--button-hover);
-  color: var(--text);
+  color: var(--error);
   transform: translateY(-1px);
 }
 
