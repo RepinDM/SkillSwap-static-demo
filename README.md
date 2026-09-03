@@ -1,90 +1,80 @@
-# SkillSwap
+# SkillSwap: автономное портфолио-демо
 
-SkillSwap is a responsive web application for exchanging skills. Users can browse offers, filter specialists, create skill requests, save favourites, and manage a personal profile.
+SkillSwap - сервис для обмена знаниями и практическими навыками. Пользователь
+может найти человека, который готов поделиться опытом, рассказать о том, чему
+хочет научиться, собрать избранное и вести свой профиль.
 
-The project demonstrates a feature-oriented React architecture, typed state management, form validation, and an autonomous demo mode suitable for static hosting.
+Эта версия подготовлена для портфолио: она полностью работает без внешнего API
+и поэтому одинаково надёжно запускается локально, на Vercel и GitHub Pages.
 
-## Demo
+## Демо
 
-The Vercel deployment URL will be added here after publication.
+Ссылка на опубликованную версию будет добавлена после завершения деплоя GitHub Pages.
 
-## Features
+## Что можно посмотреть
 
-- Browse skill cards and open a detailed skill page.
-- Filter offers by learning mode, city, category, and subcategory.
-- Search skills by title, description, or category.
-- Register in three steps with client-side validation.
-- Choose a city from the complete user directory with search and clear empty, loading, and error states.
-- Sign in, register, and manage a profile in the browser-only demo mode.
-- Save favourites and work with exchange requests locally.
-- Open protected routes only when authenticated.
-- Switch between the light and dark themes.
+- Каталог карточек с поиском и фильтрами по городу, категории и подкатегории.
+- Подробную страницу навыка и сценарий создания заявки на обмен.
+- Избранное и лайки, сохраняющиеся в браузере.
+- Регистрацию в три шага с валидацией полей.
+- Вход в демо-аккаунт, защищённые разделы и личный кабинет.
+- Редактирование и удаление демо-профиля.
+- Светлую и тёмную темы, а также адаптивную вёрстку.
 
-## Tech Stack
+## Технологии
 
-- React 19 and TypeScript
-- Vite
-- Redux Toolkit and React Redux
+- React 19, TypeScript и Vite
+- Redux Toolkit и React Redux
 - React Router
-- React Hook Form and Yup
-- SCSS modules
-- Vitest and Testing Library
-- Storybook
+- React Hook Form и Yup
+- SCSS Modules
+- Vitest, Testing Library и Storybook
 
-## Architecture
+## Автономный режим
 
-The source is organised by responsibility:
+Каталог, города, категории и карточки берутся из проверенного локального снимка
+[`public/db/skillswap-data.json`](public/db/skillswap-data.json). В нём оставлены
+только содержательные демонстрационные профили и навыки: тестовые записи удалены.
 
-```text
-src/
-├── api/         # Local data access, demo session, and transformations
-├── app/         # Application bootstrap and routing
-├── entities/    # Domain types
-├── features/    # User-facing business flows
-├── pages/       # Route-level screens
-├── services/    # Redux store, slices, actions, and middleware
-├── shared/      # Reusable UI, utilities, hooks, and layouts
-├── styles/      # Global styles, tokens, themes, and fonts
-└── widgets/     # Larger composed interface blocks
-```
+Регистрация, вход, избранное, заявки и личный профиль хранятся только в
+`localStorage` текущего браузера. Поэтому демо не передаёт персональные данные
+на внешний сервер и может быть сброшено кнопкой «Удалить профиль» в личном кабинете.
 
-## Routes
+## Вклад в проект
 
-| Route | Description |
-| --- | --- |
-| `/` | Skill catalogue |
-| `/skill/:id` | Skill details |
-| `/about` | About the service |
-| `/login` | Sign in |
-| `/register` | Registration step 1 |
-| `/register/step-2` | Registration profile details |
-| `/register/step-3` | Registration confirmation |
-| `/profile` | Protected profile overview |
-| `/profile/requests` | Protected exchange requests |
-| `/profile/exchanges` | Protected exchanges |
-| `/profile/favorites` | Protected favourites |
-| `/profile/skills` | Protected skills management |
-| `/create` | Protected skill creation |
+### Команда
 
-## Local Development
+- Спроектировала и реализовала интерфейс обмена навыками, каталог, карточки,
+  маршрутизацию, формы и состояние приложения.
+- Выбрала React-архитектуру с типизированным Redux-слоем, модульными стилями и
+  переиспользуемыми UI-компонентами.
+- Подготовила пользовательские сценарии: регистрация, профиль, избранное,
+  навыки и заявки на обмен.
 
-Requirements: Node.js 20 or later and npm.
+### Финализация портфолио-версии
+
+- Проведён аудит сборки, типизации и тестов; устранены ошибки, мешавшие деплою.
+- Исправлен сценарий выбора города: данные городов извлекаются из общего набора
+  профилей, поиск и выбор работают без внешней сети.
+- Внешняя HTTP-интеграция заменена локальным снимком реальных демонстрационных
+  данных, чтобы избежать mixed-content и нестабильности legacy API.
+- Очищены тестовые карточки и навыки, добавлено локальное удаление демо-профиля.
+- Настроены SPA-маршруты для Vercel и автоматическая публикация на GitHub Pages.
+- README приведён к формату, понятному рекрутеру и разработчику.
+
+## Быстрый старт
+
+Требуется Node.js 20+ и npm.
 
 ```bash
 npm ci
 npm run dev
 ```
 
-Open the local URL printed by Vite, normally `http://localhost:5173`.
+После запуска откройте адрес, который выведет Vite, обычно
+`http://localhost:5173`.
 
-### Demo Data
-
-The catalogue, cities, categories, and skill cards are stored in
-`public/db/skillswap-data.json`. This snapshot makes the public demo independent
-from the legacy HTTP API. Demo registration, login, and profile changes are kept
-in the browser's local storage and are not sent to a server.
-
-## Quality Checks
+## Проверки качества
 
 ```bash
 npm run lint
@@ -92,29 +82,44 @@ npm run build
 npm run test:run
 ```
 
-## Deploy To Vercel
+На момент подготовки портфолио-версии линтер, production-сборка и 39 тестов
+проходят успешно.
 
-1. Import the repository in Vercel.
-2. Select the Vite framework preset.
-3. Keep the default build command: `npm run build`.
-4. Keep the default output directory: `dist`.
-5. Deploy.
+## Маршруты
 
-`vercel.json` preserves client-side routing, so direct links such as `/profile` resolve to the application instead of a 404 page.
+| Адрес | Назначение |
+| --- | --- |
+| `/` | Каталог навыков |
+| `/skill/:id` | Страница навыка |
+| `/login` | Вход в демо-аккаунт |
+| `/register` | Регистрация |
+| `/profile` | Личный кабинет |
+| `/profile/favorites` | Избранное |
+| `/create` | Создание навыка |
 
-## Deploy To GitHub Pages
+## Структура проекта
 
-1. In the repository settings, open **Pages** and select **GitHub Actions** as the source.
-2. Push to `main`.
-3. The included workflow builds and publishes the `dist` folder automatically.
+```text
+src/
+├── api/         # локальные данные, демо-сессия и преобразования
+├── app/         # запуск приложения и маршрутизация
+├── entities/    # типы предметной области
+├── features/    # пользовательские сценарии
+├── pages/       # страницы
+├── services/    # Redux store, slices и actions
+├── shared/      # общие компоненты, утилиты и стили
+└── widgets/     # составные блоки интерфейса
+```
 
-The workflow also provides the SPA fallback needed for direct links to application routes.
+## Публикация
 
-## Development Notes
+### Vercel
 
-- Put domain types in `entities`.
-- Keep user actions and related UI in `features`.
-- Compose larger interface blocks in `widgets`.
-- Keep route-level composition in `pages`.
-- Reuse generic elements from `shared` rather than duplicating them.
-- Run linting, the production build, and tests before opening a pull request.
+Выберите preset `Vite`, оставьте команду `npm run build` и папку `dist`.
+Файл `vercel.json` сохраняет работу клиентских маршрутов при прямом открытии ссылок.
+
+### GitHub Pages
+
+В `Settings` -> `Pages` выберите источник `GitHub Actions`. Workflow
+`.github/workflows/deploy-pages.yml` автоматически соберёт приложение и
+опубликует его после push в `main`, включая fallback для клиентских маршрутов.
