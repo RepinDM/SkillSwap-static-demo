@@ -18,16 +18,25 @@ export type TUserSkillsResponse = {
   userList: TUserInfo[]
 };
 
+const toPublicAssetUrl = (url: string) =>
+  url.startsWith("db/") ? `${import.meta.env.BASE_URL}${url}` : url;
+
+const normalizeLocalAssetUrls = (data: TUserSkillsResponse): TUserSkillsResponse => ({
+  ...data,
+  userList: data.userList.map((user) => ({
+    ...user,
+    avatar: user.avatar ? toPublicAssetUrl(user.avatar) : undefined,
+  })),
+  userSkillList: data.userSkillList.map((skill) => ({
+    ...skill,
+    images: skill.images?.map(toPublicAssetUrl),
+  })),
+});
+
 export const getUserSkills = () =>
   fetch(`${import.meta.env.BASE_URL}db/skillswap-data.json`)
     .then((res) => checkResponse<TUserSkillsResponse>(res))
-    .then((data) => {
-
-      return {
-        userSkillList: data.userSkillList,
-        subcategoryList: data.subcategoryList, 
-        userList: data.userList};
-    })
+    .then(normalizeLocalAssetUrls)
     .catch((error) => {
       throw error;
     });
