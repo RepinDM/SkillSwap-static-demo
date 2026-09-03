@@ -17,6 +17,7 @@ import { selectUser } from "@/services/slices/authSlice";
 import { editUser } from "@/services/actions/editUser";
 import { deleteDemoProfile } from "@/api/demo-auth";
 import { logout } from "@/services/slices/authSlice";
+import { validateDemoImage } from "@/api/demo-data";
 
 const EMAIL_REGEXP = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const ABOUT_MAX_LENGTH = 300;
@@ -105,6 +106,12 @@ const PersonalSection = () => {
   const handleAvatarChange = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
+    const validationError = validateDemoImage(file);
+
+    if (validationError) {
+      setPasswordError(validationError);
+      return;
+    }
     if (avatarPreview?.startsWith("blob:")) URL.revokeObjectURL(avatarPreview);
     setAvatarFile(file);
     setAvatarPreview(URL.createObjectURL(file));

@@ -13,3 +13,14 @@
     row-gap: 30px;
     justify-content: space-between;
 }
+
+.cardWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.actions {
+    display: flex;
+    gap: 12px;
+}

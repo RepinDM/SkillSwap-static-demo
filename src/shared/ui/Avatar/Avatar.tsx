@@ -18,6 +18,8 @@ export const Avatar: FC<AvatarProps> = ({ src, alt = "", size = 48 }) => {
         className={styles.image}
         src={imgSrc}
         alt={alt}
+        loading="lazy"
+        decoding="async"
         onError={() => setHasError(true)}
       />
     </div>

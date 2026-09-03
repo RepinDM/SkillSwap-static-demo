@@ -10,6 +10,7 @@ import { Input } from "@/shared/ui/input/input";
 import galleryAddIcon from "@/shared/image/icons/gallery-add.svg";
 import crossIcon from "@/shared/image/icons/cross.svg";
 import { saveTeachSkill } from "@/services/actions/skills";
+import { validateDemoImage } from "@/api/demo-data";
 
 type FormData = {
   title: string;
@@ -108,6 +109,12 @@ export const EditTeachSkillModal = ({
     if (!files) return;
 
     const newFiles = Array.from(files);
+    const invalidFile = newFiles.find((file) => validateDemoImage(file));
+
+    if (invalidFile) {
+      alert(validateDemoImage(invalidFile));
+      return;
+    }
     const current = getValues("images") || [];
     const updated = [...current, ...newFiles].slice(0, 7);
 
@@ -154,8 +161,7 @@ export const EditTeachSkillModal = ({
     dispatch(saveTeachSkill({
       ...data,
       existingImageUrls,
-    }));
-    onClose();
+    })).unwrap().then(onClose).catch(() => undefined);
   };
 
   const subcategories =

@@ -23,6 +23,7 @@ import { SearchInput } from "@/features/Search/SearchInput";
 import { useAppSelector } from "@/services/hooks";
 import { selectSearchQuery } from "@/services/slices/skillCardsSlice";
 import { selectIsAuthenticated, selectUser } from "@/services/slices/authSlice";
+import { selectNotifications } from "@/services/slices/notificationsSlice";
 import { useTheme } from "@/shared/hooks/useTheme";
 
 export const Header = () => {
@@ -32,6 +33,8 @@ export const Header = () => {
   const { isDark, toggleTheme } = useTheme();
   const isLoggedIn = useAppSelector(selectIsAuthenticated);
   const user = useAppSelector(selectUser);
+  const notifications = useAppSelector(selectNotifications);
+  const hasUnreadNotifications = notifications.some((item) => !item.isRead);
 
   const toggleDropdown = () => {
     setIsDropdownOpen((prev) => !prev);
@@ -114,7 +117,7 @@ export const Header = () => {
                   alt="Уведомления"
                   className={styles.headerActionIcon}
                 />
-                <span className={styles.badge} />
+                {hasUnreadNotifications && <span className={styles.badge} />}
               </button>
               <NotificationDropdown
                 isOpen={isNotifOpen}

@@ -59,4 +59,6 @@ export const deleteDemoProfile = (userId: number) => {
   localStorage.removeItem(DEMO_USER_KEY);
   localStorage.removeItem(`favorites_${userId}`);
   localStorage.removeItem("exchangeRequests");
+  localStorage.removeItem("skillswap-demo-notifications");
+  localStorage.removeItem("skillswap-demo-likes");
 };

@@ -4,7 +4,7 @@ import { readStoredJson } from "@/shared/lib/storage";
 
 export type ExchangeRequest = {
   cardId: number;
-  status: "pending";
+  status: "pending" | "accepted";
   createdAt: string;
 };
 
@@ -46,6 +46,15 @@ const exchangeRequestsSlice = createSlice({
         );
         },
 
+    acceptRequest: (state, action: PayloadAction<number>) => {
+      const request = state.requests.find((item) => item.cardId === action.payload);
+
+      if (request) {
+        request.status = "accepted";
+        localStorage.setItem("exchangeRequests", JSON.stringify(state.requests));
+      }
+    },
+
     clearRequests: (state) => {
       state.requests = [];
       localStorage.removeItem("exchangeRequests");
@@ -54,7 +63,7 @@ const exchangeRequestsSlice = createSlice({
 });
 
 // actions
-export const { addRequest, removeRequest, clearRequests } =
+export const { addRequest, removeRequest, acceptRequest, clearRequests } =
   exchangeRequestsSlice.actions;
 
 // selector

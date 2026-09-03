@@ -1,5 +1,6 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import { fetchSkillCards } from "../actions/skills";
+import { readStoredJson, writeStoredJson } from "@/shared/lib/storage";
 
 type Like = {
   count: number
@@ -10,9 +11,12 @@ interface LikesState{
   likes: Record<number, Like>
 }
 
+const STORAGE_KEY = "skillswap-demo-likes";
+const getDemoLikeCount = (id: number) => 12 + ((id * 37) % 78);
+
 const initialState: LikesState = {
-  likes: {}
-}
+  likes: readStoredJson<LikesState["likes"]>(STORAGE_KEY, {}),
+};
 
 const likesSlice = createSlice({
   name: 'likes',
@@ -22,7 +26,7 @@ const likesSlice = createSlice({
       action.payload.forEach(id => {
         if (!state.likes[id]) {
           state.likes[id] = {
-            count: Math.floor(Math.random() * 101),
+            count: getDemoLikeCount(id),
             isLiked: false
           }
         }
@@ -39,6 +43,7 @@ const likesSlice = createSlice({
         item.count += 1;
       }
       if (item.count < 0) item.count = 0;
+      writeStoredJson(STORAGE_KEY, state.likes);
     }
   },
   extraReducers: (builder) => {
@@ -48,7 +53,7 @@ const likesSlice = createSlice({
     ids.forEach(id => {
       if (!state.likes[id]) {
         state.likes[id] = {
-          count: Math.floor(Math.random() * 101),
+          count: getDemoLikeCount(id),
           isLiked: false,
         };
       }

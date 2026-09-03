@@ -18,7 +18,7 @@ import type { TSkill } from '@/entities/skill/types';
 import { TeachSkillModal } from '../TeachSkillModal/components/SkillModal/TeachSkillModal';
 import { ExchangeCreatedModal } from '../ExchangeCreatedModal/ExchangeCreatedModal';
 import { createDemoSession } from '@/api/demo-auth';
-import { fileToDataUrl, saveDemoTeachSkill } from '@/api/demo-data';
+import { fileToDataUrl, saveDemoTeachSkill, validateDemoImage } from '@/api/demo-data';
 import { getUserSkills } from '@/api/skillswap-api';
 import { setAuthData } from '@/services/slices/authSlice';
 import type { TUserAuth } from '@/entities/user/types';
@@ -145,6 +145,12 @@ export const RegisterStep3 = () => {
     if (!newFilesList) return;
     
     const newFiles = Array.from(newFilesList);
+    const invalidFile = newFiles.find((file) => validateDemoImage(file));
+
+    if (invalidFile) {
+      alert(validateDemoImage(invalidFile));
+      return;
+    }
     const currentFiles = getValues('images') || [];
     const totalFiles = [...currentFiles, ...newFiles];
     

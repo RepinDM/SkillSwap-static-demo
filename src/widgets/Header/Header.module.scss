@@ -202,3 +202,48 @@
   font-size: var(--font-body-size);
   color: var(--text);
 }
+
+@media (max-width: 960px) {
+  .header {
+    flex-wrap: wrap;
+    gap: 16px;
+    padding: 24px;
+  }
+
+  .navigation {
+    order: 3;
+    width: 100%;
+    padding-left: 0;
+  }
+
+  .searchWrapper {
+    order: 4;
+    flex-basis: 100%;
+  }
+}
+
+@media (max-width: 640px) {
+  .header {
+    gap: 12px;
+    padding: 16px;
+  }
+
+  .navigation {
+    justify-content: space-between;
+    gap: 16px;
+    font-size: 14px;
+  }
+
+  .userActions {
+    gap: 12px;
+  }
+
+  .userName {
+    display: none;
+  }
+
+  .searchWrapper .searchInput {
+    min-height: 52px;
+    border-radius: 16px;
+  }
+}

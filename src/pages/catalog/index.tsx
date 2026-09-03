@@ -261,9 +261,9 @@ const CatalogPage = () => {
   );
 
   return (
-    <div style={{ display: "flex", gap: "24px", alignItems: "flex-start" }}>
+    <div className={styles.catalogLayout}>
       <FiltersSidebar values={filters} onChange={handleFiltersChange} />
-      <div style={{ flex: 1 }}>
+      <div className={styles.catalogContent}>
         {/* Активные фильтры */}
         {activeFilterTags.length > 0 && (
           <div className={styles.activeFilterTags}>

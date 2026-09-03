@@ -6,7 +6,7 @@ import likesSlice from './slices/likesSlice'
 import favoritesSlice from './slices/favoritesSlice'
 import { listenerMiddleware } from './middleware/saveFavorites.middleware';
 import { loadFavoriteState } from './preloadedState';
-import { loadLikesState } from './preloadedState';
+import notificationsSlice from './slices/notificationsSlice';
 import exchangeRequestsSlice from './slices/exchangeRequestsSlice';
 
 
@@ -18,16 +18,18 @@ export const store = configureStore({
     likes: likesSlice,
     exchangeRequests: exchangeRequestsSlice,
     favorites: favoritesSlice,
+    notifications: notificationsSlice,
   },
   preloadedState: {
     favorites: {byId: loadFavoriteState()},
-    likes: loadLikesState(),
-
   },
 
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
-      serializableCheck: false,
+      serializableCheck: {
+        ignoredPaths: ["register.step2.avatar", "register.step3.images"],
+        ignoredActionPaths: ["payload.avatar", "payload.images"],
+      },
     })
     .prepend(listenerMiddleware.middleware)
 });

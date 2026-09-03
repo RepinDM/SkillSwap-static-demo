@@ -6,6 +6,7 @@ import { useAppDispatch } from "@/services/hooks";
 import type { TSkillCard } from "@/entities/skill/types";
 import type { FC } from "react";
 import { addRequest } from "@/services/slices/exchangeRequestsSlice";
+import { addNotification } from "@/services/slices/notificationsSlice";
 
 interface ExchangeSuggestedModalProps {
   isOpen: boolean;
@@ -29,6 +30,11 @@ export const ExchangeSuggestedModal: FC<ExchangeSuggestedModalProps> = ({
         createdAt: new Date().toISOString(),
       })
     );
+    dispatch(addNotification({
+      title: "Заявка на обмен отправлена",
+      description: `Вы предложили обмен пользователю ${card.user.name}.`,
+      route: "/profile/requests",
+    }));
 
     onClose();
   };

@@ -14,16 +14,3 @@ export const loadFavoriteState = () => {
   }
   return favorites
 };
-
-export const loadLikesState = () => {
-  const favorites = loadFavoriteState();
-  const likes: Record<number, { count: number; isLiked: boolean }> = {};
-
-  Object.keys(favorites).forEach((id) => {
-    likes[Number(id)] = {
-      isLiked: true,
-      count: Math.floor(Math.random() * 101),
-    };
-  });
-  return { likes };
-};

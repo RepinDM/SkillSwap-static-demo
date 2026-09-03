@@ -5,6 +5,7 @@ import { readStoredJson, writeStoredJson } from "@/shared/lib/storage";
 import type { TUserSkillsResponse } from "./skillswap-api";
 
 const DEMO_DATA_KEY = "skillswap-demo-data-v1";
+export const MAX_DEMO_IMAGE_SIZE = 2 * 1024 * 1024;
 
 type DemoData = {
   users: TUserInfo[];
@@ -30,7 +31,26 @@ const replaceById = <T extends { id: number }>(items: T[], item: T) => [
 const nextSkillId = (data: TUserSkillsResponse, demoData: DemoData) =>
   Math.max(0, ...data.userSkillList.map(({ id }) => id), ...demoData.skills.map(({ id }) => id)) + 1;
 
+export const validateDemoImage = (file: File) => {
+  if (!file.type.startsWith("image/")) {
+    return "Можно загрузить только изображение";
+  }
+
+  if (file.size > MAX_DEMO_IMAGE_SIZE) {
+    return "Размер изображения не должен превышать 2 МБ";
+  }
+
+  return null;
+};
+
 export const fileToDataUrl = (file: File) => new Promise<string>((resolve, reject) => {
+  const validationError = validateDemoImage(file);
+
+  if (validationError) {
+    reject(new Error(validationError));
+    return;
+  }
+
   const reader = new FileReader();
   reader.onload = () => resolve(String(reader.result));
   reader.onerror = () => reject(new Error("Не удалось прочитать изображение"));
@@ -107,7 +127,7 @@ export const saveDemoTeachSkill = async (
     description: payload.description.trim(),
     skillType: "teach",
     images,
-    createdDate: existingSkill?.createdDate ?? new Date(),
+    createdDate: existingSkill?.createdDate ?? new Date().toISOString(),
   };
 
   demoData.skills = replaceById(demoData.skills, skill);
@@ -133,7 +153,7 @@ export const saveDemoLearnSkills = (
     title: "",
     description: "",
     skillType: "learn",
-    createdDate: new Date(),
+    createdDate: new Date().toISOString(),
   }));
 
   demoData.skills = demoData.skills.filter(

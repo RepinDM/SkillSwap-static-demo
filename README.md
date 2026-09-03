@@ -23,7 +23,8 @@ and discover relevant people through filters and search.
 - Three-step registration with client-side validation.
 - Demo sign-in and protected personal-area routes.
 - Personal profile editing and local profile deletion.
-- Favourites, likes, and exchange requests stored in the browser.
+- Favourites and likes stored together in the browser for a consistent demo flow.
+- Local exchange-request statuses and notifications that can be marked as read.
 - Light and dark themes with responsive layouts.
 - A curated local dataset for skill cards, categories, and profiles.
 - SPA routing for Vercel and an automated GitHub Pages deployment workflow.
@@ -41,8 +42,10 @@ sign-in, profile changes, and skill editing are stored in the current browser's
 remain available after a page refresh. No personal data is sent to an external
 server.
 
+For predictable local storage use, uploaded images are limited to 2 MB each.
+
 Use **Delete Profile** in the personal area to clear the current demo account,
-its skills, favourites, and exchange requests without modifying the shared
+its skills, likes, favourites, notifications, and exchange requests without modifying the shared
 dataset.
 
 ## Contributors
@@ -143,7 +146,7 @@ npm run test:run
 ```
 
 At the time this portfolio edition was prepared, linting, the production build,
-and all 42 tests passed successfully.
+and all 45 tests passed successfully.
 
 ## Deployment
 

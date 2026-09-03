@@ -18,3 +18,28 @@
   font-weight: 600;
   font-size: 20px;
 }
+
+.catalogLayout {
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+}
+
+.catalogContent {
+  min-width: 0;
+  flex: 1;
+}
+
+@media (max-width: 960px) {
+  .catalogLayout {
+    flex-direction: column;
+  }
+
+  .catalogLayout > aside {
+    width: 100%;
+  }
+
+  .catalogContent {
+    width: 100%;
+  }
+}

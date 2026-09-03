@@ -1,6 +1,12 @@
 import type { FC, RefObject } from "react";
 import { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "@/services/hooks";
+import {
+  clearRead,
+  markAllRead,
+  selectNotifications,
+} from "@/services/slices/notificationsSlice";
 import styles from "./NotificationDropdown.module.scss";
 
 const notificationIcon = `${import.meta.env.BASE_URL}idea.svg`;
@@ -11,38 +17,12 @@ interface Props {
   triggerRef: RefObject<HTMLButtonElement | null>;
 }
 
-const mockNew = [
-  {
-    id: 1,
-    text: "Николай принял ваш обмен",
-    subtext: "Перейдите в профиль, чтобы обсудить детали",
-    date: "сегодня",
-  },
-  {
-    id: 2,
-    text: "Татьяна предлагает вам обмен",
-    subtext: "Примите обмен, чтобы обсудить детали",
-    date: "сегодня",
-  },
-];
-
-const mockSeen = [
-  {
-    id: 3,
-    text: "Олег предлагает вам обмен",
-    subtext: "Примите обмен, чтобы обсудить детали",
-    date: "вчера",
-  },
-  {
-    id: 4,
-    text: "Игорь принял ваш обмен",
-    subtext: "Перейдите в профиль, чтобы обсудить детали",
-    date: "23 мая",
-  },
-];
-
 export const NotificationDropdown: FC<Props> = ({ isOpen, onClose, triggerRef }) => {
   const ref = useRef<HTMLDivElement>(null);
+  const dispatch = useAppDispatch();
+  const notifications = useAppSelector(selectNotifications);
+  const unread = notifications.filter((item) => !item.isRead);
+  const read = notifications.filter((item) => item.isRead);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -80,53 +60,51 @@ export const NotificationDropdown: FC<Props> = ({ isOpen, onClose, triggerRef })
       <div className={styles.section}>
         <div className={styles.header}>
           <span className={styles.title}>Новые уведомления</span>
-          <button type="button" className={styles.action}>
+          <button type="button" className={styles.action} onClick={() => dispatch(markAllRead())} disabled={!unread.length}>
             Прочитать все
           </button>
         </div>
 
         <div className={styles.list}>
-          {mockNew.map((item) => (
+          {unread.length ? unread.map((item) => (
             <div key={item.id} className={styles.item}>
               <div className={styles.itemTop}>
                 <img src={notificationIcon} alt="Уведомление" className={styles.icon} />
 
                 <div className={styles.textBlock}>
-                  <p className={styles.text}>{item.text}</p>
-                  <span className={styles.subtext}>{item.subtext}</span>
+                  <p className={styles.text}>{item.title}</p>
+                  <span className={styles.subtext}>{item.description}</span>
                 </div>
 
-                <span className={styles.date}>{item.date}</span>
+                <span className={styles.date}>{new Date(item.createdAt).toLocaleDateString("ru-RU")}</span>
               </div>
 
-              <button type="button" className={styles.button}>
-                Перейти
-              </button>
+              <Link to={item.route} className={styles.button} onClick={onClose}>Перейти</Link>
             </div>
-          ))}
+          )) : <span className={styles.subtext}>Новых уведомлений нет</span>}
         </div>
       </div>
 
       <div className={styles.section}>
         <div className={styles.header}>
           <span className={styles.title}>Просмотренные</span>
-          <button type="button" className={styles.action}>
+          <button type="button" className={styles.action} onClick={() => dispatch(clearRead())} disabled={!read.length}>
             Очистить
           </button>
         </div>
 
         <div className={styles.list}>
-          {mockSeen.map((item) => (
+          {read.map((item) => (
             <div key={item.id} className={styles.item}>
               <div className={styles.itemTop}>
                 <img src={notificationIcon} alt="Уведомление" className={styles.icon} />
 
                 <div className={styles.textBlock}>
-                  <p className={styles.text}>{item.text}</p>
-                  <span className={styles.subtext}>{item.subtext}</span>
+                  <p className={styles.text}>{item.title}</p>
+                  <span className={styles.subtext}>{item.description}</span>
                 </div>
 
-                <span className={styles.date}>{item.date}</span>
+                <span className={styles.date}>{new Date(item.createdAt).toLocaleDateString("ru-RU")}</span>
               </div>
             </div>
           ))}
