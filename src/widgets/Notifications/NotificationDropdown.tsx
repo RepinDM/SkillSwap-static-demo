@@ -3,6 +3,8 @@ import { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import styles from "./NotificationDropdown.module.scss";
 
+const notificationIcon = `${import.meta.env.BASE_URL}idea.svg`;
+
 interface Props {
   isOpen: boolean;
   onClose: () => void;
@@ -87,7 +89,7 @@ export const NotificationDropdown: FC<Props> = ({ isOpen, onClose, triggerRef })
           {mockNew.map((item) => (
             <div key={item.id} className={styles.item}>
               <div className={styles.itemTop}>
-                <img src="/idea.svg" alt="Уведомление" className={styles.icon} />
+                <img src={notificationIcon} alt="Уведомление" className={styles.icon} />
 
                 <div className={styles.textBlock}>
                   <p className={styles.text}>{item.text}</p>
@@ -117,7 +119,7 @@ export const NotificationDropdown: FC<Props> = ({ isOpen, onClose, triggerRef })
           {mockSeen.map((item) => (
             <div key={item.id} className={styles.item}>
               <div className={styles.itemTop}>
-                <img src="/idea.svg" alt="Уведомление" className={styles.icon} />
+                <img src={notificationIcon} alt="Уведомление" className={styles.icon} />
 
                 <div className={styles.textBlock}>
                   <p className={styles.text}>{item.text}</p>
