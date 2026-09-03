@@ -1,15 +1,15 @@
 {
   "rewrites": [
     {
-      "source": "/api/(.*)",
-      "destination": "http://skillswap.ovnet.ru/api/$1"
+      "source": "/api/:path*",
+      "destination": "http://skillswap.ovnet.ru/api/:path*"
     },
     {
-      "source": "/media/(.*)",
-      "destination": "http://skillswap.ovnet.ru/media/$1"
+      "source": "/media/:path*",
+      "destination": "http://skillswap.ovnet.ru/media/:path*"
     },
     {
-      "source": "/(.*)",
+      "source": "/:path*",
       "destination": "/index.html"
     }
   ]
