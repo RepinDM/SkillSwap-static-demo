@@ -2,8 +2,6 @@ import type { TCategoryItem, TSubcategory } from "@/entities/category/types";
 import type { TCity } from "@/entities/city/types";
 import type { TSkill } from "@/entities/skill/types";
 import type { TUserInfo } from "@/entities/user/types";
-import { API_URL } from "./config";
-
 const checkResponse = <T>(res: Response): Promise<T> => {
   return res.ok
     ? res.json().then((data) => {
@@ -21,7 +19,7 @@ export type TUserSkillsResponse = {
 };
 
 export const getUserSkills = () =>
-  fetch(`${API_URL}get_user_skill_list/`)
+  fetch(`${import.meta.env.BASE_URL}db/skillswap-data.json`)
     .then((res) => checkResponse<TUserSkillsResponse>(res))
     .then((data) => {
 

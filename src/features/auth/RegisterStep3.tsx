@@ -17,7 +17,7 @@ import { clearRegister, selectStep1, selectStep2, selectStep3, setStep3 } from '
 import type { TSkill } from '@/entities/skill/types';
 import { TeachSkillModal } from '../TeachSkillModal/components/SkillModal/TeachSkillModal';
 import { ExchangeCreatedModal } from '../ExchangeCreatedModal/ExchangeCreatedModal';
-import { API_URL } from '@/api/config';
+import { createDemoSession } from '@/api/demo-auth';
 import { setAuthData } from '@/services/slices/authSlice';
 import type { TUserAuth } from '@/entities/user/types';
 
@@ -230,56 +230,23 @@ export const RegisterStep3 = () => {
   const handleConfirmSubmit = async () => {
   if (!step3) return;
 
-  const formData = new FormData();
-
-  // STEP 1
-  formData.append("email", step1?.email || "");
-  formData.append("password", step1?.password || "");
-
-  // STEP 2
-  formData.append("name", step2?.name || "");
-  formData.append("birthDate", step2?.birthDate || "");
-  formData.append("gender", step2?.gender || "");
-  formData.append("cityId", step2?.cityId || "");
-  formData.append("about", step2?.about || "");
-
-  step2?.learnSkills?.forEach(skill => {
-    formData.append("learningSubcategoryIds", skill.subcategoryId);
-  });
-
-  if (step2?.avatar) {
-    formData.append("avatar", step2.avatar);
-  }
-
-  // STEP 3
-  formData.append("skillName", step3.skillName);
-  formData.append("categoryId", step3.categoryId);
-  formData.append("skillSubcategoryId", step3.subcategoryId);
-  formData.append("description", step3.description);
-
-  step3.images.forEach(file => {
-    formData.append("images", file);
-  });
-
   try {
-    const res = await fetch(`${API_URL}register_user/`, {
-      method: "POST",
-      body: formData,
+    const gender = step2?.gender === "female" ? "female" : "male";
+    const data: RegisterResponse = createDemoSession({
+      id: Date.now(),
+      email: step1?.email || "demo@skillswap.local",
+      name: step2?.name || "Пользователь",
+      birthDate: step2?.birthDate,
+      gender,
+      about: step2?.about,
+      avatar: step2?.avatar ? URL.createObjectURL(step2.avatar) : undefined,
+      city: { id: Number(step2?.cityId) || 0, name: "Не указан" },
     });
-
-    if (!res.ok) {
-      const errorText = await res.text();
-      console.error("SERVER ERROR:", errorText);
-      return;
-    }
-
-    const data: RegisterResponse = await res.json();
     setRegisterResponse(data);
     setShowSkillModal(false);
     setShowSuccessModal(true);
-
-  } catch (e) {
-    console.error("ERROR:", e);
+  } catch {
+    return;
   }
 };
 

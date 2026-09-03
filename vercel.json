@@ -1,13 +1,6 @@
 {
+  "$schema": "https://openapi.vercel.sh/vercel.json",
   "rewrites": [
-    {
-      "source": "/api/:path*",
-      "destination": "/api/skillswap-proxy"
-    },
-    {
-      "source": "/media/:path*",
-      "destination": "http://skillswap.ovnet.ru/media/:path*"
-    },
     {
       "source": "/:path*",
       "destination": "/index.html"

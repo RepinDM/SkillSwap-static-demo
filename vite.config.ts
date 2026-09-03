@@ -11,6 +11,7 @@ const dirname = typeof __dirname !== 'undefined' ? __dirname : path.dirname(file
 
 // More info at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon
 export default defineConfig({
+  base: process.env.GITHUB_ACTIONS ? `/${process.env.GITHUB_REPOSITORY?.split("/")[1]}/` : "/",
   plugins: [react()],
   resolve: {
     alias: {
@@ -43,18 +44,6 @@ export default defineConfig({
 
           return "vendor";
         },
-      },
-    },
-  },
-  server: {
-    proxy: {
-      "/api": {
-        target: "http://skillswap.ovnet.ru",
-        changeOrigin: true,
-      },
-      "/media": {
-        target: "http://skillswap.ovnet.ru",
-        changeOrigin: true,
       },
     },
   },
