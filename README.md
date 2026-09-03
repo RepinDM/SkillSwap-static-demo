@@ -67,6 +67,30 @@ dataset.
 - Cleaned test records from the demo dataset to keep the catalogue presentable.
 - Added a resettable local profile experience for safe portfolio demonstrations.
 
+## Portfolio Release Improvements
+
+This release focuses on making the project reliable, presentable, and easy to
+review without access to the original backend.
+
+- Audited the build, linting configuration, and automated tests; corrected
+  TypeScript issues that prevented a production build.
+- Migrated the public demo to a curated JSON dataset and bundled local media,
+  so cards and profile images load consistently on GitHub Pages.
+- Added browser persistence for the demo account, profile changes, created
+  skills, likes, favourites, requests, exchanges, and notifications.
+- Kept the familiar interaction model: liking a card also adds it to
+  favourites, while removing the like removes it from favourites.
+- Made exchange requests actionable in demo mode: a request can be cancelled
+  or confirmed, then appears in the exchanges section with a notification.
+- Reworked the notifications interface to use real application state, with
+  read and clear actions instead of static placeholder content.
+- Added a functional skill-creation page and validation for uploaded images,
+  including a 2 MB size limit for reliable browser storage.
+- Improved small-screen layouts for the header, search, filters, catalogue,
+  and personal-area screens to avoid horizontal scrolling.
+- Removed obsolete footer links, added direct-route fallbacks, and configured
+  automated GitHub Pages deployment for a smoother portfolio review.
+
 ## Future Improvements
 
 - Restore a production API with HTTPS, authentication, and persistent storage.
