@@ -16,22 +16,28 @@ const mockNavigate = vi.fn();
 
 vi.mock("react-router-dom", async () => {
   const actual = await vi.importActual<typeof ReactRouterDom>("react-router-dom");
+
   return {
     ...actual,
     useNavigate: () => mockNavigate,
   };
 });
 
-const renderWithProviders = (state?: Partial<{ isLoading: boolean; error: string | null; user: null }>) => {
+type AuthState = ReturnType<typeof authReducer>;
+
+const renderWithProviders = (state?: Partial<AuthState>) => {
   const store = configureStore({
     reducer: {
       auth: authReducer,
     },
     preloadedState: {
       auth: {
+        user: null,
+        accessToken: null,
+        refreshToken: null,
+        isAuthenticated: false,
         isLoading: false,
         error: null,
-        user: null,
         ...state,
       },
     },
@@ -42,7 +48,7 @@ const renderWithProviders = (state?: Partial<{ isLoading: boolean; error: string
       <MemoryRouter>
         <LoginForm />
       </MemoryRouter>
-    </Provider>
+    </Provider>,
   );
 };
 
@@ -51,31 +57,29 @@ describe("LoginForm", () => {
     renderWithProviders({ isLoading: true });
 
     const button = screen.getByRole("button", { name: /Входим/i });
-
     expect(button).toBeDisabled();
   });
 
   it("redirects after successful login", async () => {
-    const dispatch = vi.fn().mockResolvedValue({
-      type: "auth/loginUser/fulfilled",
-    });
+    const dispatch = vi
+      .fn()
+      .mockResolvedValue({ type: "auth/loginUser/fulfilled" });
 
     vi.spyOn(hooks, "useAppDispatch").mockReturnValue(dispatch as AppDispatch);
 
-    loginUser.fulfilled = {
-      match: () => true,
-    };
+    loginUser.fulfilled.match = (
+      action: unknown,
+    ): action is ReturnType<typeof loginUser.fulfilled> =>
+      (action as { type?: string }).type === "auth/loginUser/fulfilled";
 
     renderWithProviders();
 
     fireEvent.change(screen.getByLabelText(/Email/i), {
       target: { value: "test@mail.com" },
     });
-
     fireEvent.change(screen.getByLabelText(/Пароль/i), {
       target: { value: "123456" },
     });
-
     fireEvent.click(screen.getByText("Войти"));
 
     await Promise.resolve();
