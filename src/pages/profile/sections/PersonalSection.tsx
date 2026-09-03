@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { ChangeEvent } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/shared/ui/Button/Button";
 import { Avatar } from "@/shared/ui/Avatar/Avatar";
 import { Input } from "@/shared/ui/input/input";
@@ -14,6 +15,8 @@ import styles from "./PersonalSection.module.scss";
 import { useAppSelector, useAppDispatch } from "@/services/hooks";
 import { selectUser } from "@/services/slices/authSlice";
 import { editUser } from "@/services/actions/editUser";
+import { deleteDemoProfile } from "@/api/demo-auth";
+import { logout } from "@/services/slices/authSlice";
 
 const EMAIL_REGEXP = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const ABOUT_MAX_LENGTH = 300;
@@ -29,6 +32,7 @@ const formatBirthDate = (birthDate?: string) => {
 
 const PersonalSection = () => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const currentUser = useAppSelector(selectUser);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
@@ -160,6 +164,20 @@ const PersonalSection = () => {
     } finally {
       setIsSaving(false);
     }
+  };
+
+  const handleDeleteProfile = () => {
+    const confirmed = window.confirm(
+      "Удалить демо-профиль и все связанные локальные данные? Это действие нельзя отменить.",
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    deleteDemoProfile(currentUser?.id ?? 0);
+    dispatch(logout());
+    navigate("/", { replace: true });
   };
 
   return (
@@ -316,6 +334,14 @@ const PersonalSection = () => {
             )}
           </div>
         </div>
+
+        <button
+          type="button"
+          className={styles.deleteProfileButton}
+          onClick={handleDeleteProfile}
+        >
+          Удалить профиль
+        </button>
       </div>
 
       <div className={styles.visualColumn}>

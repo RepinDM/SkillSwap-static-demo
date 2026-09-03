@@ -51,3 +51,9 @@ export const loginDemoUser = (email: string, password: string) => {
 };
 
 export const updateDemoUser = (user: TUserAuth) => saveUser(user);
+
+export const deleteDemoProfile = (userId: number) => {
+  localStorage.removeItem(DEMO_USER_KEY);
+  localStorage.removeItem(`favorites_${userId}`);
+  localStorage.removeItem("exchangeRequests");
+};

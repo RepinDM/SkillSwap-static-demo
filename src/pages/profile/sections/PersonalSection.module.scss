@@ -227,6 +227,26 @@
   text-align: center;
 }
 
+.deleteProfileButton {
+  display: block;
+  width: fit-content;
+  margin: 28px auto 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--error);
+  font-family: var(--font-body-family);
+  font-size: var(--font-caption-size);
+  line-height: var(--font-caption-line-height);
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.deleteProfileButton:hover {
+  opacity: 0.8;
+}
+
 @media (max-width: 960px) {
   .section {
     grid-template-columns: 1fr;
