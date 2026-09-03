@@ -1,0 +1,16 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "http://skillswap.ovnet.ru/api/$1"
+    },
+    {
+      "source": "/media/(.*)",
+      "destination": "http://skillswap.ovnet.ru/media/$1"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}

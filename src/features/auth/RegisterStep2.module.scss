@@ -131,6 +131,18 @@
   line-height: var(--font-caption-line-height);
 }
 
+.helperMessage,
+.emptyMessage {
+  margin: 0;
+  color: var(--caption);
+  font-size: var(--font-caption-size);
+  line-height: var(--font-caption-line-height);
+}
+
+.emptyMessage {
+  padding: 10px 14px;
+}
+
 .learnSkillsList {
   display: flex;
   flex-direction: column;

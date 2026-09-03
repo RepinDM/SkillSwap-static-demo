@@ -1,334 +1,114 @@
 # SkillSwap
 
-SkillSwap - веб-приложение для обмена навыками между разработчиками. Пользователи могут делиться опытом, искать нужные навыки, добавлять карточки в избранное и создавать заявки на обучение.
+SkillSwap is a responsive web application for exchanging skills. Users can browse offers, filter specialists, create skill requests, save favourites, and manage a personal profile.
 
-## Структура проекта
+The project demonstrates a feature-oriented React architecture, typed state management, form validation, and an API integration adapted for a production static deployment.
+
+## Demo
+
+The Vercel deployment URL will be added here after publication.
+
+## Features
+
+- Browse skill cards and open a detailed skill page.
+- Filter offers by learning mode, city, category, and subcategory.
+- Search skills by title, description, or category.
+- Register in three steps with client-side validation.
+- Choose a city from the complete user directory with search and clear empty, loading, and error states.
+- Sign in, manage a profile, create skills, save favourites, and work with exchange requests.
+- Open protected routes only when authenticated.
+- Switch between the light and dark themes.
+
+## Tech Stack
+
+- React 19 and TypeScript
+- Vite
+- Redux Toolkit and React Redux
+- React Router
+- React Hook Form and Yup
+- SCSS modules
+- Vitest and Testing Library
+- Storybook
+
+## Architecture
+
+The source is organised by responsibility:
 
 ```text
 src/
-├── api/         # Работа с запросами и источниками данных
-├── app/         # Корневая инициализация приложения: router, store, App
-├── entities/    # Доменные сущности и их типы
-├── features/    # Пользовательские сценарии и бизнес-логика
-├── pages/       # Страницы приложения
-├── shared/      # Общие UI-компоненты, хуки, утилиты
-├── styles/      # Глобальные стили, токены, темы, шрифты
-├── widgets/     # Крупные композиционные блоки интерфейса
-└── main.tsx     # Точка входа
-
-public/
-├── logo.ico
-├── logo.png
-└── logo.svg
+├── api/         # API clients and data transformations
+├── app/         # Application bootstrap and routing
+├── entities/    # Domain types
+├── features/    # User-facing business flows
+├── pages/       # Route-level screens
+├── services/    # Redux store, slices, actions, and middleware
+├── shared/      # Reusable UI, utilities, hooks, and layouts
+├── styles/      # Global styles, tokens, themes, and fonts
+└── widgets/     # Larger composed interface blocks
 ```
 
-## Слои
+## Routes
 
-### `app`
+| Route | Description |
+| --- | --- |
+| `/` | Skill catalogue |
+| `/skill/:id` | Skill details |
+| `/about` | About the service |
+| `/login` | Sign in |
+| `/register` | Registration step 1 |
+| `/register/step-2` | Registration profile details |
+| `/register/step-3` | Registration confirmation |
+| `/profile` | Protected profile overview |
+| `/profile/requests` | Protected exchange requests |
+| `/profile/exchanges` | Protected exchanges |
+| `/profile/favorites` | Protected favourites |
+| `/profile/skills` | Protected skills management |
+| `/create` | Protected skill creation |
 
-Содержит корневую инфраструктуру приложения:
-- `App.tsx`
-- `routes/`
-- `store/`
+## Local Development
 
-### `pages`
-
-Страницы собирают экран из `widgets`, `features` и `entities`.
-
-Примеры:
-- `catalog`
-- `skill`
-- `profile`
-- `login`
-- `favorites`
-- `create`
-
-### `widgets`
-
-Крупные блоки интерфейса, которые объединяют несколько частей UI.
-
-Примеры:
-- `Header`
-- `Footer`
-- `Layout`
-- `FiltersBar`
-- `SkillsGrid`
-
-### `features`
-
-Пользовательские действия и прикладная логика.
-
-Примеры:
-- `auth`
-- `favorites`
-- `requests`
-- `skills`
-
-### `entities`
-
-Базовые сущности предметной области и их типы.
-
-Примеры:
-- `user`
-- `skill`
-- `request`
-- `category`
-- `city`
-
-### `shared`
-
-Переиспользуемые элементы, не завязанные на конкретную бизнес-логику.
-
-Подпапки:
-- `shared/ui`
-- `shared/hooks`
-- `shared/lib`
-
-### `api`
-
-Работа с запросами и внешними источниками данных.
-
-## Основные маршруты
-
-- `/` - каталог навыков
-- `/skill/:id` - страница навыка
-- `/profile` - профиль пользователя
-- `/login` - страница входа
-- `/favorites` - избранное
-- `/create` - создание навыка
-
-## Что уже сделано
-
-### Архитектура
-
-- структура `src` приведена к рабочему разделению по слоям
-- страницы вынесены в отдельные папки с `index.tsx`
-- роутер вынесен в [src/app/routes/router.tsx](/Users/dimarepin/WebstormProjects/SkillSwap/src/app/routes/router.tsx)
-
-### Приложение
-
-- подключён `RouterProvider`
-- добавлен базовый Redux store
-- `App` обёрнут в `Provider` из `react-redux`
-- добавлены typed hooks:
-  - `useAppDispatch`
-  - `useAppSelector`
-
-### Стили и UI foundation
-
-- стили переведены с `.css` на `.scss`
-- глобальная точка входа по стилям: [src/styles/global.scss](/Users/dimarepin/WebstormProjects/SkillSwap/src/styles/global.scss)
-- подключены локальные шрифты:
-  - `Roboto`
-  - `Jost`
-- типографика вынесена в токены
-- light theme вынесена в [src/styles/themes/light.scss](/Users/dimarepin/WebstormProjects/SkillSwap/src/styles/themes/light.scss)
-- подключены глобальные design tokens:
-  - шрифты
-  - reset
-  - типографика
-  - цвета темы
-
-## Работа со стилями
-
-Основная схема:
-
-- `styles/fonts` - локальные шрифты
-- `styles/variables.scss` - типографика и общие токены
-- `styles/themes/light.scss` - цветовая тема
-- `styles/reset.scss` - reset и normalize
-- `styles/global.scss` - единая точка подключения стилей
-
-Стили подключаются один раз в [src/main.tsx](/Users/dimarepin/WebstormProjects/SkillSwap/src/main.tsx):
-
-```ts
-import '@/styles/global.scss'
-```
-
-## Установка и запуск
-
-### Запуск проекта локально
-
-1. Клонируйте репозиторий и перейдите в папку проекта:
+Requirements: Node.js 20 or later and npm.
 
 ```bash
-git clone <repo>
-cd SkillSwap
-```
-
-2. Установите зависимости:
-
-```bash
-npm install
-```
-
-3. Обязательно создайте файл `.env` в корне проекта.
-  Скопируйте в него содержимое из env.example
-
-Если этого не сделать, проект может работать некорректно или падать, потому что часть запросов идет на внешний сервер и ожидает переменные окружения.
-
-
-4. Запустите проект:
-Тестировать проект реаомендуется с порта :5173 (http://127.0.0.1:5173)
-
-```bash
-npm run dev
-```
-
-5. Откройте адрес, который покажет Vite в терминале.
-
-### Коротко
-
-```bash
-git clone <repo>
-cd SkillSwap
-npm install
+npm ci
 cp .env.example .env
 npm run dev
 ```
 
-## Проверка проекта
+Open the local URL printed by Vite, normally `http://localhost:5173`.
+
+### Environment Variables
+
+```dotenv
+VITE_SKILLSWAP_API_URL=/api/
+```
+
+The application uses a relative API path. Vite proxies it to the legacy API during local development, and Vercel uses the same proxy rule in production. This keeps browsers on HTTPS and avoids mixed-content errors.
+
+## Quality Checks
 
 ```bash
 npm run lint
 npm run build
+npm run test:run
 ```
 
-## Правила для команды
+## Deploy To Vercel
 
-- `entities` - только сущности и типы
-- `features` - пользовательские действия и прикладная логика
-- `widgets` - крупные композиционные блоки
-- `pages` - сборка экранов
-- `shared` - переиспользуемые универсальные части
-- `app` - только корневая инфраструктура
+1. Import the repository in Vercel.
+2. Select the Vite framework preset.
+3. Keep the default build command: `npm run build`.
+4. Keep the default output directory: `dist`.
+5. Add `VITE_SKILLSWAP_API_URL=/api/` for Production and Preview.
+6. Deploy.
 
-## Правило по архитектуре
+`vercel.json` contains rewrites for the API, media assets, and client-side routing. As a result, direct links such as `/profile` resolve to the application instead of a 404 page.
 
-- `ui` - базовые переиспользуемые компоненты интерфейса
-- `widgets` - крупные составные блоки, собранные из `ui` и бизнес-разметки страницы
+## Development Notes
 
-Примеры:
-
-- `Button`, `Input`, `Avatar` -> `ui`
-- `Header`, `Footer`, `SidebarFilters` -> `widgets`
-
-Нельзя:
-
-- класть полноценный `Header` в `ui`
-- класть маленький `Button` в `widgets`
-
-## Рекомендации по работе с кодом
-
-- перед началом задачи проверь, в каком слое должна лежать реализация
-- не смешивай `page`-логику, `feature`-логику и базовый UI в одном файле
-- если компонент можно переиспользовать, сначала проверь `shared/ui`, `entities` и `widgets`, а не создавай дубликат
-- не складывай бизнес-логику в `pages`, страница должна в основном собирать экран
-- все новые стили добавляй в `scss`
-- используй существующие токены из `styles/variables.scss` и `styles/themes/light.scss`
-- не хардкодь цвета, шрифты, радиусы и размеры, если они уже вынесены в переменные
-- перед сдачей задачи обязательно проверь `npm run lint` и `npm run build`
-- если меняешь структуру файлов, импорты или общие типы, проверь соседние модули, которые могут от этого сломаться
-- если создаёшь новый компонент, выбирай понятное имя и сразу клади его в правильный слой
-
-## Как понять, куда класть код
-
-| Что это | Куда |
-| --- | --- |
-| Типы сущности | `entities` |
-| Бизнес-логика | `features` |
-| Крупный UI-блок | `widgets` |
-| Страница | `pages` |
-| Базовый UI-элемент | `shared/ui` |
-| Общий хук | `shared/hooks` |
-| Утилита или helper | `shared/lib` |
-| Router / store / App | `app` |
-| Запросы и API | `api` |
-
-## Процесс работы по задачам
-
-- задачи берём из Dachi
-- под каждую задачу создаём отдельную рабочую ветку
-- разработка ведётся не в `main`
-- после завершения задачи открываем Pull Request в ветку `developer`
-- перед созданием PR нужно:
-  - привести код в порядок
-  - убрать лишние временные изменения
-  - проверить `npm run lint`
-  - проверить `npm run build`
-- в описании PR нужно кратко указать:
-  - что сделано
-  - какие файлы или части проекта затронуты
-  - что нужно проверить ревьюеру
-
-## Git workflow команды
-
-### Назначение веток
-
-- `main` - финальная и стабильная ветка проекта
-- `developer` - основная ветка командной разработки
-- `feature/*` - ветки под отдельные задачи разработчиков
-
-### Как работает процесс
-
-1. Актуальная командная разработка ведётся от ветки `developer`
-2. Каждый разработчик создаёт свою ветку от `developer`
-3. После выполнения задачи разработчик открывает Pull Request в `developer`
-4. Когда в `developer` собирается проверенный набор задач, создаётся Pull Request из `developer` в `main`
-
-### Как работать разработчику
-
-Обновить `developer`:
-
-```bash
-git checkout developer
-git pull origin developer
-```
-
-Создать ветку под задачу:
-
-```bash
-git checkout -b feature/task-name
-```
-
-Перед сдачей задачи проверить проект:
-
-```bash
-npm run lint
-npm run build
-```
-
-Сохранить изменения и отправить ветку:
-
-```bash
-git add <изменённые-файлы>
-git commit -m "feat: описание задачи"
-git push -u origin feature/task-name
-```
-
-Если изменений много или нужно выбрать только часть правок, используй:
-
-```bash
-git add -p
-```
-
-После этого открыть Pull Request:
-
-- base: `developer`
-- compare: `feature/task-name`
-
-### Важно
-
-- прямые коммиты в `main` не делаем
-- задачи не вливаются напрямую в `main`
-- все feature-ветки создаются только от `developer`
-- все Pull Request по задачам направляются только в `developer`
-
-## Текущее состояние
-
-Проект проходит базовые проверки:
-
-```bash
-npm run lint
-npm run build
-```
+- Put domain types in `entities`.
+- Keep user actions and related UI in `features`.
+- Compose larger interface blocks in `widgets`.
+- Keep route-level composition in `pages`.
+- Reuse generic elements from `shared` rather than duplicating them.
+- Run linting, the production build, and tests before opening a pull request.

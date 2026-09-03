@@ -1,11 +1,13 @@
 import type { TSkillCard } from "@/entities/skill/types";
 import type { TCategoryItem } from "@/entities/category/types";
+import type { TCity } from "@/entities/city/types";
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import { fetchSkillCards, saveLearnSkills, saveTeachSkill } from "../actions/skills";
 
 interface SkillCardsState {
   allSkillCards: TSkillCard[];
   categoryItems: TCategoryItem[];
+  cities: TCity[];
   status: "idle" | "loading" | "success" | "error";
   error: string | null;
 
@@ -16,6 +18,7 @@ interface SkillCardsState {
 const initialState: SkillCardsState = {
   allSkillCards: [],
   categoryItems: [],
+  cities: [],
   status: "idle",
   error: null,
 
@@ -63,6 +66,7 @@ const skillCardsSlice = createSlice({
       state.status = "success";
       state.allSkillCards = action.payload.skillCardList;
       state.categoryItems = action.payload.categoryItems;
+      state.cities = action.payload.cities;
       state.searchFilteredSkillCards = filterSkillCards(
         action.payload.skillCardList,
         state.searchQuery
@@ -95,6 +99,7 @@ const skillCardsSlice = createSlice({
   selectors: {
     selectAllSkillCards: (state) => state.allSkillCards,
     selectCategoryItems: (state) => state.categoryItems,
+    selectCities: (state) => state.cities,
     selectStatus: (state) => state.status,
     selectError: (state) => state.error,
     selectSearchQuery: (state) => state.searchQuery,
@@ -108,6 +113,7 @@ export const {setSearchQuery, clearError} = skillCardsSlice.actions;
 export const { 
   selectAllSkillCards, 
   selectCategoryItems,
+  selectCities,
   selectStatus,
   selectError,
   selectSearchQuery,

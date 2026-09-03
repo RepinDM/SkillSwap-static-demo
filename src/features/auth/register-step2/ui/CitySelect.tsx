@@ -5,7 +5,11 @@ import chevronUpIcon from "@/shared/image/icons/chevron-up.svg";
 import crossIcon from "@/shared/image/icons/cross.svg";
 import styles from "@/features/auth/RegisterStep2.module.scss";
 import { useAppSelector } from "@/services/hooks";
-import { selectAllSkillCards } from "@/services/slices/skillCardsSlice";
+import {
+  selectCities,
+  selectError,
+  selectStatus,
+} from "@/services/slices/skillCardsSlice";
 
 type CitySelectProps = {
   error?: string;
@@ -18,7 +22,11 @@ export const CitySelect = ({ error, label, onChange, value }: CitySelectProps) =
   const wrapperRef = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
-  const allSkillCards = useAppSelector(selectAllSkillCards);
+  const cities = useAppSelector(selectCities);
+  const status = useAppSelector(selectStatus);
+  const loadError = useAppSelector(selectError);
+  const isLoading = status === "loading";
+  const isUnavailable = status === "error" || (status === "success" && cities.length === 0);
 
   useEffect(() => {
     const handleOutsideClick = (event: MouseEvent) => {
@@ -31,27 +39,12 @@ export const CitySelect = ({ error, label, onChange, value }: CitySelectProps) =
     return () => document.removeEventListener("mousedown", handleOutsideClick);
   }, []);
 
-  const cities = useMemo(() => {
-    const map = new Map();
-
-    allSkillCards.forEach((c) => {
-      const city = c.user.city;
-      if (city?.id && city?.name) {
-        map.set(city.id, {
-          id: city.id,
-          name: city.name,
-        });
-      }
-    });
-    return Array.from(map.values());
-  }, [allSkillCards]);
-
   const filteredCities = useMemo(() => {
     const normalized = query.trim().toLowerCase();
     if (!normalized) return cities;
 
     return cities.filter((city) =>
-      city.name.toLowerCase().includes(normalized)
+      city.name?.toLowerCase().includes(normalized)
     );
   }, [query, cities]);
 
@@ -63,6 +56,8 @@ export const CitySelect = ({ error, label, onChange, value }: CitySelectProps) =
       <button
         type="button"
         className={`${styles.trigger} ${error ? styles.triggerError : ""}`}
+        disabled={isLoading || isUnavailable}
+        aria-expanded={open}
         onClick={() => {
           setOpen((prev) => !prev);
           setQuery("");
@@ -72,6 +67,12 @@ export const CitySelect = ({ error, label, onChange, value }: CitySelectProps) =
         <img src={open ? chevronUpIcon : chevronDownIcon} alt="" />
       </button>
       {error && <span className={styles.errorMessage}>{error}</span>}
+      {isLoading && <span className={styles.helperMessage}>Загружаем список городов...</span>}
+      {isUnavailable && (
+        <span className={styles.errorMessage}>
+          {loadError ?? "Список городов пока недоступен. Попробуйте обновить страницу."}
+        </span>
+      )}
 
       {open && (
         <div className={`${styles.dropdownPanel} ${styles.cityPanel}`}>
@@ -109,6 +110,9 @@ export const CitySelect = ({ error, label, onChange, value }: CitySelectProps) =
                 {city.name}
               </button>
             ))}
+            {filteredCities.length === 0 && (
+              <p className={styles.emptyMessage}>Города по вашему запросу не найдены</p>
+            )}
           </div>
         </div>
       )}

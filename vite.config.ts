@@ -46,14 +46,18 @@ export default defineConfig({
       },
     },
   },
-  // server: {
-  //   proxy: {
-  //     "/api": {
-  //       target: "http://skillswap.ovnet.ru",
-  //       changeOrigin: true,
-  //     },
-  //   },
-  // },
+  server: {
+    proxy: {
+      "/api": {
+        target: "http://skillswap.ovnet.ru",
+        changeOrigin: true,
+      },
+      "/media": {
+        target: "http://skillswap.ovnet.ru",
+        changeOrigin: true,
+      },
+    },
+  },
   test: {
     projects: [
       {

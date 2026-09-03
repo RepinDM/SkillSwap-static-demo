@@ -1,4 +1,5 @@
 import type { TCategoryItem, TSubcategory } from "@/entities/category/types";
+import type { TCity } from "@/entities/city/types";
 import type { TSkill } from "@/entities/skill/types";
 import type { TUserInfo } from "@/entities/user/types";
 import { API_URL } from "./config";
@@ -20,7 +21,7 @@ export type TUserSkillsResponse = {
 };
 
 export const getUserSkills = () =>
-  fetch(`${API_URL}get_user_skill_list`)
+  fetch(`${API_URL}get_user_skill_list/`)
     .then((res) => checkResponse<TUserSkillsResponse>(res))
     .then((data) => {
 
@@ -32,6 +33,20 @@ export const getUserSkills = () =>
     .catch((error) => {
       throw error;
     });
+
+export const extractCities = (users: TUserInfo[]): TCity[] => {
+  const cities = new Map<number, TCity>();
+
+  users.forEach(({ city }) => {
+    if (city.id !== undefined && city.name) {
+      cities.set(city.id, { id: city.id, name: city.name });
+    }
+  });
+
+  return Array.from(cities.values()).sort((first, second) =>
+    first.name!.localeCompare(second.name!, "ru"),
+  );
+};
 
 export const getUserById = (
   users: TUserInfo[],

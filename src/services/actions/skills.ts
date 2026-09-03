@@ -1,5 +1,10 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { convertSkillsToCards, convertSubcategoriesToCategoryItems, getUserSkills } from "@/api/skillswap-api";
+import {
+  convertSkillsToCards,
+  convertSubcategoriesToCategoryItems,
+  extractCities,
+  getUserSkills,
+} from "@/api/skillswap-api";
 import { updateUserSkills } from "@/api/update-data-profile-api";
 
 export const fetchSkillCards = createAsyncThunk(
@@ -8,6 +13,7 @@ export const fetchSkillCards = createAsyncThunk(
     const data = await getUserSkills();
     return {
       categoryItems: convertSubcategoriesToCategoryItems(data.subcategoryList),
+      cities: extractCities(data.userList),
       skillCardList: convertSkillsToCards(data.userSkillList, data.userList),
       filteredSkillCardList: convertSkillsToCards(data.userSkillList, data.userList),
     };
