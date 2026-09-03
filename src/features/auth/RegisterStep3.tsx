@@ -18,6 +18,8 @@ import type { TSkill } from '@/entities/skill/types';
 import { TeachSkillModal } from '../TeachSkillModal/components/SkillModal/TeachSkillModal';
 import { ExchangeCreatedModal } from '../ExchangeCreatedModal/ExchangeCreatedModal';
 import { createDemoSession } from '@/api/demo-auth';
+import { fileToDataUrl, saveDemoTeachSkill } from '@/api/demo-data';
+import { getUserSkills } from '@/api/skillswap-api';
 import { setAuthData } from '@/services/slices/authSlice';
 import type { TUserAuth } from '@/entities/user/types';
 
@@ -239,8 +241,16 @@ export const RegisterStep3 = () => {
       birthDate: step2?.birthDate,
       gender,
       about: step2?.about,
-      avatar: step2?.avatar ? URL.createObjectURL(step2.avatar) : undefined,
+      avatar: step2?.avatar ? await fileToDataUrl(step2.avatar) : undefined,
       city: { id: Number(step2?.cityId) || 0, name: "Не указан" },
+    });
+    const catalogData = await getUserSkills();
+    await saveDemoTeachSkill(catalogData, data.user.id, {
+      title: step3.skillName,
+      description: step3.description,
+      subcategoryId: step3.subcategoryId,
+      images: step3.images,
+      existingImageUrls: [],
     });
     setRegisterResponse(data);
     setShowSkillModal(false);

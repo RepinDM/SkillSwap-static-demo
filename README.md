@@ -36,12 +36,14 @@ block insecure external requests.
 
 For this portfolio edition, catalogue data is loaded from
 [`public/db/skillswap-data.json`](public/db/skillswap-data.json). Registration,
-sign-in, favourites, exchange requests, and profile changes are stored in the
-current browser's `localStorage`. No personal data is sent to an external
+sign-in, profile changes, and skill editing are stored in the current browser's
+`localStorage`. New or edited skills are immediately shown in the catalogue and
+remain available after a page refresh. No personal data is sent to an external
 server.
 
 Use **Delete Profile** in the personal area to clear the current demo account,
-its favourites, and its exchange requests without modifying the shared dataset.
+its skills, favourites, and exchange requests without modifying the shared
+dataset.
 
 ## Contributors
 
@@ -141,7 +143,7 @@ npm run test:run
 ```
 
 At the time this portfolio edition was prepared, linting, the production build,
-and all 39 tests passed successfully.
+and all 42 tests passed successfully.
 
 ## Deployment
 

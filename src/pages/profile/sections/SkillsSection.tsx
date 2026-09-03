@@ -124,9 +124,6 @@ const SkillsSection = () => {
       <EditTeachSkillModal
         isOpen={showTeachModal}
         onClose={() => setShowTeachModal(false)}
-        currentLearnSkills={learnSkills.map((s) => ({
-          subcategoryId: String(s.subcategory.id),
-        }))}
         initialData={{
           title: teachSkill?.title || "",
           description: teachSkill?.description || "",
@@ -139,12 +136,6 @@ const SkillsSection = () => {
       <EditLearnSkillsModal
         isOpen={showLearnModal}
         onClose={() => setShowLearnModal(false)}
-        currentTeachSkill={{
-          title: teachSkill?.title || "",
-          description: teachSkill?.description || "",
-          subcategoryId: String(teachSkill?.subcategory?.id || ""),
-          imageUrls: images,
-        }}
         initialData={learnSkills.map((s) => ({
           categoryId: String(s.subcategory.category.id),
           subcategoryId: String(s.subcategory.id),

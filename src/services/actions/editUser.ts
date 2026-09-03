@@ -1,6 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import type { RootState } from "../store";
 import { updateDemoUser } from "@/api/demo-auth";
+import { fileToDataUrl } from "@/api/demo-data";
 
 interface EditUserPayload {
   name?: string;
@@ -38,7 +39,7 @@ export const editUser = createAsyncThunk(
           ? { ...currentUser.city, id: Number(payload.city) }
           : currentUser.city,
         avatar: payload.avatar
-          ? URL.createObjectURL(payload.avatar)
+          ? await fileToDataUrl(payload.avatar)
           : currentUser.avatar,
       });
 

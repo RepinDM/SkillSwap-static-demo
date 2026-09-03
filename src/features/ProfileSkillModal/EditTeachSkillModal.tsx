@@ -22,7 +22,6 @@ type FormData = {
 type Props = {
   isOpen: boolean;
   onClose: () => void;
-  currentLearnSkills: { subcategoryId: string }[];
   initialData?: {
     title: string;
     description: string;
@@ -36,7 +35,6 @@ export const EditTeachSkillModal = ({
   isOpen,
   onClose,
   initialData,
-  currentLearnSkills,
 }: Props) => {
   const categoryItems = useAppSelector(selectCategoryItems);
 
@@ -156,7 +154,6 @@ export const EditTeachSkillModal = ({
     dispatch(saveTeachSkill({
       ...data,
       existingImageUrls,
-      currentLearnSkills,
     }));
     onClose();
   };

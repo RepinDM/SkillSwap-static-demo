@@ -2,6 +2,7 @@ import type { TCategoryItem, TSubcategory } from "@/entities/category/types";
 import type { TCity } from "@/entities/city/types";
 import type { TSkill } from "@/entities/skill/types";
 import type { TUserInfo } from "@/entities/user/types";
+import { mergeDemoData } from "./demo-data";
 const checkResponse = <T>(res: Response): Promise<T> => {
   return res.ok
     ? res.json().then((data) => {
@@ -36,6 +37,7 @@ const normalizeLocalAssetUrls = (data: TUserSkillsResponse): TUserSkillsResponse
 export const getUserSkills = () =>
   fetch(`${import.meta.env.BASE_URL}db/skillswap-data.json`)
     .then((res) => checkResponse<TUserSkillsResponse>(res))
+    .then(mergeDemoData)
     .then(normalizeLocalAssetUrls)
     .catch((error) => {
       throw error;

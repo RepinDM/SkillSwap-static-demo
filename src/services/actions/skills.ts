@@ -5,7 +5,7 @@ import {
   extractCities,
   getUserSkills,
 } from "@/api/skillswap-api";
-import { updateUserSkills } from "@/api/update-data-profile-api";
+import { saveDemoLearnSkills, saveDemoTeachSkill } from "@/api/demo-data";
 
 export const fetchSkillCards = createAsyncThunk(
   "skillCards/fetchSkillCards",
@@ -30,34 +30,19 @@ export const saveTeachSkill = createAsyncThunk(
       subcategoryId: string;
       images: File[];
       existingImageUrls: string[];
-      // текущие learn-навыки чтобы не потерять их
-      currentLearnSkills: { subcategoryId: string }[];
     },
-    { dispatch, rejectWithValue }
+    { dispatch, getState, rejectWithValue }
   ) => {
     try {
-      const formData = new FormData();
-      formData.append("skillName", payload.title);
-      formData.append("description", payload.description);
-      formData.append("categoryId", payload.categoryId);
-      formData.append("skillSubcategoryId", payload.subcategoryId);
+      const userId = (getState() as { auth: { user: { id: number } | null } }).auth.user?.id;
 
-      // Новые файлы
-      payload.images.forEach((img) => formData.append("images", img));
+      if (userId === undefined) {
+        return rejectWithValue("Войдите в демо-аккаунт, чтобы изменить навык");
+      }
 
-      // Существующие URL картинок — бэкенд их пока игнорирует,
-      // но передаём на будущее
-      payload.existingImageUrls.forEach((url) =>
-        formData.append("existingTeachSkillImages", url)
-      );
-
-      // Передаём текущие learn-навыки чтобы бэкенд их не удалил
-      payload.currentLearnSkills.forEach((s) =>
-        formData.append("learningSubcategoryIds", s.subcategoryId)
-      );
-
-      const result = await updateUserSkills(formData);
-      dispatch(fetchSkillCards());
+      const data = await getUserSkills();
+      const result = await saveDemoTeachSkill(data, userId, payload);
+      await dispatch(fetchSkillCards()).unwrap();
       return result;
     } catch {
       return rejectWithValue("Ошибка сохранения навыка");
@@ -70,34 +55,19 @@ export const saveLearnSkills = createAsyncThunk(
   async (
     payload: {
       skills: { categoryId: string; subcategoryId: string }[];
-      // текущий teach-навык чтобы не потерять его
-      currentTeachSkill: {
-        title: string;
-        description: string;
-        subcategoryId: string;
-        imageUrls: string[];
-      };
     },
-    { dispatch, rejectWithValue }
+    { dispatch, getState, rejectWithValue }
   ) => {
     try {
-      const formData = new FormData();
-      
-      // Передаём teach как есть
-      formData.append("skillName", payload.currentTeachSkill.title);
-      formData.append("description", payload.currentTeachSkill.description);
-      formData.append("skillSubcategoryId", payload.currentTeachSkill.subcategoryId);
-      payload.currentTeachSkill.imageUrls.forEach((url) =>
-        formData.append("existingTeachSkillImages", url)
-      );
+      const userId = (getState() as { auth: { user: { id: number } | null } }).auth.user?.id;
 
-      // Новые learn-навыки
-      payload.skills.forEach((s) =>
-        formData.append("learningSubcategoryIds", s.subcategoryId)
-      );
+      if (userId === undefined) {
+        return rejectWithValue("Войдите в демо-аккаунт, чтобы изменить навыки");
+      }
 
-      const result = await updateUserSkills(formData);
-      dispatch(fetchSkillCards());
+      const data = await getUserSkills();
+      const result = saveDemoLearnSkills(data, userId, payload.skills);
+      await dispatch(fetchSkillCards()).unwrap();
       return result;
     } catch {
       return rejectWithValue("Ошибка сохранения навыков");

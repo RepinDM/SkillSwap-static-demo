@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
+import { readStoredJson, writeStoredJson } from "@/shared/lib/storage";
 
 export const useLocalList = <T>(key: string, initial: T[] = []) => {
   const [list, setList] = useState<T[]>(() => {
-    const raw = localStorage.getItem(key);
-    return raw ? JSON.parse(raw) : initial;
+    return readStoredJson(key, initial);
   });
 
   useEffect(() => {
-    localStorage.setItem(key, JSON.stringify(list));
+    writeStoredJson(key, list);
   }, [list, key]);
 
   return [list, setList] as const;

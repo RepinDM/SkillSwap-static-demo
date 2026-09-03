@@ -1,1 +1,0 @@
-export const API_URL = import.meta.env.VITE_SKILLSWAP_API_URL ?? "/api/";

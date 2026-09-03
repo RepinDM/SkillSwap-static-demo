@@ -1,4 +1,5 @@
 import type { TUserAuth } from "@/entities/user/types";
+import { removeDemoUserData, saveDemoUserData } from "./demo-data";
 
 const DEMO_USER_KEY = "skillswap-demo-user";
 const DEMO_ACCESS_TOKEN = "skillswap-demo-access-token";
@@ -23,6 +24,7 @@ const getStoredUser = (): TUserAuth | null => {
 
 const saveUser = (user: TUserAuth) => {
   localStorage.setItem(DEMO_USER_KEY, JSON.stringify(user));
+  saveDemoUserData(user);
   return user;
 };
 
@@ -53,6 +55,7 @@ export const loginDemoUser = (email: string, password: string) => {
 export const updateDemoUser = (user: TUserAuth) => saveUser(user);
 
 export const deleteDemoProfile = (userId: number) => {
+  removeDemoUserData(userId);
   localStorage.removeItem(DEMO_USER_KEY);
   localStorage.removeItem(`favorites_${userId}`);
   localStorage.removeItem("exchangeRequests");

@@ -1,5 +1,6 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import type { RootState } from "@/services/store";
+import { readStoredJson } from "@/shared/lib/storage";
 
 export type ExchangeRequest = {
   cardId: number;
@@ -12,7 +13,7 @@ interface ExchangeState {
 }
 
 const initialState: ExchangeState = {
-  requests: JSON.parse(localStorage.getItem("exchangeRequests") || "[]"),
+  requests: readStoredJson<ExchangeRequest[]>("exchangeRequests", []),
 };
 
 const exchangeRequestsSlice = createSlice({

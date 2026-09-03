@@ -22,6 +22,7 @@ import { NotificationDropdown } from "../Notifications/NotificationDropdown";
 import { SearchInput } from "@/features/Search/SearchInput";
 import { useAppSelector } from "@/services/hooks";
 import { selectSearchQuery } from "@/services/slices/skillCardsSlice";
+import { selectIsAuthenticated, selectUser } from "@/services/slices/authSlice";
 import { useTheme } from "@/shared/hooks/useTheme";
 
 export const Header = () => {
@@ -29,19 +30,8 @@ export const Header = () => {
   const dropdownTriggerRef = useRef<HTMLButtonElement>(null);
   const notificationTriggerRef = useRef<HTMLButtonElement>(null);
   const { isDark, toggleTheme } = useTheme();
-  const token = localStorage.getItem("accessToken");
-  const userRaw = localStorage.getItem("user");
-
-  const isLoggedIn = Boolean(token);
-  const user = userRaw ? JSON.parse(userRaw) : null;
-  //
-  // const isLoggedIn = useMemo(() => {
-  //   if (typeof window === "undefined") return false;
-  //
-  //   return Boolean(
-  //     localStorage.getItem("token") || localStorage.getItem("registrationComplete")
-  //   );
-  // }, []);
+  const isLoggedIn = useAppSelector(selectIsAuthenticated);
+  const user = useAppSelector(selectUser);
 
   const toggleDropdown = () => {
     setIsDropdownOpen((prev) => !prev);

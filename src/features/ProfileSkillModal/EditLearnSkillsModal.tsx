@@ -25,19 +25,12 @@ type Props = {
   isOpen: boolean;
   onClose: () => void;
   initialData?: SkillItem[];
-  currentTeachSkill: {
-    title: string;
-    description: string;
-    subcategoryId: string;
-    imageUrls: string[];
-  };
 };
 
 export const EditLearnSkillsModal = ({
   isOpen,
   onClose,
   initialData,
-  currentTeachSkill,
 }: Props) => {
   const categoryItems = useAppSelector(selectCategoryItems);
 
@@ -80,7 +73,6 @@ export const EditLearnSkillsModal = ({
   const onSubmit = (data: FormValues) => {
     dispatch(saveLearnSkills({
       skills: data.skills,
-      currentTeachSkill,
     }));
     onClose();
   };

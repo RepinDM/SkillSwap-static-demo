@@ -2,6 +2,7 @@ import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import { loginUser } from "../actions/login";
 import type { TUserAuth } from "@/entities/user/types";
 import { editUser } from "../actions/editUser";
+import { readStoredJson } from "@/shared/lib/storage";
 
 interface AuthState {
   user: TUserAuth | null;
@@ -14,8 +15,7 @@ interface AuthState {
 
 // Читаем токен из localStorage при старте
 const accessToken = localStorage.getItem("accessToken");
-const userRaw = localStorage.getItem("user");
-const savedUser = userRaw ? (JSON.parse(userRaw) as TUserAuth) : null;
+const savedUser = readStoredJson<TUserAuth | null>("user", null);
 
 const initialState: AuthState = {
   user: savedUser,
