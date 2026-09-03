@@ -1,80 +1,84 @@
-# SkillSwap: автономное портфолио-демо
+# SkillSwap: Standalone Portfolio Demo
 
-SkillSwap - сервис для обмена знаниями и практическими навыками. Пользователь
-может найти человека, который готов поделиться опытом, рассказать о том, чему
-хочет научиться, собрать избранное и вести свой профиль.
+SkillSwap is a web application for exchanging knowledge and practical skills.
+Users can find someone ready to share their expertise, describe what they want
+to learn, save favourites, and manage a personal profile.
 
-Эта версия подготовлена для портфолио: она полностью работает без внешнего API
-и поэтому одинаково надёжно запускается локально, на Vercel и GitHub Pages.
+This portfolio edition is fully independent of an external API. It runs
+reliably locally, on Vercel, and on GitHub Pages.
 
-## Демо
+## Live Demo
 
-Ссылка на опубликованную версию будет добавлена после завершения деплоя GitHub Pages.
+The live GitHub Pages URL will be added after the deployment workflow completes.
 
-## Что можно посмотреть
+## Highlights
 
-- Каталог карточек с поиском и фильтрами по городу, категории и подкатегории.
-- Подробную страницу навыка и сценарий создания заявки на обмен.
-- Избранное и лайки, сохраняющиеся в браузере.
-- Регистрацию в три шага с валидацией полей.
-- Вход в демо-аккаунт, защищённые разделы и личный кабинет.
-- Редактирование и удаление демо-профиля.
-- Светлую и тёмную темы, а также адаптивную вёрстку.
+- Browse skill cards with search and filters by city, category, and subcategory.
+- Open a skill details page and create an exchange request.
+- Save favourites and likes in the browser.
+- Complete a three-step registration flow with client-side validation.
+- Sign in to a demo account and explore protected profile sections.
+- Edit or delete a demo profile.
+- Use light and dark themes on desktop and mobile layouts.
 
-## Технологии
+## Tech Stack
 
-- React 19, TypeScript и Vite
-- Redux Toolkit и React Redux
+- React 19, TypeScript, and Vite
+- Redux Toolkit and React Redux
 - React Router
-- React Hook Form и Yup
+- React Hook Form and Yup
 - SCSS Modules
-- Vitest, Testing Library и Storybook
+- Vitest, Testing Library, and Storybook
 
-## Автономный режим
+## Standalone Demo Mode
 
-Каталог, города, категории и карточки берутся из проверенного локального снимка
-[`public/db/skillswap-data.json`](public/db/skillswap-data.json). В нём оставлены
-только содержательные демонстрационные профили и навыки: тестовые записи удалены.
+The catalogue, cities, categories, and skill cards are loaded from a curated
+local snapshot at [`public/db/skillswap-data.json`](public/db/skillswap-data.json).
+Test records were removed to keep the portfolio content consistent.
 
-Регистрация, вход, избранное, заявки и личный профиль хранятся только в
-`localStorage` текущего браузера. Поэтому демо не передаёт персональные данные
-на внешний сервер и может быть сброшено кнопкой «Удалить профиль» в личном кабинете.
+Registration, sign-in, favourites, exchange requests, and profile changes are
+stored in the current browser's `localStorage`. No personal data is sent to an
+external server. Use **Delete Profile** in the profile settings to reset the
+current demo account and its local data.
 
-## Вклад в проект
+## Project Contributions
 
-### Команда
+### Team Work
 
-- Спроектировала и реализовала интерфейс обмена навыками, каталог, карточки,
-  маршрутизацию, формы и состояние приложения.
-- Выбрала React-архитектуру с типизированным Redux-слоем, модульными стилями и
-  переиспользуемыми UI-компонентами.
-- Подготовила пользовательские сценарии: регистрация, профиль, избранное,
-  навыки и заявки на обмен.
+- Designed and implemented the skill-exchange experience, catalogue, cards,
+  routing, forms, and application state.
+- Chose a React architecture with a typed Redux layer, modular styles, and
+  reusable UI components.
+- Built key user journeys: registration, profile management, favourites,
+  skills, and exchange requests.
 
-### Финализация портфолио-версии
+### Portfolio Finalization
 
-- Проведён аудит сборки, типизации и тестов; устранены ошибки, мешавшие деплою.
-- Исправлен сценарий выбора города: данные городов извлекаются из общего набора
-  профилей, поиск и выбор работают без внешней сети.
-- Внешняя HTTP-интеграция заменена локальным снимком реальных демонстрационных
-  данных, чтобы избежать mixed-content и нестабильности legacy API.
-- Очищены тестовые карточки и навыки, добавлено локальное удаление демо-профиля.
-- Настроены SPA-маршруты для Vercel и автоматическая публикация на GitHub Pages.
-- README приведён к формату, понятному рекрутеру и разработчику.
+- Audited the build, TypeScript checks, and tests; resolved deployment-blocking issues.
+- Fixed the city-selection flow by deriving cities from the shared user dataset.
+- Replaced the legacy HTTP integration with a local snapshot to avoid
+  mixed-content errors and external API instability.
+- Removed test cards and skills, and added local demo-profile deletion.
+- Configured SPA routing for Vercel and automatic deployment to GitHub Pages.
+- Reworked this README for recruiters and developers reviewing the project.
 
-## Быстрый старт
+## Getting Started
 
-Требуется Node.js 20+ и npm.
+### Prerequisites
+
+- Node.js 20 or later
+- npm
+
+### Install and Run
 
 ```bash
 npm ci
 npm run dev
 ```
 
-После запуска откройте адрес, который выведет Vite, обычно
-`http://localhost:5173`.
+Open the local URL shown by Vite, usually `http://localhost:5173`.
 
-## Проверки качества
+## Quality Checks
 
 ```bash
 npm run lint
@@ -82,44 +86,46 @@ npm run build
 npm run test:run
 ```
 
-На момент подготовки портфолио-версии линтер, production-сборка и 39 тестов
-проходят успешно.
+At the time this portfolio edition was prepared, linting, the production build,
+and all 39 tests passed successfully.
 
-## Маршруты
+## Routes
 
-| Адрес | Назначение |
+| Route | Purpose |
 | --- | --- |
-| `/` | Каталог навыков |
-| `/skill/:id` | Страница навыка |
-| `/login` | Вход в демо-аккаунт |
-| `/register` | Регистрация |
-| `/profile` | Личный кабинет |
-| `/profile/favorites` | Избранное |
-| `/create` | Создание навыка |
+| `/` | Skill catalogue |
+| `/skill/:id` | Skill details |
+| `/login` | Demo sign-in |
+| `/register` | Registration |
+| `/profile` | Personal dashboard |
+| `/profile/favorites` | Favourites |
+| `/create` | Create a skill |
 
-## Структура проекта
+## Project Structure
 
 ```text
 src/
-├── api/         # локальные данные, демо-сессия и преобразования
-├── app/         # запуск приложения и маршрутизация
-├── entities/    # типы предметной области
-├── features/    # пользовательские сценарии
-├── pages/       # страницы
-├── services/    # Redux store, slices и actions
-├── shared/      # общие компоненты, утилиты и стили
-└── widgets/     # составные блоки интерфейса
+├── api/         # local data access, demo session, and transformations
+├── app/         # application bootstrap and routing
+├── entities/    # domain types
+├── features/    # user-facing flows
+├── pages/       # route-level pages
+├── services/    # Redux store, slices, and actions
+├── shared/      # shared components, utilities, and styles
+└── widgets/     # larger composed interface blocks
 ```
 
-## Публикация
+## Deployment
 
 ### Vercel
 
-Выберите preset `Vite`, оставьте команду `npm run build` и папку `dist`.
-Файл `vercel.json` сохраняет работу клиентских маршрутов при прямом открытии ссылок.
+Select the `Vite` preset, keep `npm run build` as the build command, and use
+`dist` as the output directory. `vercel.json` keeps client-side routes working
+when opened directly.
 
 ### GitHub Pages
 
-В `Settings` -> `Pages` выберите источник `GitHub Actions`. Workflow
-`.github/workflows/deploy-pages.yml` автоматически соберёт приложение и
-опубликует его после push в `main`, включая fallback для клиентских маршрутов.
+In the repository settings, open **Pages** and choose **GitHub Actions** as the
+source. The workflow in `.github/workflows/deploy-pages.yml` builds and deploys
+the application after every push to `main`, including an SPA fallback for direct
+links to application routes.
