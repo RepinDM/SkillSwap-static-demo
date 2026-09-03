@@ -254,6 +254,10 @@
   transform: translateY(-1px);
 }
 
+[data-theme="light"] .deleteProfileButton:hover {
+  background: var(--card-hover);
+}
+
 .deleteProfileButton:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 3px;
