@@ -95,6 +95,21 @@ review without access to the original backend.
 - Removed obsolete footer links, added direct-route fallbacks, and configured
   automated GitHub Pages deployment for a smoother portfolio review.
 
+## Screenshots
+
+### Skills Catalogue
+
+![SkillSwap skills catalogue](docs/screenshots/catalog.png)
+
+### Skill Details
+
+![SkillSwap skill details](docs/screenshots/skill-details.png)
+
+### Dark Theme
+
+![SkillSwap dark theme](docs/screenshots/dark-theme.png)
+
+---
 ## Future Improvements
 
 - Restore a production API with HTTPS, authentication, and persistent storage.
