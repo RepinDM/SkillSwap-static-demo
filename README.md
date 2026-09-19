@@ -195,14 +195,6 @@ and all 45 tests passed successfully.
 
 `vercel.json` provides the SPA fallback required for direct route access.
 
-## Future Improvements
-
-- Restore a production API with HTTPS, authentication, and persistent storage.
-- Add real-time messaging and notifications for exchange requests.
-- Add image optimisation and a managed media storage service.
-- Expand test coverage with end-to-end scenarios and accessibility checks.
-- Add user reporting, moderation, and content-management tools.
-- Add analytics to understand popular skills, searches, and successful exchanges.
 
 ### GitHub Pages
 
@@ -212,3 +204,13 @@ and all 45 tests passed successfully.
 
 The workflow in `.github/workflows/deploy-pages.yml` builds and deploys the
 application automatically, including an SPA fallback for direct route access.
+
+## Future Improvements
+
+- Restore a production API with HTTPS, authentication, and persistent storage.
+- Add real-time messaging and notifications for exchange requests.
+- Add image optimisation and a managed media storage service.
+- Expand test coverage with end-to-end scenarios and accessibility checks.
+- Add user reporting, moderation, and content-management tools.
+- Add analytics to understand popular skills, searches, and successful exchanges.
+
