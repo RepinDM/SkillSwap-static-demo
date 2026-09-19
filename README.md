@@ -33,6 +33,17 @@ and discover relevant people through filters and search.
 - A curated local dataset for skill cards, categories, and profiles.
 - SPA routing for Vercel and an automated GitHub Pages deployment workflow.
 
+## Tech Stack
+
+- React 19 and TypeScript
+- Vite
+- Redux Toolkit and React Redux
+- React Router
+- React Hook Form and Yup
+- SCSS Modules
+- Vitest, Testing Library, and Storybook
+- GitHub Actions for GitHub Pages deployment
+
 ## Standalone Demo Mode
 
 The original project depended on a legacy HTTP API. That approach is not
@@ -110,25 +121,6 @@ review without access to the original backend.
 ![SkillSwap dark theme](docs/screenshots/dark-theme.png)
 
 ---
-## Future Improvements
-
-- Restore a production API with HTTPS, authentication, and persistent storage.
-- Add real-time messaging and notifications for exchange requests.
-- Add image optimisation and a managed media storage service.
-- Expand test coverage with end-to-end scenarios and accessibility checks.
-- Add user reporting, moderation, and content-management tools.
-- Add analytics to understand popular skills, searches, and successful exchanges.
-
-## Tech Stack
-
-- React 19 and TypeScript
-- Vite
-- Redux Toolkit and React Redux
-- React Router
-- React Hook Form and Yup
-- SCSS Modules
-- Vitest, Testing Library, and Storybook
-- GitHub Actions for GitHub Pages deployment
 
 ## Architecture
 
@@ -202,6 +194,15 @@ and all 45 tests passed successfully.
 5. Deploy.
 
 `vercel.json` provides the SPA fallback required for direct route access.
+
+## Future Improvements
+
+- Restore a production API with HTTPS, authentication, and persistent storage.
+- Add real-time messaging and notifications for exchange requests.
+- Add image optimisation and a managed media storage service.
+- Expand test coverage with end-to-end scenarios and accessibility checks.
+- Add user reporting, moderation, and content-management tools.
+- Add analytics to understand popular skills, searches, and successful exchanges.
 
 ### GitHub Pages
 
