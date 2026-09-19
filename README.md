@@ -1,5 +1,9 @@
 # SkillSwap: Standalone Portfolio Demo
 
+**Live Demo:** https://repindm.github.io/SkillSwap-static-demo/
+
+**Original Team Repository:** https://github.com/RepinDM/SkillSwap_47_7
+
 SkillSwap is a responsive web application for exchanging practical knowledge and
 skills. It helps people find someone who can teach them a useful skill while
 also showing what they are ready to share in return.
